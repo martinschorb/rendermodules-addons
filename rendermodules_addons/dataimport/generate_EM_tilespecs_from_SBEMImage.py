@@ -17,13 +17,10 @@ from rendermodules_addons.utilities.EMBL_file_utils import groupsharepath
 import time
 
 import glob
-# import bdv_tools as bdv
+
 import json
 
 # from pyEM import parse_adoc
-
-# from rendermodules.utilities import uri_utils
-
 
 example_input = {
     "render": {
@@ -247,11 +244,6 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
 
             self.output_tilespecs_to_stack(specs[1])
 
-# I don know what this does... so leave it out
-        # try:
-        #     self.output({'stack': self.output_stack})
-        # except AttributeError as e:
-        #     self.logger.error(e)
 
 
 if __name__ == "__main__":
