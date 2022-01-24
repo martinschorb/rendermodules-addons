@@ -110,3 +110,10 @@ ENV/
 /.idea/inspectionProfiles/Project_Default.xml
 /.idea/render-modules.iml
 /.idea/vcs.xml
+/misc.xml
+/modules.xml
+/inspectionProfiles/profiles_settings.xml
+/inspectionProfiles/Project_Default.xml
+/rendermodules-addons.iml
+/vcs.xml
+/workspace.xml
