@@ -1,11 +1,56 @@
 import argschema
 
-from asap.materialize import (ScaleList,ResolutionList,InFileOrDir)
-
 from argschema.fields import (Str, OutputDir, Int, Boolean, Float,
                               List, InputDir, Nested)
 
 import marshmallow as mm
+
+
+class InFileOrDir(Str):
+    """InFileOrDir is  :class:`marshmallow.fields.Str` subclass which is a path to a
+       a directory or a file that exists and that the user can access
+       (presently checked with os.access)
+    """
+
+    def _validate(self, value):
+
+        if not os.path.isdir(value):
+            validate_input_path(value)
+
+        if sys.platform == "win32":
+            try:
+                x = list(os.scandir(value))
+            except PermissionError:
+                raise mm.ValidationError(
+                    "%s is not a readable directory" % value)
+        else:
+            if not os.access(value, os.R_OK):
+                raise mm.ValidationError(
+                    "%s is not a readable directory" % value)
+
+
+class ResolutionList(List):
+    def _validate(self, value):
+        if len(value) != 3 :
+                    raise mm.ValidationError(
+                            "Wrong dimensions for resolution list %s" % value)
+
+class ScaleList(List):
+    def _validate(self, value):
+
+        flattened_list = [item for sublist in value for item in sublist]
+        if any(type(item) != int for item in flattened_list):
+            raise mm.ValidationError(
+                "All entries in scale list %s need to be integers." % value)
+
+        if any(len(item) != 3 for item in value):
+            raise mm.ValidationError(
+                "Wrong dimensions for scale list %s" % value)
+
+        for idx,item in enumerate(value):
+            if item != value[idx-1]:
+                raise mm.ValidationError(
+                    "Scale factors need to be consistent!")
 
 
 class MakeXMLParameters(argschema.ArgSchema):
