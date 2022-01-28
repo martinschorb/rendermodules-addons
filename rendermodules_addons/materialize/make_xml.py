@@ -18,6 +18,12 @@ example = {
 
 
 def get_n5scales(path):
+    """
+    Extract scales from Render/Neuroglancer n5 container.
+
+    :param str path: path to n5 container
+    :return: nested list of relative scale factors
+    """
     with open(os.path.join(path,'setup0','timepoint0','attributes.json')) as f:
         t0_attribs = json.load(f)
 
@@ -35,8 +41,16 @@ class MakeXML(argschema.ArgSchemaParser):
 
 
     @classmethod
-    def make_render_xml(self,path, scale_factors , resolution, unit):
-        
+    def make_render_xml(self,path, scale_factors = [[1,1,1]] , resolution = [10,10,10], unit='nm'):
+        """
+        Generate valid n5 attributes and BDV XML file to enable visualisation of a Render/Neuroglancer n5 in BDV/MoBIE
+
+        :param str path: path to the n5 container
+        :param list scale_factors: downsampling scale factors of the n5
+        :param list resolution: resolutio of the volume
+        :param str unit: unit label for the axis
+
+        """
         if path.endswith('n5'):
             xml_path = path.replace('.n5', '.xml')
             is_h5=False

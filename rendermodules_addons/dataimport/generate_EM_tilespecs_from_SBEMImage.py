@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-create tilespecs from SBEMImage dataset
+Create tilespecs from SBEMImage dataset
 """
 
 import os
@@ -54,7 +54,13 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
         return M
     
     def parse_adoc(self,lines):
-    # converts an adoc-format string list into a dictionary
+        """
+        converts an adoc-format string list into a dictionary
+
+        :param list lines: adoc string list
+        :return: dict of adoc key-value pairs
+
+        """
 
         output = {}
         for line in lines:
@@ -65,6 +71,17 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
     
 
     def ts_from_SBEMtile(self,line,pxs,rotation):
+        """
+        Generates a tilespec entry from a line in a SBEMImage tile definition
+
+        :param str line:  Line from SBEMImage tile definition
+        :param float pxs:  Pixelsize
+        :param float rotation: rotation from SBEMImage parameters
+        :return f1: path to the raw image of the tile
+        :return tilespec: a :class:`renderapi.tilespec.TileSpec` object with the metadata for this tile
+
+        """
+
         # tile = bdv.str2dict(line[line.find('{'):])
         
         instr = line[line.find('{'):].replace("'",'"') 
@@ -136,7 +153,12 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
 
 
     def ts_from_sbemimage (self,imgdir):
+        """
 
+        :param imgdir: input directory - SBEMImage project folder.
+        :return: list of :class:`renderapi.tilespec.TileSpec` objects for all tiles.
+
+        """
         os.chdir(imgdir)
 
 

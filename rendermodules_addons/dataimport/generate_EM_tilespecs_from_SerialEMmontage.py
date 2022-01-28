@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 """
-create tilespecs from SBEMImage dataset
+Create tilespecs from SerialEM montages.
+Currently only idoc files are supported.
+
 """
 
 import os
@@ -46,6 +48,16 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
 
 
     def ts_from_SerialEMtile(self,tile,camline,header,z=0):
+        """
+
+        :param dict tile: :class:`pyEM.adoc_item` containg the montage slice
+        :param str camline: line of the adoc file describing the camera settings
+        :param list header:  header of the adoc
+        :param int z: section index
+        :return f1: path to the raw image of the tile
+        :return tilespec: a :class:`renderapi.tilespec.TileSpec` object with the metadata for this tile
+
+        """
 
         # curr_posid = [int(tile['tileid'].split('.')[0]),int(tile['tileid'].split('.')[1])]
         # curr_pos = tilepos[posid.index(str(curr_posid[0])+'.'+str(curr_posid[1]))]
@@ -130,7 +142,14 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
 
 
     def ts_from_serialemmontage (self,idocfile,mapsection=0,correct_gradient=True):
-        
+        """
+
+        :param str idocfile: input file (idoc)
+        :param int mapsection: if multiple montages inside the file, index of section to be imported
+        :param correct_gradient: if intensity gradient correction should be performed (not yet implemented)
+        :return: list of :class:`renderapi.tilespec.TileSpec` objects for all tiles.
+
+        """
         rawdir = os.path.dirname(idocfile)
         os.chdir(rawdir)
 
@@ -176,7 +195,7 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
         
         pxs = float(header[0]['PixelSpacing'][0])/10
 
-        print(pxs)
+        # print(pxs)
         
         allspecs = [tspecs,pxs]
 

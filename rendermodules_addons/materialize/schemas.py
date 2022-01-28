@@ -1,15 +1,14 @@
 import argschema
 
 from argschema.fields import (Str, OutputDir, Int, Boolean, Float,
-                              List, InputDir, Nested)
+                              List, Number, InputDir, Nested)
 
 import marshmallow as mm
 
 
 class InFileOrDir(Str):
-    """InFileOrDir is  :class:`marshmallow.fields.Str` subclass which is a path to a
-       a directory or a file that exists and that the user can access
-       (presently checked with os.access)
+    """InFileOrDir: subclass of  :class:`marshmallow.fields.Str` is a path to a
+       a file or directory that exists and is accesible to the user. This is checked with os.access.
     """
 
     def _validate(self, value):
@@ -30,6 +29,9 @@ class InFileOrDir(Str):
 
 
 class ResolutionList(List):
+    """
+    ResolutionList: subclass of  :class:`marshmallow.fields.List` that needs to have length 3.
+    """
     def _validate(self, value):
         if len(value) != 3 :
                     raise mm.ValidationError(
