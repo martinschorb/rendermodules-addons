@@ -14,7 +14,7 @@ test:
     
 pages:
   stage: deploy
-  before script:
+  before_script:
   - apt install git
   - pip install -U sphinx
   - pip install git+https://github.com/AllenInstitute/asap-modules
@@ -25,8 +25,6 @@ pages:
   artifacts:
     paths:
     - public
-  rules:
-    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
   only:
-    - main
-    - doctest
+  - main
+  - doctest
