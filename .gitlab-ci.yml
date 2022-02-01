@@ -1,9 +1,9 @@
-image: python:3.7-alpine
+image: python:3.7-buster
 
 test:
   stage: test
   script:
-  - apt-get install git
+  - apt install git
   - pip install -U sphinx
   - pip install git+https://github.com/AllenInstitute/asap-modules
   - pip install git+https://github.com/AllenInstitute/render-python
