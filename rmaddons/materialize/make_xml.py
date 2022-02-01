@@ -1,7 +1,7 @@
 import os.path
 import argschema
 import json
-from rendermodules_addons.materialize.schemas import MakeXMLParameters, MakeXMLOutput
+from rmaddons.materialize.schemas import MakeXMLParameters, MakeXMLOutput
 from pybdv.metadata import write_xml_metadata, write_h5_metadata, write_n5_metadata, validate_attributes
 from pybdv.util import absolute_to_relative_scale_factors
 # import sys

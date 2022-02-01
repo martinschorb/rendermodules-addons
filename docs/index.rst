@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome the `rendermodules_addons` documentation!
-==========================================================
+Welcome the `rendermodules-addons` documentation!
+=============================================================================
 
 .. toctree::
    :maxdepth: 2
@@ -15,15 +15,15 @@ Modules
 .. toctree::
    :maxdepth: 2
 
-   rendermodules_addons
+   rmaddons
 
 Index and search
-==================
+=====================================
 
 * :ref:`genindex`
 * :ref:`search`
 
 Original repository
-==================
+===============================
 
 * https://git.embl.de/schorb/rendermodules-addons

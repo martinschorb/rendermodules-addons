@@ -10,9 +10,9 @@ from asap.module.render_module import StackOutputModule
 
 from asap.dataimport.schemas import GenerateEMTileSpecsOutput
 
-from rendermodules_addons.dataimport.schemas import GenerateSBEMTileSpecsParameters
+from rmaddons.dataimport.schemas import GenerateSBEMTileSpecsParameters
 
-from rendermodules_addons.utilities.EMBL_file_utils import groupsharepath
+from rmaddons.utilities.EMBL_file_utils import groupsharepath
 
 import time
 

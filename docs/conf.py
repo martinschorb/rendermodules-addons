@@ -63,13 +63,14 @@ pygments_style = 'sphinx'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+# html_static_path = ['_static']
 
 
 intersphinx_mapping = {'marshmallow': ('http://marshmallow.readthedocs.io/en/latest/', None),
                        'renderapi' : ('https://render-python.readthedocs.io/en/latest/',None),
-                       'asap' : ('https://asap-modules.readthedocs.io/en/latest/',None),
+                       'asap' : ('https://alleninstitute.github.io/asap-modules/',None),
+                       'argschema' : ('https://argschema.readthedocs.io/en/latest/',None),
                        'sphinx': ('http://www.sphinx-doc.org/en/stable/', None)}
 
 sys.path.insert(0, os.path.abspath("../"))
-sys.path.insert(0, os.path.abspath("../rendermodules_addons"))
+sys.path.insert(0, os.path.abspath("../rmaddons"))
