@@ -14,9 +14,11 @@ render_port = os.environ.get(
 render_test_owner = os.environ.get(
     'RENDER_TEST_OWNER', 'test'
 )
+render_dir = os.environ.get('RENDER_DIR',('/g/emcf/software/render'))
+
 client_script_location = os.environ.get(
     'RENDER_CLIENT_SCRIPTS',
-    ('/shared/render/render-ws-java-client/'
+    (render_dir+'/render-ws-java-client/'
      'src/main/scripts/'))
 
 # asap test compares with integer
@@ -43,7 +45,7 @@ render_params = {
 
 log_dir = os.environ.get(
     'LOG_DIR',
-    os.path.join(TEST_DATA_ROOT, 'logs'))
+    (os.path.join(os.path.dirname(__file__), '../test_logs')))
 
 try:
     os.makedirs(log_dir)
