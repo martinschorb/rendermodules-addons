@@ -3,6 +3,7 @@ image: python:3.7-alpine
 test:
   stage: test
   script:
+  - apt-get install git
   - pip install -U sphinx
   - pip install git+https://github.com/AllenInstitute/asap-modules
   - pip install git+https://github.com/AllenInstitute/render-python
@@ -15,6 +16,7 @@ test:
 pages:
   stage: deploy
   script:
+  - apt-get install git
   - pip install -U sphinx
   - pip install -U sphinx
   - pip install git+https://github.com/AllenInstitute/asap-modules
