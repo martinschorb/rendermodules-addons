@@ -1,18 +1,19 @@
 image: python:3.7-buster
 
-test:
-  stage: test
-  script:
-  - apt install git
-  - pip install -U sphinx
-  - pip install git+https://github.com/AllenInstitute/asap-modules
-  - pip install git+https://git.embl.de/schorb/pyem
-  - pip install -r requirements.txt
-  - sphinx-build -b html docs public
-  rules:
-    - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
+#test:
+#  stage: test
+#  script:
+#  - apt install git
+#  - pip install -U sphinx
+#  - pip install git+https://github.com/AllenInstitute/asap-modules
+#  - pip install git+https://git.embl.de/schorb/pyem
+#  - pip install -r requirements.txt
+#  - sphinx-build -b html docs public
+#  rules:
+#    - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
     
 pages:
+  image: python:3.7-buster
   stage: deploy
   before_script:
   - apt install git

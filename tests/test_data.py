@@ -8,7 +8,7 @@ import marshmallow
 pool_size = os.environ.get('ASAP_POOL_SIZE', 5)
 
 render_host = os.environ.get(
-    'RENDER_HOST', 'renderservice')
+    'RENDER_HOST', 'render.embl.de')
 render_port = os.environ.get(
     'RENDER_PORT', 8080)
 render_test_owner = os.environ.get(
