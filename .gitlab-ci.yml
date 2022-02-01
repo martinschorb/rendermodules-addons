@@ -4,7 +4,11 @@ test:
   stage: test
   script:
   - pip install -U sphinx
-  - sphinx-build -b html doc public
+  - pip install git+https://github.com/AllenInstitute/asap-modules
+  - pip install git+https://github.com/AllenInstitute/render-python
+  - pip install git+https://git.embl.de/schorb/pyem
+  - pip install -r requirements.txt
+  - sphinx-build -b html docs public
   rules:
     - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
     
@@ -12,7 +16,12 @@ pages:
   stage: deploy
   script:
   - pip install -U sphinx
-  - sphinx-build -b html doc public
+  - pip install -U sphinx
+  - pip install git+https://github.com/AllenInstitute/asap-modules
+  - pip install git+https://github.com/AllenInstitute/render-python
+  - pip install git+https://git.embl.de/schorb/pyem
+  - pip install -r requirements.txt
+  - sphinx-build -b html docs public
   artifacts:
     paths:
     - public
