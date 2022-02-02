@@ -5,10 +5,9 @@ import os
 import copy
 
 import pytest
-
+import xml.etree.ElementTree as ET
 
 import renderapi
-from asap.utilities.pillow_utils import Image
 from rmaddons.materialize import make_xml
 from test_data import (render_params,
                        example_dir,
@@ -29,5 +28,61 @@ def test_make_xml():
 
     # test file type check
     with pytest.raises(TypeError):
-            mod.make_render_xml()
+        mod.make_render_xml(path=input_params['path'])
 
+    input_params['path'] = example_n5
+
+    xml_path = example_n5.replace('.n5', '.xml')
+
+    mod = make_xml.MakeXML(input_data=input_params)
+
+    mod.make_render_xml(path=example_n5,unit='lightyears',resolution=makexml_template['resolution'])
+
+    # test XML file generation
+    assert os.path.exists(xml_path)
+
+    # test XML source link
+    tree = ET.parse(xml_path)
+    assert type(tree) is ET.ElementTree
+
+    root = tree.getroot()
+    assert type(root) is ET.Element
+
+    # load the sequence description
+    seqdesc = root.find('SequenceDescription')
+    assert seqdesc is not None
+
+    # load the ImageLoader
+    imload = seqdesc.find('ImageLoader')
+    assert imload is not None
+
+    # test correct path to source
+    n5path = imload.find('n5')
+    assert n5path is not None
+    assert n5path.text == os.path.basename(example_n5)
+
+    # load the view descriptions
+    viewsets = seqdesc.find('ViewSetups')
+    assert viewsets is not None
+
+    vset = viewsets.find('ViewSetup')
+    assert vset is not None
+
+    xmlsize = vset.find('size')
+    assert xmlsize is not None
+
+    # test if data size fits
+    assert xmlsize.text == ' '.join(map(str,makexml_template['size']))
+
+    # test if units and resolution fit
+    voxs = vset.find('voxelSize')
+    assert voxs is not None
+
+    unit = voxs.find('unit')
+    assert unit.text=='lightyears'
+
+    pxs = voxs.find('size')
+    assert pxs is not None
+    res = copy.deepcopy(makexml_template['resolution'])
+    res.reverse()
+    assert pxs.text == ' '.join(map(str,res))

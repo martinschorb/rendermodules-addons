@@ -55,20 +55,20 @@ class MakeXML(argschema.ArgSchemaParser):
             xml_path = path.replace('.n5', '.xml')
         else:
             raise TypeError('Only n5 format is currently supported.')
-    
+
         attrs = {'channel': {'id': None}}
         attrs = validate_attributes(xml_path, attrs, setup_id=0,
                                     enforce_consistency=False)
         if scale_factors == [[1,1,1]]:
             scale_factors = get_n5scales(path)
-        
+
         write_xml_metadata(xml_path, path, unit, resolution,
                            is_h5=False,
                            setup_id=0, timepoint=0,
                            setup_name=None,
                            affine=None,
                            attributes=attrs,
-                           overwrite=False,
+                           overwrite=True,
                            overwrite_data=False,
                            enforce_consistency=False)
         
