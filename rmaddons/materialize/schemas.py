@@ -1,7 +1,10 @@
 import argschema
 import os
+import sys
 from argschema.fields import (Str, OutputDir, Int, Boolean, Float,
                               List, Number, InputDir, Nested)
+
+from argschema.fields.files import validate_input_path
 
 import marshmallow as mm
 
