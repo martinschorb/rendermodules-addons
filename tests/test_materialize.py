@@ -14,8 +14,3 @@ from asap.materialize import materialize_sections
 from test_data import (render_params,
                        )
 
-
-@pytest.fixture(scope='module')
-def render():
-    return renderapi.connect(**render_params)
-

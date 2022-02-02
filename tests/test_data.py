@@ -55,6 +55,14 @@ except OSError as e:
 example_dir = os.path.join(os.path.dirname(__file__), 'test_files')
 example_env = Environment(loader=FileSystemLoader(example_dir))
 
+example_n5z =  os.path.join(example_dir,'testn5.tgz')
+example_n5 = os.path.join(example_dir,'rmaddons_test.n5')
+
+if not os.path.exists(example_n5):
+    try:
+        os.system('tar xvfz ' + example_n5z + ' -C ' + example_dir)
+    except OSError as e:
+        pass
 
 def render_json_template(env, template_file, **kwargs):
     template = env.get_template(template_file)
