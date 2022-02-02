@@ -1,5 +1,5 @@
 import argschema
-
+import os
 from argschema.fields import (Str, OutputDir, Int, Boolean, Float,
                               List, Number, InputDir, Nested)
 
