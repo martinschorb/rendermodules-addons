@@ -5,7 +5,7 @@ import tempfile
 from jinja2 import Environment, FileSystemLoader
 import marshmallow
 
-pool_size = os.environ.get('ASAP_POOL_SIZE', 5)
+pool_size = os.environ.get('TEST_POOL_SIZE', 5)
 
 render_host = os.environ.get(
     'RENDER_HOST', 'render.embl.de')
@@ -35,13 +35,7 @@ render_params = {
     "project": "test_project",
     "client_scripts": client_script_location
 }
-#
-# scratch_dir = os.environ.get(
-#     'SCRATCH_DIR', '/var/www/render/scratch/')
-# try:
-#     os.makedirs(scratch_dir)
-# except OSError as e:
-#     pass
+
 
 log_dir = os.environ.get(
     'LOG_DIR',
@@ -68,3 +62,9 @@ def render_json_template(env, template_file, **kwargs):
     template = env.get_template(template_file)
     d = json.loads(template.render(**kwargs))
     return d
+
+
+makexml_template = render_json_template(
+        example_env,
+        'materialize_makexml.json')
+
