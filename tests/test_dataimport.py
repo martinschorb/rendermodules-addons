@@ -21,9 +21,11 @@ import copy
 def render():
     return renderapi.connect(**render_params)
 
-#
-# def test_generate_SBEM(render):
-#     assert isinstance(render, renderapi.render.RenderClient)
+def test_generate_SBEM(render):
+    print(render_params)
+    os.system('ping '+render_params["host"] + ' -c 3')
+    assert isinstance(render, renderapi.render.RenderClient)
+
 #     with open(METADATA_FILE, 'r') as f:
 #         md = json.load(f)
 #     ex = copy.deepcopy(generate_EM_tilespecs_from_metafile.example_input)

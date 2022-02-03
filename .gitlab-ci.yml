@@ -14,10 +14,13 @@ test:
   - chmod 777 -R *
   - su testuser -c "coverage run -m pytest"
   - coverage xml
+  - coverage-badge
+  - coverage report
   artifacts:
     reports:
       cobertura:
         coverage.xml
+  coverage: '*TOTAL.*s+(d+%)$*'
   rules:
     - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
     
