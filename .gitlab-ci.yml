@@ -2,7 +2,7 @@ dockertest:
   image: python:3.7-buster
   stage: test
   before_script:
-  - apt install git\
+  - apt-get install git\
     libblas-dev\
     liblapack-dev\
     libatlas-base-dev\
