@@ -1,6 +1,6 @@
 image: python:3.7-buster
 
-#test:
+test:
   stage: test
   script:
   - apt install git
