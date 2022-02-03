@@ -2,7 +2,7 @@ import argschema
 import os
 import sys
 from argschema.fields import (Str, OutputDir, Int, Boolean, Float,
-                              List, Number, InputDir, Nested)
+                              List, Field, InputDir, Nested)
 
 from argschema.fields.files import validate_input_path
 
@@ -23,11 +23,11 @@ class InFileOrDir(Str):
             try:
                 x = list(os.scandir(value))
             except PermissionError:
-                raise mm.ValidationError(
+                raise mm.exceptions.ValidationError(
                     "%s is not a readable directory" % value)
         else:
             if not os.access(value, os.R_OK):
-                raise mm.ValidationError(
+                raise mm.exceptions.ValidationError(
                     "%s is not a readable directory" % value)
 
 
@@ -37,33 +37,32 @@ class ResolutionList(List):
     """
     def _validate(self, value):
         if len(value) != 3 :
-                    raise mm.ValidationError(
+                    raise mm.exceptions.ValidationError(
                             "Wrong dimensions for resolution list %s" % value)
 
 class ScaleList(List):
     def _validate(self, value):
 
-        flattened_list = [item for sublist in value for item in sublist]
-        if any(type(item) != int for item in flattened_list):
-            raise mm.ValidationError(
-                "All entries in scale list %s need to be integers." % value)
-
         if any(len(item) != 3 for item in value):
-            raise mm.ValidationError(
+            raise mm.exceptions.ValidationError(
                 "Wrong dimensions for scale list %s" % value)
+
+        flattened_list = [item for sublist in value for item in sublist]
+
+        if any(type(item) != int for item in flattened_list):
+            raise mm.exceptions.ValidationError(
+                "All entries in lists of scale list %s need to be integers." % value)
 
         for idx,item in enumerate(value):
             if item != value[idx-1]:
-                raise mm.ValidationError(
+                raise mm.exceptions.ValidationError(
                     "Scale factors need to be consistent!")
 
 
 class MakeXMLParameters(argschema.ArgSchema):
     path = InFileOrDir(required=True, description=(
         "Path to the image data. Supports N5 and HDF5"))
-    scale_factors = ScaleList(List(Int,
-                              cli_as_single_argument=True),
-                              required=False,description=(
+    scale_factors = ScaleList(List(Field),required=False,description=(
         "List of downsampling factors"),
         default = [[1,1,1]],
         cli_as_single_argument=True)
