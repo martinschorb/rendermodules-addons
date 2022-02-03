@@ -9,7 +9,6 @@ dockertest:
     libopenblas-base\
     libopenblas-dev\
     gfortran\
-#    openjdk-8-jdk\
     maven
 #  - pip install git+https://github.com/AllenInstitute/asap-modules
 #  - pip install git+https://git.embl.de/schorb/pyem
