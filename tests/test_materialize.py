@@ -29,7 +29,7 @@ def test_make_xml():
 
     os.makedirs(baddir,exist_ok=True)
     os.system('chmod -r '+baddir)
-    os.system('ls -l '+example_dir)
+
     input_params = {'path':baddir}
     with pytest.raises(ValidationError):
         mod1 = make_xml.MakeXML(input_data=input_params)
