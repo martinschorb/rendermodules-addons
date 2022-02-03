@@ -1,15 +1,16 @@
 dockertest:
-  image: python:3.7-buster
+  image: python3.8:bullseye
   stage: test
   before_script:
-  - apt-get install git\
+  - apt install git\
     libblas-dev\
     liblapack-dev\
     libatlas-base-dev\
     libopenblas-base\
     libopenblas-dev\
     gfortran\
-    maven
+    maven\
+    docker
 #  - pip install git+https://github.com/AllenInstitute/asap-modules
 #  - pip install git+https://git.embl.de/schorb/pyem
 #  - pip install git+https://github.com/constantinpape/pybdv
