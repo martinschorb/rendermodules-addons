@@ -1,5 +1,5 @@
 dockertest:
-image: python:3.7-buster
+  image: python:3.7-buster
   stage: test
   before_script:
   - apt install git\
