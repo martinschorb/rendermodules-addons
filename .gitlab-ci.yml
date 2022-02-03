@@ -1,6 +1,6 @@
-image: python:3.7-buster
 
 test:
+  image: python:3.7-buster
   stage: test
   script:
   - apt install git
@@ -12,7 +12,8 @@ test:
   - coverage xml
   artifacts:
     reports:
-      cobertura
+      cobertura:
+        coverage.xml
   rules:
     - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
     
