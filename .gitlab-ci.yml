@@ -2,14 +2,7 @@ dockertest:
   image: python:3.8-bullseye
   stage: test
   before_script:
-  - apt update
-  - apt install git\
-    libblas-dev\
-    liblapack-dev\
-    libatlas-base-dev\
-    libopenblas-base\
-    libopenblas-dev\
-    gfortran\
+  - apt apt-get update && apt-get install -y git\
     maven\
     docker
 #  - pip install git+https://github.com/AllenInstitute/asap-modules
