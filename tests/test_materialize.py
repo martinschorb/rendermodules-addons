@@ -31,12 +31,14 @@ def test_make_xml():
         mod.make_render_xml(path=input_params['path'])
 
     input_params['path'] = example_n5
+    input_params['unit'] = 'lightyears'
+    input_params['resolution']  = makexml_template['resolution']
 
     xml_path = example_n5.replace('.n5', '.xml')
 
     mod = make_xml.MakeXML(input_data=input_params)
 
-    mod.make_render_xml(path=example_n5,unit='lightyears',resolution=makexml_template['resolution'])
+    mod.run()
 
     # test XML file generation
     assert os.path.exists(xml_path)
@@ -85,4 +87,10 @@ def test_make_xml():
     assert pxs is not None
     res = copy.deepcopy(makexml_template['resolution'])
     res.reverse()
+    res = map(float,res)
     assert pxs.text == ' '.join(map(str,res))
+
+
+    # clean up
+    os.system('rm -rf ' + example_n5)
+    os.system('rm ' + xml_path)

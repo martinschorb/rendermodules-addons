@@ -22,7 +22,7 @@ wheels/
 .installed.cfg
 *.egg
 test_logs/
-.n5
+*.n5
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
