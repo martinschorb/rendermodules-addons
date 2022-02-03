@@ -1,1 +1,0 @@
-{"compression":{"type":"gzip","useZlib":false,"level":-1},"downsamplingFactors":[2,2,2],"blockSize":[128,128,51],"dataType":"uint8","dimensions":[200,150,25]}

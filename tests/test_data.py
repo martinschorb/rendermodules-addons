@@ -58,6 +58,7 @@ if not os.path.exists(example_n5):
     except OSError as e:
         pass
 
+
 def render_json_template(env, template_file, **kwargs):
     template = env.get_template(template_file)
     d = json.loads(template.render(**kwargs))

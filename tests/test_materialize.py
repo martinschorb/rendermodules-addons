@@ -8,9 +8,9 @@ import pytest
 import xml.etree.ElementTree as ET
 from marshmallow.exceptions import ValidationError
 
-import renderapi
+import json
 from rmaddons.materialize import make_xml
-from test_data import (render_params,
+from test_data import (
                        example_dir,
                        example_n5,
                        makexml_template
@@ -67,6 +67,14 @@ def test_make_xml():
     mod = make_xml.MakeXML(input_data=input_params)
 
     mod.run()
+
+    # test N5 attrib update
+    for attdir in ['setup0','setup0/timepoint0']:
+        with open(os.path.join(example_n5,attdir,'attributes.json')) as f:
+            att_template = json.load(f)
+
+        assert makexml_template['n5_attribs'][attdir] == att_template
+
 
     # test XML file generation
     assert os.path.exists(xml_path)
