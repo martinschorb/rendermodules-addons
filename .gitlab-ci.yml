@@ -1,10 +1,19 @@
 dockertest:
-  image: python:3.8-bullseye
+  image: git.embl.de:4567/grp-bio-it/gitlab-images/workshop-rmarkdown-ubuntu:latest
   stage: test
   before_script:
-  - apt apt-get update && apt-get install -y git\
-    maven\
-    docker
+  - apt-get update && apt-get install -y git\
+    libblas-dev\
+    liblapack-dev\
+    libatlas-base-dev\
+    libopenblas-base\
+    libopenblas-dev\
+    gfortran\
+    openjdk-8-jdk\
+    maven
+  - apt install software-properties-common
+  - add-apt-repository --yes ppa:deadsnakes/ppa
+  - apt install python3.8
 #  - pip install git+https://github.com/AllenInstitute/asap-modules
 #  - pip install git+https://git.embl.de/schorb/pyem
 #  - pip install git+https://github.com/constantinpape/pybdv
