@@ -1,16 +1,20 @@
 image: python:3.7-buster
 
 #test:
-#  stage: test
-#  script:
-#  - apt install git
-#  - pip install git+https://github.com/AllenInstitute/asap-modules
-#  - pip install git+https://git.embl.de/schorb/pyem
-#  - pip install -r requirements.txt
-#  - pip install -r test_requirements.txt
-#  - pytest
-#  rules:
-#    - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
+  stage: test
+  script:
+  - apt install git
+  - pip install git+https://github.com/AllenInstitute/asap-modules
+  - pip install git+https://git.embl.de/schorb/pyem
+  - pip install -r requirements.txt
+  - pip install -r test_requirements.txt
+  - coverage run -m pytest
+  - coverage xml
+  artifacts:
+    reports:
+      cobertura
+  rules:
+    - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
     
 pages:
   image: python:3.7-buster
