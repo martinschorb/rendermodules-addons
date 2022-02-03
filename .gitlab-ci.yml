@@ -29,37 +29,20 @@ image: python:3.7-buster
   - export RENDER_EXAMPLE_DATA=/tmp
   - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
   - docker-compose up -d
-
   script:
-    - docker run -v /var/run/docker.sock:/var/run/docker.sock \
-      -ti docker
-
-
-#
-#test:
-#  image: python:3.7-buster
-#  stage: test
-#  before_script:
-#  - apt install git
-#  - pip install git+https://github.com/AllenInstitute/asap-modules
-#  - pip install git+https://git.embl.de/schorb/pyem
-#  - pip install git+https://github.com/constantinpape/pybdv
-#  - pip install -r requirements.txt
-#  - pip install -r test_requirements.txt
-#  script:
-#  - useradd testuser
-#  - chmod 777 -R *
-#  - su testuser -c "coverage run -m pytest"
-#  - coverage xml
-#  - coverage-badge
-#  - coverage report
-#  artifacts:
-#    reports:
-#      cobertura:
-#        coverage.xml
-#  coverage: '/TOTAL.+ ([0-9]{1,3}%)/'
-#  rules:
-#    - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
+  - useradd testuser
+  - chmod 777 -R *
+  - su testuser -c "coverage run -m pytest"
+  - coverage xml
+  - coverage-badge
+  - coverage report
+  artifacts:
+    reports:
+      cobertura:
+        coverage.xml
+  coverage: '/TOTAL.+ ([0-9]{1,3}%)/'
+  rules:
+    - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
     
 pages:
   image: python:3.7-buster
