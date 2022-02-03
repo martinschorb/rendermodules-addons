@@ -2,6 +2,7 @@ dockertest:
   image: python:3.8-bullseye
   stage: test
   before_script:
+  - apt-update
   - apt install git\
     libblas-dev\
     liblapack-dev\
