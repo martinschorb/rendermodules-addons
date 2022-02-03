@@ -1,5 +1,5 @@
 dockertest:
-  image: python3.8:bullseye
+  image: python:3.8-bullseye
   stage: test
   before_script:
   - apt install git\
