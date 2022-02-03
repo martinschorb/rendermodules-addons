@@ -3,16 +3,16 @@ test:
   image: python:3.7-buster
   stage: test
   before_script:
-  - apt install git
-  - pip install git+https://github.com/AllenInstitute/asap-modules
-  - pip install git+https://git.embl.de/schorb/pyem
-  - pip install git+https://github.com/constantinpape/pybdv
-  - pip install -r requirements.txt
-  - pip install -r test_requirements.txt
+#  - apt install git
+#  - pip install git+https://github.com/AllenInstitute/asap-modules
+#  - pip install git+https://git.embl.de/schorb/pyem
+#  - pip install git+https://github.com/constantinpape/pybdv
+#  - pip install -r requirements.txt
+#  - pip install -r test_requirements.txt
   script:
   - useradd testuser
-  - su testuser
-  - coverage run -m pytest
+  - mkdir test123
+  - su testuser -c "whoami && pwd && ls && coverage run -m pytest"
   - coverage xml
   artifacts:
     reports:
