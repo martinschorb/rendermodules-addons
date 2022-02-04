@@ -1,5 +1,5 @@
 dockertest:
-  image: "mreimbold/debian10-dind:20.10.6"
+  image: "listx/texlive:2020"
   stage: test
   variables:
     DOCKER_HOST: tcp://docker:2375
