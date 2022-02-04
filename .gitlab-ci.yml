@@ -12,7 +12,7 @@ dockertest:
   services:
     - mreimbold/debian10-dind:20.10.6
   before_script:
-  - apt update && apt install -y git\
+  - apt-get update && apt-get install -y git\
     libblas-dev\
     liblapack-dev\
     libatlas-base-dev\
