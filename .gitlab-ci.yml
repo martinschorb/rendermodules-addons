@@ -1,7 +1,7 @@
 dockertest:
   image: "mongo:4-focal"
-#  tags:
-#    - docker7
+  tags:
+    - docker7
   stage: test
   variables:
     RENDER_HOST: localhost
