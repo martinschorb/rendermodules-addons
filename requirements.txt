@@ -8,4 +8,3 @@ argschema<2.0
 jinja2
 six
 numpy
-subprocess
