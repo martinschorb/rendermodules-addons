@@ -13,3 +13,6 @@ flake8>=3.0.4
 pylint>=1.5.4
 codecov
 jinja2
+pathlib2
+uri-handler
+zarr
