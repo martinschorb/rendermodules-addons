@@ -59,6 +59,17 @@ if not os.path.exists(example_n5):
         pass
 
 
+
+example_sbemz =  os.path.join(example_dir,'testsbemimage.tgz')
+example_sbem = os.path.join(example_dir,'sbemimage_testdata')
+
+if not os.path.exists(example_sbemm):
+    try:
+        os.system('tar xvfz ' + example_sbemz + ' -C ' + example_dir)
+    except OSError as e:
+        pass
+
+
 def render_json_template(env, template_file, **kwargs):
     template = env.get_template(template_file)
     d = json.loads(template.render(**kwargs))

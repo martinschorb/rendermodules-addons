@@ -22,9 +22,13 @@ def render():
     return renderapi.connect(**render_params)
 
 def test_generate_SBEM(render):
-    print(render_params)
+    # print(render_params)
     # os.system('ping '+render_params["host"] + ' -c 3')
-    # assert isinstance(render, renderapi.render.RenderClient)
+    assert isinstance(render, renderapi.render.Render)
+
+
+
+
 
 #     with open(METADATA_FILE, 'r') as f:
 #         md = json.load(f)
