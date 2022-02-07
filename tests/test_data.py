@@ -14,7 +14,7 @@ render_port = os.environ.get(
 render_test_owner = os.environ.get(
     'RENDER_TEST_OWNER', 'test'
 )
-render_dir = os.environ.get('RENDER_DIR',os.path.abspath('./render'))
+render_dir = os.environ.get('RENDER_DIR',('../render'))
 
 client_script_location = os.environ.get(
     'RENDER_CLIENT_SCRIPTS',
@@ -46,12 +46,8 @@ try:
 except OSError as e:
     pass
 
-# example data setup
-
 example_dir = os.path.join(os.path.dirname(__file__), 'test_files')
 example_env = Environment(loader=FileSystemLoader(example_dir))
-
-# example N5 output data
 
 example_n5z =  os.path.join(example_dir,'testn5.tgz')
 example_n5 = os.path.join(example_dir,'rmaddons_test.n5')
@@ -63,26 +59,11 @@ if not os.path.exists(example_n5):
         pass
 
 
-# example SBEMImage input data
-
-example_sbemz =  os.path.join(example_dir,'testsbemimage.tgz')
-example_sbem = os.path.join(example_dir,'sbemimage_testdata')
-
-if not os.path.exists(example_sbem):
-    try:
-        os.system('tar xvfz ' + example_sbemz + ' -C ' + example_dir)
-    except OSError as e:
-        pass
-
-# load template json files
-
 def render_json_template(env, template_file, **kwargs):
     template = env.get_template(template_file)
     d = json.loads(template.render(**kwargs))
     return d
 
-
-# define test templates
 
 makexml_template = render_json_template(
         example_env,
