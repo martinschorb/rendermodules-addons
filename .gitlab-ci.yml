@@ -14,7 +14,7 @@ dockertest:
   - pip install asap-modules/ --no-deps
   - pip install git+https://git.embl.de/schorb/pyem --no-deps
   - pip install git+https://github.com/constantinpape/pybdv --no-deps
-  - pip install -r requirements.txt
+  - pip install render-python
   - pip install -r test_requirements.txt
   - git clone --depth 1 https://github.com/saalfeldlab/render.git render -b master
   - ./render/render-ws/src/main/scripts/install.sh
