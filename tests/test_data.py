@@ -8,13 +8,13 @@ import marshmallow
 pool_size = os.environ.get('TEST_POOL_SIZE', 5)
 
 render_host = os.environ.get(
-    'RENDER_HOST', 'render.embl.de')
+    'RENDER_HOST', 'localhost')
 render_port = os.environ.get(
     'RENDER_PORT', 8080)
 render_test_owner = os.environ.get(
     'RENDER_TEST_OWNER', 'test'
 )
-render_dir = os.environ.get('RENDER_DIR',('/g/emcf/software/render'))
+render_dir = os.environ.get('RENDER_DIR',('../render'))
 
 client_script_location = os.environ.get(
     'RENDER_CLIENT_SCRIPTS',
