@@ -1,5 +1,5 @@
 dockertest:
-  image: "mongo:4-focal"
+  image: 'mongo:4-focal'
   tags:
     - docker7
   stage: test
@@ -40,8 +40,8 @@ dockertest:
   - coverage report
   artifacts:
     reports:
-   cobertura:
-     coverage.xml
+      cobertura:
+        coverage.xml
   coverage: '/TOTAL.+ ([0-9]{1,3}%)/'
   rules:
     - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
