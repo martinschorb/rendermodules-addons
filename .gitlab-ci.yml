@@ -9,17 +9,7 @@ dockertest:
     RENDER_CLIENT_SCRIPTS: render/render-ws-java-client/src/main/scripts
 
   before_script:
-  - apt-get update && apt-get install -y git
-#    pip\
-#    libblas-dev\
-#    liblapack-dev\
-#    libatlas-base-dev\
-#    libopenblas-base\
-#    libopenblas-dev\
-#    gfortran\
-#    curl\
-#    cmake\
-#    maven
+  - apt-get update && apt-get install -y git  pip  libblas-dev  liblapack-dev  libatlas-base-dev  libopenblas-base  libopenblas-dev  gfortran  curl  cmake  maven
   - git clone --depth 1 -b master  https://github.com/AllenInstitute/asap-modules
   - sed -i '/opencv/d' asap-modules/requirements.txt
   - sed -i '/stitch/d' asap-modules/requirements.txt
@@ -52,8 +42,8 @@ dockertest:
   - coverage report
   artifacts:
     reports:
-      cobertura:
-        coverage.xml
+   cobertura:
+     coverage.xml
   coverage: '/TOTAL.+ ([0-9]{1,3}%)/'
   rules:
     - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
