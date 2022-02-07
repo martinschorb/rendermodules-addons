@@ -23,7 +23,7 @@ def render():
 
 def test_generate_SBEM(render):
     print(render_params)
-    os.system('ping '+render_params["host"] + ' -c 3')
+    # os.system('ping '+render_params["host"] + ' -c 3')
     assert isinstance(render, renderapi.render.RenderClient)
 
 #     with open(METADATA_FILE, 'r') as f:
