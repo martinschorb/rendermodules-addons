@@ -12,10 +12,8 @@ pathlib2
 scipy
 rtree
 networkx
-bokeh<=1.4.0
+bokeh
 bigfeta
-opencv-contrib-python
-em_stitch
 matplotlib
 jinja2
 six
