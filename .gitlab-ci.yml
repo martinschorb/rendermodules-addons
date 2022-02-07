@@ -1,5 +1,5 @@
 dockertest:
-  image: "mongo:4-focal"
+  image: 'mongo:4-focal'
   tags:
     - docker7
   stage: test
@@ -9,36 +9,23 @@ dockertest:
     RENDER_CLIENT_SCRIPTS: render/render-ws-java-client/src/main/scripts
 
   before_script:
-  - apt-get update && apt-get install -y git
-#    pip\
-#    libblas-dev\
-#    liblapack-dev\
-#    libatlas-base-dev\
-#    libopenblas-base\
-#    libopenblas-dev\
-#    gfortran\
-#    curl\
-#    cmake\
-#    maven
-  - git clone --depth 1 -b master  https://github.com/AllenInstitute/asap-modules
-  - sed -i '/opencv/d' asap-modules/requirements.txt
-  - sed -i '/stitch/d' asap-modules/requirements.txt
-  - pip install -e asap-modules/
-  - pip install git+https://git.embl.de/schorb/pyem
+  - apt-get update && apt-get install -y git  pip  libblas-dev  liblapack-dev  libatlas-base-dev  libopenblas-base  libopenblas-dev  gfortran  curl  cmake  maven
+  - pip install git+https://github.com/AllenInstitute/asap-modules/ --no-deps
+  - pip install git+https://git.embl.de/schorb/pyem --no-deps
   - pip install git+https://github.com/constantinpape/pybdv
-  - pip install -r requirements.txt
+  - pip install render-python
   - pip install -r test_requirements.txt
   - git clone --depth 1 https://github.com/saalfeldlab/render.git render -b master
   - ./render/render-ws/src/main/scripts/install.sh
   - export JAVA_HOME=`readlink -m ./render/deploy/*jdk*`
-  - mvn package -pl render-ws-java-client,render-app,render-ws  -am -DskipTests -f render/pom.xml
+  - mvn package -q -pl render-ws-java-client,render-app,render-ws  -am -DskipTests -f render/pom.xml
   - cp render/render-ws/target/render-ws-*.war render/deploy/jetty_base/webapps/render-ws.war
   - render/deploy/jetty_base/jetty_wrapper.sh start
   - export RENDER_CLIENT_JAR=`readlink -m render/render-ws-java-client/target/render-ws-java-client-*-standalone.jar`
   - export RENDER_WS_JAVA_CLIENT_EXAMPLE_DATA=`readlink -m render/render-ws-java-client/src/main/resources`
   - export RENDER_APP_EXAMPLE_DATA=`readlink -m render/render-app/src/test/resources`
   - export RENDER_JAVA_HOME=$JAVA_HOME
-  - "curl -X GET --header 'Accept: application/json' 'http://localhost:8080/render-ws/v1/serverProperties" 
+  - "curl -X GET --header 'Accept: application/json' 'http://localhost:8080/render-ws/v1/serverProperties'"
   - mkdir -p /tmp/example_1 && cp -R $RENDER_WS_JAVA_CLIENT_EXAMPLE_DATA/example_1 /tmp/.
   - cp -R $RENDER_APP_EXAMPLE_DATA/* /tmp/.
   - export RENDER_EXAMPLE_DATA=/tmp
