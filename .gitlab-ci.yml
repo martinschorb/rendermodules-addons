@@ -10,9 +10,8 @@ dockertest:
 
   before_script:
   - apt-get update && apt-get install -y git  pip  libblas-dev  liblapack-dev  libatlas-base-dev  libopenblas-base  libopenblas-dev  gfortran  curl  cmake  maven
-  - git clone --depth 1 -b master  https://github.com/AllenInstitute/asap-modules
-  - pip install asap-modules/ --no-deps
-  - pip install git+https://git.embl.de/schorb/pyem --no-deps
+  - pip install git+https://github.com/AllenInstitute/asap-modules/ --no-deps
+  - pip install git.embl.de/schorb/pyem --no-deps
   - pip install git+https://github.com/constantinpape/pybdv
   - pip install render-python
   - pip install -r test_requirements.txt
