@@ -24,7 +24,7 @@ import json
 
 example_input = {
     "render": {
-        "host": "pc-emcf-16.embl.de",
+        "host": "render.embl.de",
         "port": 8080,
         "owner": "SBEM",
         "project": "tests",
@@ -163,13 +163,13 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
 
 
         timestamp = time.localtime()
-        if not os.path.exists('conv_log'):os.makedirs('conv_log')
-        log_name = '_{}{:02d}{:02d}-{:02d}{:02d}'.format(timestamp.tm_year,timestamp.tm_mon,timestamp.tm_mday,timestamp.tm_hour,timestamp.tm_min)
+        # if not os.path.exists('conv_log'):os.makedirs('conv_log')
+        # log_name = '_{}{:02d}{:02d}-{:02d}{:02d}'.format(timestamp.tm_year,timestamp.tm_mon,timestamp.tm_mday,timestamp.tm_hour,timestamp.tm_min)
 
 
         # mipmap_args = []
         # tilespecpaths = []
-        logfile = os.path.join(imgdir,'conv_log','Render_convert'+log_name+'.log')
+        # logfile = os.path.join(imgdir,'conv_log','Render_convert'+log_name+'.log')
 
         if not os.path.exists('meta'): raise  FileNotFoundError('Change to proper directory!')
 
