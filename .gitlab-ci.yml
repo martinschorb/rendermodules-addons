@@ -1,52 +1,39 @@
-variables:
-  DOCKER_DRIVER: overlay2
-  DOCKER_VERSION: 18.09.7
-  RENDER_HOST: myrender
-  RENDER_PORT: 8080
-build_render_docker:
-  stage: build
-  image: docker:$DOCKER_VERSION-git
+dockertest:
+  image: 'mongo:4-focal'
   tags:
     - docker7
-  services:
-    - docker:$DOCKER_VERSION-dind
-  before_script:
-    - docker info
-  script:
-    - git clone --depth 1 https://github.com/saalfeldlab/render.git render -b master
-    - cd render
-    - sed -i 's/MONGO_HOST=""/MONGO_HOST="mymongo"/' Dockerfile
-    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin && docker build -t $CI_REGISTRY_IMAGE --target render-ws . && docker push $CI_REGISTRY_IMAGE && echo $CI_REGISTRY_IMAGE
-  when: manual
-
-dockertest:
-  image: 'python:3.7-bullseye'
   stage: test
-  services:
-    - name: mongo:4
-      alias: mymongo
-    - name: git.embl.de:4567/schorb/rendermodules-addons
-      alias: myrender
+  variables:
+    RENDER_HOST: localhost
+    RENDER_PORT: 8080
+    RENDER_CLIENT_SCRIPTS: render/render-ws-java-client/src/main/scripts
+
   before_script:
   - apt-get update && apt-get install -y git  pip  libblas-dev  liblapack-dev  libatlas-base-dev  libopenblas-base  libopenblas-dev  gfortran  curl  cmake  maven
-  - "curl -X GET --header 'Accept: application/json' 'http://myrender:8080/render-ws/v1/serverProperties'"
-  - pip install pymongo
-  - python -c "from pymongo import MongoClient; client=MongoClient('mymongo'); print(client.server_info())"
-  - pip install git+https://github.com/constantinpape/pybdv
-  - pip install render-python
   - pip install git+https://github.com/AllenInstitute/asap-modules/ --no-deps
   - pip install git+https://git.embl.de/schorb/pyem --no-deps
+  - pip install git+https://github.com/constantinpape/pybdv
+  - pip install render-python
   - pip install -r test_requirements.txt
   - git clone --depth 1 https://github.com/saalfeldlab/render.git render -b master
   - ./render/render-ws/src/main/scripts/install.sh
   - export JAVA_HOME=`readlink -m ./render/deploy/*jdk*`
-  - mvn package -q -pl render-ws-java-client  -am -DskipTests -f render/pom.xml
-
+  - mvn package -q -pl render-ws-java-client,render-app,render-ws  -am -DskipTests -f render/pom.xml
+  - cp render/render-ws/target/render-ws-*.war render/deploy/jetty_base/webapps/render-ws.war
+  - render/deploy/jetty_base/jetty_wrapper.sh start
+  - export RENDER_CLIENT_JAR=`readlink -m render/render-ws-java-client/target/render-ws-java-client-*-standalone.jar`
+  - export RENDER_WS_JAVA_CLIENT_EXAMPLE_DATA=`readlink -m render/render-ws-java-client/src/main/resources`
+  - export RENDER_APP_EXAMPLE_DATA=`readlink -m render/render-app/src/test/resources`
+  - export RENDER_JAVA_HOME=$JAVA_HOME
+  - "curl -X GET --header 'Accept: application/json' 'http://localhost:8080/render-ws/v1/serverProperties'"
+  - mkdir -p /tmp/example_1 && cp -R $RENDER_WS_JAVA_CLIENT_EXAMPLE_DATA/example_1 /tmp/.
+  - cp -R $RENDER_APP_EXAMPLE_DATA/* /tmp/.
+  - export RENDER_EXAMPLE_DATA=/tmp
   script:
-  - export RENDER_CLIENT_SCRIPTS=`readlink -m ./render/render-ws-java-client/src/main/scripts`
   - useradd testuser
   - chmod 777 -R *
   - su testuser -c "coverage run -m pytest"
+  - echo $RENDER_PORT
   - coverage xml
   - coverage-badge
   - coverage report
