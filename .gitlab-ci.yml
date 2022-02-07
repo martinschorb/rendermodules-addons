@@ -9,7 +9,8 @@ dockertest:
     RENDER_CLIENT_SCRIPTS: render/render-ws-java-client/src/main/scripts
 
   before_script:
-  - apt-get update && apt-get install -y git\
+  - apt-get update\
+    && apt-get install -y git\
     pip\
     libblas-dev\
     liblapack-dev\
@@ -17,7 +18,6 @@ dockertest:
     libopenblas-base\
     libopenblas-dev\
     gfortran\
-    tar\
     curl\
     cmake\
     maven
