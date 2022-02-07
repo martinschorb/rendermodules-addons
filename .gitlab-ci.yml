@@ -9,17 +9,17 @@ dockertest:
     RENDER_CLIENT_SCRIPTS: render/render-ws-java-client/src/main/scripts
 
   before_script:
-  - apt update && apt install -y git\
-    pip\
-    libblas-dev\
-    liblapack-dev\
-    libatlas-base-dev\
-    libopenblas-base\
-    libopenblas-dev\
-    gfortran\
-    curl\
-    cmake\
-    maven
+  - apt-get update && apt-get install -y git
+#    pip\
+#    libblas-dev\
+#    liblapack-dev\
+#    libatlas-base-dev\
+#    libopenblas-base\
+#    libopenblas-dev\
+#    gfortran\
+#    curl\
+#    cmake\
+#    maven
   - git clone --depth 1 -b master  https://github.com/AllenInstitute/asap-modules
   - sed -i '/opencv/d' asap-modules/requirements.txt
   - sed -i '/stitch/d' asap-modules/requirements.txt
