@@ -29,7 +29,7 @@ example_input = {
         "owner": "SBEM",
         "project": "tests",
         "client_scripts": (
-            "/rendermodules-addons/tests/sbemimagetest_data"
+            "/render/tests/sbemimagetest_data"
             "src/main/scripts")},
     "image_directory": "",
     "stack": "test_stack",
