@@ -24,7 +24,7 @@ import json
 
 example_input = {
     "render": {
-        "host": "render.embl.de",
+        "host": "localhost",
         "port": 8080,
         "owner": "SBEM",
         "project": "tests",
