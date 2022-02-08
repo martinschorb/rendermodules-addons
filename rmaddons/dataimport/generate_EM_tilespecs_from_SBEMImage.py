@@ -29,12 +29,12 @@ example_input = {
         "owner": "SBEM",
         "project": "tests",
         "client_scripts": (
-            "/g/emcf/software/render/render-ws-java-client/"
+            "tests/sbemimagetest_data"
             "src/main/scripts")},
-    "image_directory": "/g/emcf/common/for_martin/SBEMdata/platy_20-05-27",
-    "stack": "test_resolution",
+    "image_directory": "",
+    "stack": "test_stack",
     "overwrite_zlayer": True,
-    "pool_size": 4,
+    "pool_size": 1,
     "close_stack": True,
     "z_index": 1,
     "output_stackVersion":{
