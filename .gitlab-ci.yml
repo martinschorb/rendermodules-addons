@@ -1,14 +1,13 @@
 variables:
   DOCKER_DRIVER: overlay2
   DOCKER_VERSION: 18.09.7
-
+  RENDER_HOST: myrender
+  RENDER_PORT: 8080
 build_render_docker:
   stage: build
   image: docker:$DOCKER_VERSION-git
   tags:
     - docker7
-  variables:
-    DOCKER_DRIVER: overlay2
   services:
     - docker:$DOCKER_VERSION-dind
   before_script:
@@ -17,8 +16,8 @@ build_render_docker:
     - git clone --depth 1 https://github.com/saalfeldlab/render.git render -b master
     - cd render
     - sed -i 's/MONGO_HOST=""/MONGO_HOST="mymongo"/' Dockerfile
-    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin && docker build -t schorb_render --target render-ws . && docker push schorb_render
-  when: manual
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin && docker build -t $CI_REGISTRY_IMAGE --target render-ws . && docker push $CI_REGISTRY_IMAGE && echo $CI_REGISTRY_IMAGE
+
 
 dockertest:
   image: 'python:bullseye'
@@ -28,7 +27,7 @@ dockertest:
   services:
     - name: mongo:4
       alias: mymongo
-    - name: schorb_render
+    - name: $CI_REGISTRY_IMAGE
       alias: myrender
   script:
     - apt update -y && apt install -y curl
@@ -38,8 +37,7 @@ dockertest:
 
 
 #  variables:
-#    RENDER_HOST: localhost
-#    RENDER_PORT: 8080
+#
 #    RENDER_CLIENT_SCRIPTS: render/render-ws-java-client/src/main/scripts
 #
 #  before_script:
