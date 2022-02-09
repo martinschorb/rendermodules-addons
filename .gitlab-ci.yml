@@ -12,9 +12,7 @@ build_render_docker:
     - git clone --depth 1 https://github.com/saalfeldlab/render.git render -b master
     - cd render
     - sed -i 's/MONGO_HOST=""/MONGO_HOST="mymongo"/' Dockerfile
-    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
-    - docker build -t $CI_REGISTRY_IMAGE --target render-ws .
-    - docker push $CI_REGISTRY_IMAGE
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin && docker build -t $CI_REGISTRY_IMAGE --target render-ws . && docker push $CI_REGISTRY_IMAGE
 
 
 dockertest:
