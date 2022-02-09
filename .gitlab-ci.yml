@@ -1,14 +1,18 @@
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_VERSION: 19.03.0
 
 build_render_docker:
   stage: build
-  image: docker:git
+  image: docker:$DOCKER_VERSION-git
   tags:
     - docker7
   variables:
     DOCKER_DRIVER: overlay2
-    DOCKER_HOST: tcp://docker:2375
   services:
-    - docker:dind
+    - docker:$DOCKER_VERSION-dind
+  before_script:
+    - docker info
   script:
     - git clone --depth 1 https://github.com/saalfeldlab/render.git render -b master
     - cd render
