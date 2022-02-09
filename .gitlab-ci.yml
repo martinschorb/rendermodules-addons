@@ -1,13 +1,12 @@
 
 build_render_docker:
   stage: build
-  image: docker
+  image: docker:git
   tags:
     - docker7
   services:
     - docker:dind
   script:
-    - apt update -y && apt install -y git curl
     - git clone --depth 1 https://github.com/saalfeldlab/render.git render -b master
     - cd render
     - sed -i 's/MONGO_HOST=""/MONGO_HOST="mymongo"/' Dockerfile
