@@ -1,5 +1,6 @@
+
 build_render_docker:
-  stage: package
+  stage: build
   image: docker
   tags:
     - docker7
