@@ -4,6 +4,8 @@ build_render_docker:
   image: docker:git
   tags:
     - docker7
+  variables:
+    DOCKER_HOST: tcp://docker7:2375
   services:
     - docker:dind
   script:
