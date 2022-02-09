@@ -1,3 +1,20 @@
+build_render_docker:
+  stage: package
+  image: docker
+  tags:
+    - docker7
+  services:
+    - docker:dind
+  script:
+    - apt update -y && apt install -y git curl
+    - git clone --depth 1 https://github.com/saalfeldlab/render.git render -b master
+    - cd render
+    - sed -i 's/MONGO_HOST=""/MONGO_HOST="mymongo"/' Dockerfile
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
+    - docker build -t $CI_REGISTRY_IMAGE --target render-ws .
+    - docker push $CI_REGISTRY_IMAGE
+
+
 dockertest:
   image: 'python:bullseye'
   tags:
@@ -6,9 +23,13 @@ dockertest:
   services:
     - name: mongo:4
       alias: mymongo
+    - name: $CI_REGISTRY_IMAGE
+      alias: myrender
   script:
+    - apt update -y && apt install -y curl
     - pip install pymongo
     - python -c "from pymongo import MongoClient ; client=MongoClient('mymongo');print(client.server_info())"
+    - "curl -X GET --header 'Accept: application/json' 'http://myrender:8080/render-ws/v1/serverProperties’"
 
 
 #  variables:
