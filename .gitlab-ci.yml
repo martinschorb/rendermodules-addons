@@ -34,7 +34,7 @@ dockertest:
     - apt update -y && apt install -y curl
     - pip install pymongo
     - python -c "from pymongo import MongoClient ; client=MongoClient('mymongo');print(client.server_info())"
-    - "curl -X GET --header 'Accept: application/json' 'http://myrender:8080/render-ws/v1/serverProperties’"
+    - "curl -X GET --header 'Accept: application/json' 'http://myrender:8080/render-ws/v1/serverProperties'"
 
 
 #  variables:
