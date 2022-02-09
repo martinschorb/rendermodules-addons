@@ -5,7 +5,7 @@ build_render_docker:
   tags:
     - docker7
   variables:
-    DOCKER_HOST: tcp://docker7:2375
+    DOCKER_HOST: tcp://docker7.embl.de:2375
   services:
     - docker:dind
   script:
