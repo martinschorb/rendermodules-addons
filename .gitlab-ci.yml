@@ -20,7 +20,7 @@ build_render_docker:
   when: manual
 
 dockertest:
-  image: 'python:3.7-buster'
+  image: 'python:3.7-bullseye'
   tags:
     - docker7
   stage: test
