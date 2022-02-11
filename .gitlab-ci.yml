@@ -27,8 +27,6 @@ dockertest:
       alias: mymongo
     - name: git.embl.de:4567/schorb/rendermodules-addons
       alias: myrender
-  variables:
-    RENDER_CLIENT_SCRIPTS: render/render-ws-java-client/src/main/scripts
   before_script:
   - apt-get update && apt-get install -y git  pip  libblas-dev  liblapack-dev  libatlas-base-dev  libopenblas-base  libopenblas-dev  gfortran  curl  cmake  maven
   - "curl -X GET --header 'Accept: application/json' 'http://myrender:8080/render-ws/v1/serverProperties'"
@@ -45,6 +43,7 @@ dockertest:
   - mvn package -q -pl render-ws-java-client  -am -DskipTests -f render/pom.xml
 
   script:
+  - export RENDER_CLIENT_SCRIPTS=`readlink -m ./render/render-ws-java-client/src/main/scripts`
   - useradd testuser
   - chmod 777 -R *
   - su testuser -c "coverage run -m pytest"
