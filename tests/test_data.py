@@ -51,10 +51,12 @@ except OSError as e:
 example_dir = os.path.join(os.path.dirname(__file__), 'test_files')
 example_env = Environment(loader=FileSystemLoader(example_dir))
 
+tempdir = os.environ.get('TEMPDIR',example_dir)
+
 # example N5 output data
 
 example_n5z =  os.path.join(example_dir,'testn5.tgz')
-example_n5 = os.path.join(example_dir,'rmaddons_test.n5')
+example_n5 = os.path.join(tempdir,'rmaddons_test.n5')
 
 if not os.path.exists(example_n5):
     try:
@@ -66,7 +68,7 @@ if not os.path.exists(example_n5):
 # example SBEMImage input data
 
 example_sbemz = os.path.join(example_dir,'testsbemimage.tgz')
-example_sbem = os.path.join(example_dir,'sbemimage_testdata')
+example_sbem = os.path.join(tempdir,'sbemimage_testdata')
 
 if not os.path.exists(example_sbem):
     try:

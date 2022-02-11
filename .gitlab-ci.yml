@@ -7,6 +7,11 @@ variables:
 
 
 build_render_ws_docker:
+  cache:
+    paths:
+      - tempdata
+    untracked: true
+    policy: pull-push
   stage: build
   image: docker:$DOCKER_VERSION-git
   tags:
@@ -52,6 +57,7 @@ tests:
   cache:
     paths:
       - render
+      - tempdata
     untracked: true
     policy: pull
   before_script:
