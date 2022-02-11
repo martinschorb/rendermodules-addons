@@ -32,7 +32,8 @@ build_render_clientscripts:
 #    - ./render/render-ws/src/main/scripts/install.sh
 #    - export JAVA_HOME=`readlink -m ./render/deploy/*jdk*`
     - mvn package -q -pl render-ws-java-client  -am -DskipTests -f render/pom.xml
-  artifacts:
+  cache:
+    key: render-client-scripts
     paths: [ 'render/render-ws-java-client/src/main/scripts' ]
   when: manual
 
