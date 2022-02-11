@@ -3,6 +3,9 @@ variables:
   DOCKER_VERSION: 18.09.7
   RENDER_HOST: myrender
   RENDER_PORT: 8080
+cache:
+  paths:
+    - render_build
 
 
 build_render_ws_docker:
@@ -32,9 +35,8 @@ build_render_clientscripts:
 #    - ./render/render-ws/src/main/scripts/install.sh
 #    - export JAVA_HOME=`readlink -m ./render/deploy/*jdk*`
     - mvn package -q -pl render-ws-java-client  -am -DskipTests -f render/pom.xml
-  cache:
-    key: render-client-scripts
-    paths: [ 'render/render-ws-java-client/src/main/scripts' ]
+    - mv render/render-ws-java-client render_build/
+
   when: manual
 
 
@@ -48,9 +50,6 @@ tests:
       alias: myrender
   dependencies:
     -  build_render_clientscripts
-  cache:
-    - key: render-client-scripts
-    - paths: [ 'render/render-ws-java-client/src/main/scripts' ]
 
   before_script:
 #    - apt-get update && apt-get install -y git curl wget
@@ -58,8 +57,8 @@ tests:
 #    - pip install pymongo
 #    - python -c "from pymongo import MongoClient; client=MongoClient('mymongo'); print(client.server_info())"
     - ls
-    - ls render
-    - export RENDER_CLIENT_SCRIPTS=`readlink -m ./render/render-ws-java-client/src/main/scripts`
+    - ls render_build
+    - export RENDER_CLIENT_SCRIPTS=`readlink -m ./render_build/render-ws-java-client/src/main/scripts`
     - ls $RENDER_CLIENT_SCRIPTS
     - exit 1
     - pip install git+https://github.com/constantinpape/pybdv
