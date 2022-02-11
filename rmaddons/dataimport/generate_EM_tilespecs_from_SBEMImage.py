@@ -158,8 +158,7 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
         :return: list of :class:`renderapi.tilespec.TileSpec` objects for all tiles.
 
         """
-        os.chdir(imgdir)
-
+        imgdir = os.path.realpath(imgdir)
 
         timestamp = time.localtime()
 
@@ -167,9 +166,9 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
 
         logfile = os.path.join(imgdir,'conv_log','Render_convert'+log_name+'.log')
 
-        if not os.path.exists('meta'): raise  FileNotFoundError('Change to proper directory!')
+        if not os.path.exists(imgdir,'meta'): raise  FileNotFoundError('Change to proper directory!')
 
-        mfile0 = os.path.join('meta','logs','imagelist_')
+        mfile0 = os.path.join(imgdir,'meta','logs','imagelist_')
 
         mfiles = glob.glob(mfile0+'*')
 
@@ -186,11 +185,11 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             # with open(mfile) as mf: ml = mf.read().splitlines()
             acq_suffix = mfile[mfile.rfind('_'):]
 
-            mdfile = os.path.join('meta','logs','metadata'+acq_suffix)
+            mdfile = os.path.join(imgdir,'meta','logs','metadata'+acq_suffix)
 
             with open(mdfile) as mdf: mdl = mdf.read().splitlines()
 
-            conffile = os.path.join('meta','logs','config'+acq_suffix)
+            conffile = os.path.join(imgdir,'meta','logs','config'+acq_suffix)
 
             with open(conffile) as cf: cl = cf.read().splitlines()
 
@@ -228,7 +227,7 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
                         tspecs.append(tilespeclist)
                     else:
                         fnf_error = 'ERROR: File '+f1+' does not exist, skipping tile creation.'
-                        if not os.path.exists('conv_log'):os.makedirs('conv_log')
+                        if not os.path.exists(os.path.join(imgdir,'conv_log')):os.makedirs(os.path.join(imgdir,'conv_log'))
                         print(fnf_error)
                         with open(logfile,'w') as log: log.writelines(fnf_error)
 

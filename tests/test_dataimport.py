@@ -7,7 +7,7 @@ import os
 import renderapi
 from marshmallow.exceptions import ValidationError
 
-from asap.module.render_module import RenderModuleException
+# from asap.module.render_module import RenderModuleException
 # from asap.dataimport import generate_EM_tilespecs_from_metafile
 # from asap.dataimport import generate_mipmaps
 # from asap.dataimport import apply_mipmaps_to_render
@@ -15,13 +15,15 @@ from asap.module.render_module import RenderModuleException
 from rmaddons.dataimport import generate_EM_tilespecs_from_SBEMImage
 
 from test_data import (render_params,
-                       example_sbem)
-
+                       example_sbem,
+                       sbemimage_template
+                       )
 
 
 @pytest.fixture(scope='module')
 def render():
     return renderapi.connect(**render_params)
+
 
 def test_generate_SBEM(render):
     # print(render_params)
@@ -31,7 +33,6 @@ def test_generate_SBEM(render):
     ex = copy.deepcopy(generate_EM_tilespecs_from_SBEMImage.example_input)
     ex['render'] = render.make_kwargs()
 
-
     with tempfile.NamedTemporaryFile(suffix='.json') as probablyemptyfn:
         outfile = probablyemptyfn.name
 
@@ -40,7 +41,7 @@ def test_generate_SBEM(render):
 
     with pytest.raises(ValidationError):
         mod1 = generate_EM_tilespecs_from_SBEMImage.GenerateSBEMImageTileSpecs(input_data=ex,
-                                                                           args=['--output_json', outfile])
+                                                                               args=['--output_json', outfile])
 
     ex['image_directory'] = example_sbem
 
@@ -48,7 +49,7 @@ def test_generate_SBEM(render):
     os.rename(example_sbem + '/meta', example_sbem + '/meta123')
 
     mod = generate_EM_tilespecs_from_SBEMImage.GenerateSBEMImageTileSpecs(input_data=ex,
-                                                                           args=['--output_json', outfile])
+                                                                          args=['--output_json', outfile])
     with pytest.raises(FileNotFoundError):
         mod.run()
 
@@ -59,7 +60,15 @@ def test_generate_SBEM(render):
 
     mod.run()
 
+    assert os.path.exists(example_sbem + '/conv_log')
+    with open(os.path.join(example_sbem, 'conv_log', os.listdir(example_sbem + '/conv_log')[0])) as file:
+        importlog = file.read()
 
+    assert importlog == sbemimage_template['errorlog0'] + example_sbem + sbemimage_template['errorlog1']
+
+
+    # cleanup
+    os.system('rm -rf ' + example_sbem)
 #
 #     mod = generate_EM_tilespecs_from_metafile.GenerateEMTileSpecsModule(
 #         input_data=ex, args=['--output_json', outfile])

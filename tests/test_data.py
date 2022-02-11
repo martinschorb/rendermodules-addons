@@ -88,3 +88,6 @@ makexml_template = render_json_template(
         example_env,
         'materialize_makexml.json')
 
+sbemimage_template = render_json_template(
+        example_env,
+        'dataimport_generate_EM_tilespecs_from_SBEMImage.json')
