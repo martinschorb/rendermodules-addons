@@ -48,6 +48,10 @@ tests:
       alias: myrender
   dependencies:
     -  build_render_clientscripts
+  cache:
+    - key: render-client-scripts
+    - paths: [ 'render/render-ws-java-client/src/main/scripts' ]
+
   before_script:
 #    - apt-get update && apt-get install -y git curl wget
 #    - "curl -X GET --header 'Accept: application/json' 'http://myrender:8080/render-ws/v1/serverProperties'"
