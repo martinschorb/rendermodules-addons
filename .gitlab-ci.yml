@@ -38,7 +38,7 @@ build_render_clientscripts:
       - render
     untracked: true
     policy: pull-push
-#  when: manual
+  when: manual
 
 
 tests:
