@@ -75,6 +75,7 @@ tests:
 
   script:
     - export RENDER_CLIENT_SCRIPTS=`readlink -m ./render/render-ws-java-client/src/main/scripts`
+    - export TEMPDIR=./tempdata
     - useradd testuser
     - chmod 777 -R *
     - su testuser -c "coverage run -m pytest"

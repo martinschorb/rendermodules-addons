@@ -262,7 +262,7 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
 
             self.output_tilespecs_to_stack(specs[1])
 
-
+        print(allspecs)
 
 if __name__ == "__main__":
     mod = GenerateSBEMImageTileSpecs(input_data=example_input)
