@@ -3,9 +3,7 @@ variables:
   DOCKER_VERSION: 18.09.7
   RENDER_HOST: myrender
   RENDER_PORT: 8080
-cache:
-  paths:
-    - render_build
+
 
 
 build_render_ws_docker:
@@ -35,8 +33,11 @@ build_render_clientscripts:
 #    - ./render/render-ws/src/main/scripts/install.sh
 #    - export JAVA_HOME=`readlink -m ./render/deploy/*jdk*`
     - mvn package -q -pl render-ws-java-client  -am -DskipTests -f render/pom.xml
-    - mv render/render-ws-java-client render_build/
-
+  cache:
+    paths:
+      - render
+    untracked: true
+    policy: pull-push
   when: manual
 
 
@@ -48,16 +49,18 @@ tests:
       alias: mymongo
     - name: git.embl.de:4567/schorb/rendermodules-addons
       alias: myrender
-  dependencies:
-    -  build_render_clientscripts
-
+  cache:
+    paths:
+      - render
+    untracked: true
+    policy: pull
   before_script:
 #    - apt-get update && apt-get install -y git curl wget
 #    - "curl -X GET --header 'Accept: application/json' 'http://myrender:8080/render-ws/v1/serverProperties'"
 #    - pip install pymongo
 #    - python -c "from pymongo import MongoClient; client=MongoClient('mymongo'); print(client.server_info())"
     - ls
-    - ls render_build
+    - ls render
     - export RENDER_CLIENT_SCRIPTS=`readlink -m ./render_build/render-ws-java-client/src/main/scripts`
     - ls $RENDER_CLIENT_SCRIPTS
     - exit 1
