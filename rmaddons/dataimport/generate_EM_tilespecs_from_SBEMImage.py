@@ -166,7 +166,7 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
 
         logfile = os.path.join(imgdir,'conv_log','Render_convert'+log_name+'.log')
 
-        if not os.path.exists(imgdir,'meta'): raise  FileNotFoundError('Change to proper directory!')
+        if not os.path.exists(os.path.join(imgdir,'meta')): raise  FileNotFoundError('Change to proper directory!')
 
         mfile0 = os.path.join(imgdir,'meta','logs','imagelist_')
 
