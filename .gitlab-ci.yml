@@ -21,8 +21,6 @@ build_render_docker:
 
 dockertest:
   image: 'python:3.7-bullseye'
-  tags:
-    - docker7
   stage: test
   services:
     - name: mongo:4
