@@ -54,6 +54,9 @@ def test_generate_SBEM(render):
 
     os.rename(example_sbem + '/meta123', example_sbem + '/meta')
 
+    # test missing tile image reporting to log
+    os.remove(example_sbem + '/tiles/g0000/t0008/test_example_g0000_t0008_s00005.jpg')
+
     mod.run()
 
 

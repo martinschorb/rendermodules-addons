@@ -65,7 +65,7 @@ if not os.path.exists(example_n5):
 
 # example SBEMImage input data
 
-example_sbemz =  os.path.join(example_dir,'testsbemimage.tgz')
+example_sbemz = os.path.join(example_dir,'testsbemimage.tgz')
 example_sbem = os.path.join(example_dir,'sbemimage_testdata')
 
 if not os.path.exists(example_sbem):
