@@ -95,7 +95,7 @@ tests:
     - ls
     - cd render-ws-ja*
     - ls
-    -
+    - exit 0 ß
     - export RENDER_CLIENT_SCRIPTS=render/render-ws-java-client/src/main/scripts
     - ls $RENDER_CLIENT_SCRIPTS
     - useradd testuser
