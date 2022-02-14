@@ -87,8 +87,7 @@ tests:
     - pip install -r test_requirements.txt
 
   script:
-    - export RENDER_CLIENT_SCRIPTS=`readlink -m ./render/render-ws-java-client/src/main/scripts`
-    - export TEMPDIR=testdata
+    - ls /render/render-ws-java-client/src/main/scripts
     - useradd testuser
     - chmod 777 -R *
     - su testuser -c "coverage run -m pytest"
