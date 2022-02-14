@@ -15,6 +15,7 @@ prepare_test_data:
   script:
   - pip install jinja2
   - python tests/test_data.py
+  when: manual
 
 build_render_ws_docker:
   cache:
@@ -68,9 +69,11 @@ tests:
   cache:
     paths:
       - render
+        untracked: true
+        policy: pull
       - tests/test_files
-    untracked: true
-    policy: pull
+        untracked: true
+        policy: pull
   before_script:
 #    - apt-get update && apt-get install -y git curl wget
 #    - "curl -X GET --header 'Accept: application/json' 'http://myrender:8080/render-ws/v1/serverProperties'"
@@ -79,7 +82,7 @@ tests:
 #    - cd tests/test_files/
 #    - ls -l
     - export RENDER_CLIENT_SCRIPTS=`readlink -m ./render/render-ws-java-client/src/main/scripts`
-#    - ls $RENDER_CLIENT_SCRIPTS
+    - ls $RENDER_CLIENT_SCRIPTS
     - pip install git+https://github.com/constantinpape/pybdv
     - pip install render-python
     - pip install git+https://github.com/AllenInstitute/asap-modules/ --no-deps
