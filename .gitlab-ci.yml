@@ -79,7 +79,13 @@ tests:
 #    - cd tests/test_files/
 #    - ls -l
     - export RENDER_CLIENT_SCRIPTS=render/render-ws-java-client/src/main/scripts
-    - ls $RENDER_CLIENT_SCRIPTS
+    - cd render
+    - ls
+    - cd render-ws-java-client
+    - ls
+    - cd src
+    - ls
+    - exit 0
     - pip install git+https://github.com/constantinpape/pybdv
     - pip install render-python
     - pip install git+https://github.com/AllenInstitute/asap-modules/ --no-deps
