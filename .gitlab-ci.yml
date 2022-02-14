@@ -4,7 +4,14 @@ variables:
   RENDER_HOST: myrender
   RENDER_PORT: 8080
 
-
+test_dirs:
+  stage: build
+  image: 'python:3.7-bullseye'
+  script:
+    - ls
+    - pwd
+    - pwd -P
+    - cd /shared
 
 build_render_ws_docker:
   cache:
