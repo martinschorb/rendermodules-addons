@@ -13,7 +13,7 @@ test_dirs:
     untracked: true
     policy: push
   script:
-  - pip install jinja2 tempfile
+  - pip install jinja2
   - ls
   - cd tests
   - python test_data.py
