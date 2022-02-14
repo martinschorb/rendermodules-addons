@@ -7,27 +7,23 @@ variables:
 test_dirs:
   stage: build
   image: 'python:3.7-bullseye'
-  script:
+  cache:
+    paths:
+      - tests/test_files/
+    untracked: true
+    policy: push
+    script:
+    - pip install jinja2 tempfile
     - ls
-    - pwd
-    - cd /builds/rZMs1Hzd/0/schorb/rendermodules-addons
-    - ls
-    - mkdir testdata
-    - cd /tmp
-    - mkdir $CI_PROJECT_NAME
-    - mkdir $CI_PROJECT_NAME/testdata
-    - cd /tmp/$CI_PROJECT_NAME/testdata
-    - pwd
-    - ls
-
-    
+    - cd tests
+    - python test_data.py
 
 build_render_ws_docker:
   cache:
     paths:
-      - tempdata
+    - tests/test_files/
     untracked: true
-    policy: pull-push
+    policy: pull
   stage: build
   image: docker:$DOCKER_VERSION-git
   tags:
@@ -74,7 +70,7 @@ tests:
   cache:
     paths:
       - render
-      - tempdata
+      - tests/test_files/
     untracked: true
     policy: pull
   before_script:
@@ -82,8 +78,8 @@ tests:
 #    - "curl -X GET --header 'Accept: application/json' 'http://myrender:8080/render-ws/v1/serverProperties'"
 #    - pip install pymongo
 #    - python -c "from pymongo import MongoClient; client=MongoClient('mymongo'); print(client.server_info())"
-    - cd /tmp/$CI_PROJECT_NAME/testdata
-    - touch testdata/ping
+    - cd tests/test_files/
+    - ls -l
     - export RENDER_CLIENT_SCRIPTS=`readlink -m ./render/render-ws-java-client/src/main/scripts`
     - ls $RENDER_CLIENT_SCRIPTS
     - pip install git+https://github.com/constantinpape/pybdv
