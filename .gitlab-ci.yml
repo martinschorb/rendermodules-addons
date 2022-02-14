@@ -10,8 +10,10 @@ test_dirs:
   script:
     - ls
     - pwd
-    - pwd -P
-    - cd /shared
+    - cd /builds/rZMs1Hzd/0/schorb/rendermodules-addons
+    - ls
+    - mkdir 123
+    
 
 build_render_ws_docker:
   cache:
