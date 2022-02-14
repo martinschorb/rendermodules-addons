@@ -68,9 +68,11 @@ tests:
   cache:
     paths:
       - render
+        untracked: true
+        policy: pull
       - tests/test_files
-    untracked: true
-    policy: pull
+        untracked: true
+        policy: pull
   before_script:
 #    - apt-get update && apt-get install -y git curl wget
 #    - "curl -X GET --header 'Accept: application/json' 'http://myrender:8080/render-ws/v1/serverProperties'"
