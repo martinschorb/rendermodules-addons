@@ -8,6 +8,7 @@ prepare_test_data:
   stage: build
   image: 'python:3.7-bullseye'
   cache:
+    key: testdata
     paths:
       - tests/test_files
     untracked: true
@@ -18,6 +19,7 @@ prepare_test_data:
 
 build_render_ws_docker:
   cache:
+    key: testdata
     paths:
     - tests/test_files
     untracked: true
@@ -50,6 +52,7 @@ build_render_clientscripts:
 #    - export JAVA_HOME=`readlink -m ./render/deploy/*jdk*`
     - mvn package -pl render-ws-java-client  -am -DskipTests -f render/pom.xml
   cache:
+    key: render
     paths:
       - render
     untracked: true
@@ -66,13 +69,16 @@ tests:
     - name: git.embl.de:4567/schorb/rendermodules-addons
       alias: myrender
   cache:
-    paths:
-      - render
-        untracked: true
-        policy: pull
-      - tests/test_files
-        untracked: true
-        policy: pull
+    - key: render
+      paths:
+        - render
+      untracked: true
+      policy: pull
+    - key: testdata
+      paths: 
+        - tests/test_files
+      untracked: true
+      policy: pull
   before_script:
 #    - apt-get update && apt-get install -y git curl wget
 #    - "curl -X GET --header 'Accept: application/json' 'http://myrender:8080/render-ws/v1/serverProperties'"
