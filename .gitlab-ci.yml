@@ -12,11 +12,11 @@ test_dirs:
       - tests/test_files
     untracked: true
     policy: push
-    script:
-    - pip install jinja2 tempfile
-    - ls
-    - cd tests
-    - python test_data.py
+  script:
+  - pip install jinja2 tempfile
+  - ls
+  - cd tests
+  - python test_data.py
 
 build_render_ws_docker:
   cache:
