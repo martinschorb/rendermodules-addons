@@ -8,7 +8,6 @@ prepare_test_data:
   stage: build
   image: 'python:3.7-bullseye'
   cache:
-    key: testdata
     paths:
       - tests/test_files
     untracked: true
@@ -19,7 +18,6 @@ prepare_test_data:
 
 build_render_ws_docker:
   cache:
-    key: testdata
     paths:
     - tests/test_files
     untracked: true
@@ -52,7 +50,6 @@ build_render_clientscripts:
 #    - export JAVA_HOME=`readlink -m ./render/deploy/*jdk*`
     - mvn package -pl render-ws-java-client  -am -DskipTests -f render/pom.xml
   cache:
-    key: render
     paths:
       - render
     untracked: true
@@ -69,16 +66,11 @@ tests:
     - name: git.embl.de:4567/schorb/rendermodules-addons
       alias: myrender
   cache:
-    - key: render
-      paths:
-        - render
-      untracked: true
-      policy: pull
-    - key: testdata
-      paths: 
-        - tests/test_files
-      untracked: true
-      policy: pull
+    paths:
+      - render
+      - tests/test_files
+    untracked: true
+    policy: pull
   before_script:
 #    - apt-get update && apt-get install -y git curl wget
 #    - "curl -X GET --header 'Accept: application/json' 'http://myrender:8080/render-ws/v1/serverProperties'"
@@ -86,14 +78,8 @@ tests:
 #    - python -c "from pymongo import MongoClient; client=MongoClient('mymongo'); print(client.server_info())"
 #    - cd tests/test_files/
 #    - ls -l
-    - export RENDER_CLIENT_SCRIPTS=render/render-ws-java-client/src/main/scripts
-    - cd render
-    - ls
-    - cd render-ws-java-client
-    - ls
-    - cd src
-    - ls
-    - exit 0
+    - export RENDER_CLIENT_SCRIPTS=`readlink -m ./render/render-ws-java-client/src/main/scripts`
+#    - ls $RENDER_CLIENT_SCRIPTS
     - pip install git+https://github.com/constantinpape/pybdv
     - pip install render-python
     - pip install git+https://github.com/AllenInstitute/asap-modules/ --no-deps
