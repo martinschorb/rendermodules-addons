@@ -83,15 +83,20 @@ tests:
 #    - "curl -X GET --header 'Accept: application/json' 'http://myrender:8080/render-ws/v1/serverProperties'"
 #    - pip install pymongo
 #    - python -c "from pymongo import MongoClient; client=MongoClient('mymongo'); print(client.server_info())"
-    - pip install git+https://github.com/constantinpape/pybdv
-    - pip install render-python
-    - pip install git+https://github.com/AllenInstitute/asap-modules/ --no-deps
-    - pip install git+https://git.embl.de/schorb/pyem --no-deps
-    - pip install -r test_requirements.txt
+#    - pip install git+https://github.com/constantinpape/pybdv
+#    - pip install render-python
+#    - pip install git+https://github.com/AllenInstitute/asap-modules/ --no-deps
+#    - pip install git+https://git.embl.de/schorb/pyem --no-deps
+#    - pip install -r test_requirements.txt
 
   script:
     - cd tests/test_files/
     - ls -l
+    - cd render
+    - ls
+    - cd render-ws-ja*
+    - ls
+    -
     - export RENDER_CLIENT_SCRIPTS=render/render-ws-java-client/src/main/scripts
     - ls $RENDER_CLIENT_SCRIPTS
     - useradd testuser
