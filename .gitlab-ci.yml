@@ -12,7 +12,7 @@ test_dirs:
     - pwd
     - cd /builds/rZMs1Hzd/0/schorb/rendermodules-addons
     - ls
-    - mkdir 123
+    - mkdir testdata
     
 
 build_render_ws_docker:
@@ -75,7 +75,7 @@ tests:
 #    - "curl -X GET --header 'Accept: application/json' 'http://myrender:8080/render-ws/v1/serverProperties'"
 #    - pip install pymongo
 #    - python -c "from pymongo import MongoClient; client=MongoClient('mymongo'); print(client.server_info())"
-    - touch tempdata/ping
+    - touch testdata/ping
     - export RENDER_CLIENT_SCRIPTS=`readlink -m ./render/render-ws-java-client/src/main/scripts`
     - ls $RENDER_CLIENT_SCRIPTS
     - pip install git+https://github.com/constantinpape/pybdv
@@ -86,7 +86,7 @@ tests:
 
   script:
     - export RENDER_CLIENT_SCRIPTS=`readlink -m ./render/render-ws-java-client/src/main/scripts`
-    - export TEMPDIR=tempdata
+    - export TEMPDIR=testdata
     - useradd testuser
     - chmod 777 -R *
     - su testuser -c "coverage run -m pytest"
