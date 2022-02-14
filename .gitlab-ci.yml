@@ -4,7 +4,7 @@ variables:
   RENDER_HOST: myrender
   RENDER_PORT: 8080
 
-test_dirs:
+prepare_test_data:
   stage: build
   image: 'python:3.7-bullseye'
   cache:
@@ -30,7 +30,7 @@ build_render_ws_docker:
     - docker:$DOCKER_VERSION-dind
   before_script:
     - docker info
-    - touch tempdata/ping
+    - touch tests/test_files/*.n5
   script:
     - git clone --depth 1 https://github.com/saalfeldlab/render.git render -b master
     - cd render
