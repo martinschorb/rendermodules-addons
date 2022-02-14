@@ -92,7 +92,7 @@ tests:
   script:
     - cd tests/test_files/
     - ls -l
-    - export RENDER_CLIENT_SCRIPTS= /render/render-ws-java-client/src/main/scripts
+    - export RENDER_CLIENT_SCRIPTS=render/render-ws-java-client/src/main/scripts
     - ls $RENDER_CLIENT_SCRIPTS
     - useradd testuser
     - chmod 777 -R *
