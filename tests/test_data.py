@@ -3,7 +3,6 @@ import json
 import tempfile
 
 from jinja2 import Environment, FileSystemLoader
-import marshmallow
 
 pool_size = os.environ.get('TEST_POOL_SIZE', 5)
 
