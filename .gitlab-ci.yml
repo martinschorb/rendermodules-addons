@@ -78,7 +78,7 @@ tests:
 #    - python -c "from pymongo import MongoClient; client=MongoClient('mymongo'); print(client.server_info())"
 #    - cd tests/test_files/
 #    - ls -l
-    - export RENDER_CLIENT_SCRIPTS=`readlink -m ./render/render-ws-java-client/src/main/scripts`
+    - export RENDER_CLIENT_SCRIPTS=render/render-ws-java-client/src/main/scripts
     - ls $RENDER_CLIENT_SCRIPTS
     - pip install git+https://github.com/constantinpape/pybdv
     - pip install render-python
@@ -87,7 +87,6 @@ tests:
     - pip install -r test_requirements.txt
 
   script:
-    - ls /render/render-ws-java-client/src/main/scripts
     - useradd testuser
     - chmod 777 -R *
     - su testuser -c "coverage run -m pytest"
