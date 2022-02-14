@@ -9,7 +9,7 @@ test_dirs:
   image: 'python:3.7-bullseye'
   cache:
     paths:
-      - tests/test_files/
+      - tests/test_files
     untracked: true
     policy: push
     script:
@@ -21,7 +21,7 @@ test_dirs:
 build_render_ws_docker:
   cache:
     paths:
-    - tests/test_files/
+    - tests/test_files
     untracked: true
     policy: pull
   stage: build
@@ -70,7 +70,7 @@ tests:
   cache:
     paths:
       - render
-      - tests/test_files/
+      - tests/test_files
     untracked: true
     policy: pull
   before_script:
