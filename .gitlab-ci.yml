@@ -86,7 +86,7 @@ tests:
 #    - pip install git+https://github.com/constantinpape/pybdv
 #    - pip install render-python
 #    - pip install git+https://github.com/AllenInstitute/asap-modules/ --no-deps
-#    - pip install git+https://git.embl.de/schorb/pyem --no-deps
+    - pip install git+https://git.embl.de/schorb/pyem --no-deps
 #    - pip install -r test_requirements.txt
 
   script:
