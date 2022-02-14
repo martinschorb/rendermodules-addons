@@ -14,9 +14,7 @@ test_dirs:
     policy: push
   script:
   - pip install jinja2
-  - ls
-  - cd tests
-  - python test_data.py
+  - python tests/test_data.py
 
 build_render_ws_docker:
   cache:
@@ -78,8 +76,8 @@ tests:
 #    - "curl -X GET --header 'Accept: application/json' 'http://myrender:8080/render-ws/v1/serverProperties'"
 #    - pip install pymongo
 #    - python -c "from pymongo import MongoClient; client=MongoClient('mymongo'); print(client.server_info())"
-    - cd tests/test_files/
-    - ls -l
+#    - cd tests/test_files/
+#    - ls -l
     - export RENDER_CLIENT_SCRIPTS=`readlink -m ./render/render-ws-java-client/src/main/scripts`
     - ls $RENDER_CLIENT_SCRIPTS
     - pip install git+https://github.com/constantinpape/pybdv
