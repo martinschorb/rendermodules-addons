@@ -211,7 +211,7 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
 
         # create stack and fill resolution parameters
     
-        url = 'http://'+self.args["render"]["host"]+':'+str(self.args["render"]["port"])
+        url = self.args["render"]["host"]+':'+str(self.args["render"]["port"])
         url += '/render-ws/v1/owner/'+self.args["render"]["owner"]
         url += '/project/'+self.args["render"]["project"]
         url += '/stack/'+self.args["output_stack"]

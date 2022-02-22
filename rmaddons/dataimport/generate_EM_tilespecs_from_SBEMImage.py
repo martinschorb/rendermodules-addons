@@ -259,7 +259,7 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             self.output_tilespecs_to_stack(specs[1])
 
             resolution = specs[2]
-            url = 'http://' + self.args["render"]["host"] + ':' + str(self.args["render"]["port"])
+            url =  self.args["render"]["host"] + ':' + str(self.args["render"]["port"])
             url += '/render-ws/v1/owner/' + self.args["render"]["owner"]
             url += '/project/' + self.args["render"]["project"]
             url += '/stack/' + self.args["output_stack"]
