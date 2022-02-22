@@ -16,6 +16,7 @@ from rmaddons.dataimport.schemas import GenerateSerialEMTileSpecsParameters
 from rmaddons.utilities.EMBL_file_utils import groupsharepath
 
 import time
+import requests
 
 import pyEM as em
 
@@ -196,28 +197,30 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
         pxs = float(header[0]['PixelSpacing'][0])/10
 
         # print(pxs)
-        
-        allspecs = [tspecs,pxs]
 
-        return allspecs #,mipmap_args
+
+        return tspecs,pxs
 
 
     def run(self):    
-        specs = self.ts_from_serialemmontage(self.args["image_file"])
+        specs,pxs = self.ts_from_serialemmontage(self.args["image_file"])
         z_res = self.args["z_spacing"]
+
+        self.output_tilespecs_to_stack(specs[0])
 
         # create stack and fill resolution parameters
     
-        pxs=specs[1]
+        url = 'http://'+self.args["render"]["host"]+':'+self.args["render"]["port"]
+        url += '/render-ws/v1/owner/'+self.args["render"]["owner"]
+        url += '/project/'+self.args["render"]["project"]
+        url += '/stack/'+self.args["stack"]
+        url += 'resolutionValues'
 
-        self.args["output_stackVersion"]["stackResolutionX"]=pxs
-        self.args["output_stackVersion"]["stackResolutionY"]=pxs
-        self.args["output_stackVersion"]["stackResolutionZ"]=z_res
+        res = [pxs,pxs,z_res]
 
-        # self.args["output_stack"] = self.args["stack"]
+        requests.put(url, json=res)
 
 
-        self.output_tilespecs_to_stack(specs[0])
 
 # I don know what this does... so leave it out
         # try:

@@ -251,18 +251,26 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
 
         for specs in allspecs:
 
-            resolution=specs[2]
 
-            self.args["output_stackVersion"]["stackResolutionX"]=resolution[0]
-            self.args["output_stackVersion"]["stackResolutionY"]=resolution[1]
-            self.args["output_stackVersion"]["stackResolutionZ"]=resolution[2]
 
             self.args["output_stack"] = specs[0]
 
 
             self.output_tilespecs_to_stack(specs[1])
 
-        print(allspecs)
+            resolution=specs[2]
+            # create stack and fill resolution parameters
+
+            self.output_tilespecs_to_stack(specs[0])
+
+            url = 'http://' + self.args["render"]["host"] + ':' + self.args["render"]["port"]
+            url += '/render-ws/v1/owner/' + self.args["render"]["owner"]
+            url += '/project/' + self.args["render"]["project"]
+            url += '/stack/' + self.args["stack"]
+            url += 'resolutionValues'
+
+            requests.put(url, json=resolution)
+
 
 if __name__ == "__main__":
     mod = GenerateSBEMImageTileSpecs(input_data=example_input)
