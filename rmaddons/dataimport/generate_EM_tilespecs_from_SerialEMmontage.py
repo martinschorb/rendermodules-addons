@@ -205,7 +205,7 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
     def run(self):    
         specs,pxs = self.ts_from_serialemmontage(self.args["image_file"])
         z_res = self.args["z_spacing"]
-        self.args["output_stack"] = self.args["stack"]
+        # self.args["output_stack"] = self.args["stack"]
 
         self.output_tilespecs_to_stack(specs)
 
