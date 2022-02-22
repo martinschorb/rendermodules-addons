@@ -205,6 +205,7 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
     def run(self):    
         specs,pxs = self.ts_from_serialemmontage(self.args["image_file"])
         z_res = self.args["z_spacing"]
+        self.args["output_stack"] = self.args["stack"]
 
         self.output_tilespecs_to_stack(specs)
 
@@ -213,7 +214,7 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
         url = 'http://'+self.args["render"]["host"]+':'+str(self.args["render"]["port"])
         url += '/render-ws/v1/owner/'+self.args["render"]["owner"]
         url += '/project/'+self.args["render"]["project"]
-        url += '/stack/'+self.args["stack"]
+        url += '/stack/'+self.args["output_stack"]
         url += 'resolutionValues'
 
         res = [pxs,pxs,z_res]

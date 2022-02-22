@@ -262,7 +262,7 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             url = 'http://' + self.args["render"]["host"] + ':' + str(self.args["render"]["port"])
             url += '/render-ws/v1/owner/' + self.args["render"]["owner"]
             url += '/project/' + self.args["render"]["project"]
-            url += '/stack/' + self.args["stack"]
+            url += '/stack/' + self.args["output_stack"]
             url += 'resolutionValues'
 
             requests.put(url, json=resolution)
