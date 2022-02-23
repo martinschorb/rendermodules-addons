@@ -90,7 +90,8 @@ tests:
   script:
     - export JAVA_HOME=`readlink -m ./render/deploy/*jdk*`
     - alias java=$JAVA_HOME/bin/java
-    - which java
+    - export RENDER_CLIENT_SCRIPTS=render/render-ws-java-client/src/main/scripts
+    - echo `which java`
     - java --version
     - ls $RENDER_CLIENT_SCRIPTS
     - useradd testuser
