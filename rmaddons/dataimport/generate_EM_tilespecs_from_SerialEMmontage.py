@@ -114,8 +114,7 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
 
         tileid = tile['# [Image'].strip('.tif')
 
-        intensities = tile['MinMaxMean'].split(' ')
-
+        intensities = tile['MinMaxMean']
 
 
         print("Processing tile "+tileid+" metadata for Render.")
