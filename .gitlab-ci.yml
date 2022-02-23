@@ -89,6 +89,10 @@ tests:
     - pip install git+https://git.embl.de/schorb/pyem --no-deps
 #    - pip install -r test_requirements.txt
   script:
+    - ls
+    - ls render
+    - ls tests
+    - ls tests/tes_files
     - export JAVA_HOME=`readlink -m ./render/deploy/*jdk*`
     - alias java=$JAVA_HOME/bin/java
     - echo $JAVA_HOME
