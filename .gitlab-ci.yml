@@ -53,10 +53,10 @@ build_render_clientscripts:
     - mvn package -pl render-ws-java-client  -am -DskipTests -f render/pom.xml
   cache:
     - key: render
-        paths:
-          - render
-        untracked: true
-        policy: push
+      paths:
+        - render
+      untracked: true
+      policy: push
   when: manual
 
 
