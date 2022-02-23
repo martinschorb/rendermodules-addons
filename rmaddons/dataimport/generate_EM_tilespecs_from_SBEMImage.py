@@ -36,7 +36,6 @@ example_input = {
     "pool_size": 1,
     "close_stack": True,
     "z_index": 1,
-    "output_json" : "sbem_conv.json"
     "output_stackVersion":{
         "stackResolutionX":10.1
         }
