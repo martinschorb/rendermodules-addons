@@ -38,8 +38,6 @@ def test_generate_SBEM(render):
     with tempfile.NamedTemporaryFile(suffix='.json') as probablyemptyfn:
         outfile = probablyemptyfn.name
 
-
-
     # test non existing directory
     ex['image_directory'] = example_sbem + 'notexistingdir'
 
@@ -69,24 +67,25 @@ def test_generate_SBEM(render):
 
     assert importlog == sbemimage_template['errorlog0'] + example_sbem + sbemimage_template['errorlog1']
 
-
     expected_tileIds = set(sbemimage_template['tileids'])
     delivered_tileIds = set(renderapi.stack.get_stack_tileIds(ex['stack'], render=render))
-
 
     # test if all tiles are imported
     assert len(expected_tileIds.symmetric_difference(delivered_tileIds)) == 0
 
-    url = 'http://'+render_params["host"] + ':' + str(render_params["port"])
-    url += '/render-ws/v1/owner/' + render_params["owner"]
-    url += '/project/' + render_params["project"]
-    url += '/stack/' + ex["stack"]
-    url += '/resolutionValues'
+    # url = 'http://'+render_params["host"] + ':' + str(render_params["port"])
+    # url += '/render-ws/v1/owner/' + render_params["owner"]
+    # url += '/project/' + render_params["project"]
+    # url += '/stack/' + ex["stack"]
+    # url += '/resolutionValues'
+    #
+    # r = requests.get(url)
+    # delivered_resolution = r.json()
 
-    r = requests.get(url)
+    md = renderapi.stack.get_stack_metadata(render=render, stack=ex['stack'])
 
     expected_resolution = sbemimage_template['resolution']
-    delivered_resolution = r.json()
+    delivered_resolution = [md.stackResolutionX,md.stackResolutionY,md.stackResolutionZ]
 
     # test if resolution of stack is correct
     assert (np.array(expected_resolution)-np.array(delivered_resolution)==[0,0,0]).all()
