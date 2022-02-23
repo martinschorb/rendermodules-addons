@@ -68,6 +68,7 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
     
         return output
     
+    imgdir = []
 
     def ts_from_SBEMtile(self,line,pxs,rotation):
         """
@@ -95,7 +96,7 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
         # mat_t = np.concatenate((np.eye(3),[[tile['glob_x']],[tile['glob_y']],[tile['glob_z']]]),axis=1)
         # mat_t = np.concatenate((mat_t,[[0,0,0,1]]))
 
-        f1 = os.path.realpath(tile['filename'])
+        f1 = os.path.realpath(os.path.join(self.imgdir,tile['filename']))
 
         filepath= groupsharepath(f1)
 
@@ -159,6 +160,7 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
 
         """
         imgdir = os.path.realpath(imgdir)
+        self.imgdir = imgdir
 
         timestamp = time.localtime()
 
