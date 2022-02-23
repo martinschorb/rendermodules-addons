@@ -92,12 +92,6 @@ tests:
   script:
     - export JAVA_HOME=`readlink -m ./render/deploy/*jdk*`
     - export PATH=$PATH:$JAVA_HOME/bin
-    - echo $JAVA_HOME
-    - echo $PATH
-    - export RENDER_CLIENT_SCRIPTS=render/render-ws-java-client/src/main/scripts
-    - java --version
-    - echo $JAVA_HOME
-    - exit 0
     - ls $RENDER_CLIENT_SCRIPTS
     - useradd testuser
     - chmod 777 -R *
