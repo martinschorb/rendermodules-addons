@@ -36,6 +36,7 @@ example_input = {
     "pool_size": 1,
     "close_stack": True,
     "z_index": 1,
+    "output_json" : "sbem_conv.json"
     "output_stackVersion":{
         "stackResolutionX":10.1
         }
@@ -205,20 +206,21 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             resolution = [pxs,pxs,z_thick]
             rotation = float(config['rotation'][0].strip('[],'))
 
-            if not curr_res == -1:
-                if not resolution==curr_res:
-                    stack_idx += 1
-                    allspecs.append([stackname,tspecs,curr_res])
-                    stackname += '_' + '%02d' %stack_idx
-                    tspecs=[]
-                elif not rotation==curr_rot:
-                    stack_idx += 1
-                    allspecs.append([stackname,tspecs,curr_res])
-                    stackname += '_' + '%02d' % stack_idx
-                    tspecs=[]
-
-            curr_res = resolution
-            curr_rot = rotation
+### ----   CHECK if resolution or tile rotation changes during run (should work but never used so far...)
+            # if not curr_res == -1:
+            #     if not resolution==curr_res:
+            #         stack_idx += 1
+            #         allspecs.append([stackname,tspecs,curr_res])
+            #         stackname += '_' + '%02d' %stack_idx
+            #         tspecs=[]
+            #     elif not rotation==curr_rot:
+            #         stack_idx += 1
+            #         allspecs.append([stackname,tspecs,curr_res])
+            #         stackname += '_' + '%02d' % stack_idx
+            #         tspecs=[]
+            #
+            # curr_res = resolution
+            # curr_rot = rotation
 
             for line in mdl:
                 if line.startswith('TILE: '):

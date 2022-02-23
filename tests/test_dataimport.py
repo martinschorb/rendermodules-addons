@@ -3,6 +3,8 @@ import tempfile
 import pytest
 import copy
 import os
+import requests
+import numpy as np
 
 import renderapi
 from marshmallow.exceptions import ValidationError
@@ -67,22 +69,36 @@ def test_generate_SBEM(render):
     assert importlog == sbemimage_template['errorlog0'] + example_sbem + sbemimage_template['errorlog1']
 
 
+    with open(outfile, 'r') as f:
+        outjson = json.load(f)
+
+    # test correct output
+    assert outjson['stack'] == ex['stack']
+
+    expected_tileIds = set(sbemimage_template['tileids'])
+    delivered_tileIds = set(renderapi.stack.get_stack_tileIds(ex['stack'], render=render))
+
+
+    # test if all tiles are imported
+    assert len(expected_tileIds.symmetric_difference(delivered_tileIds)) == 0
+
+    url = 'http://'+render_params["host"] + ':' + str(render_params["port"])
+    url += '/render-ws/v1/owner/' + render_params["owner"]
+    url += '/project/' + render_params["project"]
+    url += '/stack/' + ex["stack"]
+    url += '/resolutionValues'
+
+    r = requests.get(url)
+
+    expected_resolution = sbemimage_template['resolution']
+    delivered_resolution = r.json()
+
+    # test if resolution of stack is correct
+    assert (np.array(expected_resolution)-np.array(delivered_resolution)==[0,0,0]).all()
+
     # cleanup
     os.system('rm -rf ' + example_sbem)
-#
-#     mod = generate_EM_tilespecs_from_metafile.GenerateEMTileSpecsModule(
-#         input_data=ex, args=['--output_json', outfile])
-#     mod.run()
-#
-#     with open(outfile, 'r') as f:
-#         outjson = json.load(f)
-#
-#     assert outjson['stack'] == ex['stack']
-#
-#     expected_tileIds = {mod.tileId_from_basename(img['img_path'])
-#                         for img in md[1]['data']}
-#     delivered_tileIds = set(renderapi.stack.get_stack_tileIds(
-#         ex['stack'], render=render))
-#
-#     renderapi.stack.delete_stack(ex['stack'], render=render)
-#     assert len(expected_tileIds.symmetric_difference(delivered_tileIds)) == 0
+    renderapi.stack.delete_stack(ex['stack'], render=render)
+
+
+
