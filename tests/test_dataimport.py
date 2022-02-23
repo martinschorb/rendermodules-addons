@@ -38,20 +38,21 @@ def test_generate_SBEM(render):
     with tempfile.NamedTemporaryFile(suffix='.json') as probablyemptyfn:
         outfile = probablyemptyfn.name
 
+
+
     # test non existing directory
     ex['image_directory'] = example_sbem + 'notexistingdir'
 
     with pytest.raises(ValidationError):
-        mod1 = generate_EM_tilespecs_from_SBEMImage.GenerateSBEMImageTileSpecs(input_data=ex,
-                                                                               args=['--output_json', outfile])
+        mod1 = generate_EM_tilespecs_from_SBEMImage.GenerateSBEMImageTileSpecs(input_data=ex)
 
     ex['image_directory'] = example_sbem
 
     # test non existing "meta" directory
     os.rename(example_sbem + '/meta', example_sbem + '/meta123')
 
-    mod = generate_EM_tilespecs_from_SBEMImage.GenerateSBEMImageTileSpecs(input_data=ex,
-                                                                          args=['--output_json', outfile])
+    mod = generate_EM_tilespecs_from_SBEMImage.GenerateSBEMImageTileSpecs(input_data=ex)
+
     with pytest.raises(FileNotFoundError):
         mod.run()
 
@@ -68,12 +69,6 @@ def test_generate_SBEM(render):
 
     assert importlog == sbemimage_template['errorlog0'] + example_sbem + sbemimage_template['errorlog1']
 
-
-    with open(outfile, 'r') as f:
-        outjson = json.load(f)
-
-    # test correct output
-    assert outjson['stack'] == ex['stack']
 
     expected_tileIds = set(sbemimage_template['tileids'])
     delivered_tileIds = set(renderapi.stack.get_stack_tileIds(ex['stack'], render=render))
