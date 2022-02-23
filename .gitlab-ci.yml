@@ -13,8 +13,9 @@ prepare_test_data:
     untracked: true
     policy: push
   script:
-  - pip install jinja2
-  - python tests/test_data.py
+    - pip install jinja2
+    - python tests/test_data.py
+  when: manual
 
 
 build_render_ws_docker:
@@ -90,9 +91,12 @@ tests:
   script:
     - export JAVA_HOME=`readlink -m ./render/deploy/*jdk*`
     - alias java=$JAVA_HOME/bin/java
+    - echo $JAVA_HOME
+    - ls $JAVA_HOME
     - export RENDER_CLIENT_SCRIPTS=render/render-ws-java-client/src/main/scripts
     - echo `which java`
     - java --version
+    - exit 0
     - ls $RENDER_CLIENT_SCRIPTS
     - useradd testuser
     - chmod 777 -R *
