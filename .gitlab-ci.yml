@@ -91,9 +91,9 @@ tests:
 #    - pip install -r test_requirements.txt
   script:
     - export JAVA_HOME=`readlink -m ./render/deploy/*jdk*`
-    - alias java=$JAVA_HOME/bin/java
+    - export PATH=$PATH:$JAVA_HOME/bin/java
     - echo $JAVA_HOME
-    - ls $JAVA_HOME/bin/
+    - echo $PATH
     - export RENDER_CLIENT_SCRIPTS=render/render-ws-java-client/src/main/scripts
     - which java
     - java --version
