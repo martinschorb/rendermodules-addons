@@ -114,6 +114,9 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
 
         tileid = tile['# [Image'].strip('.tif')
 
+        intensities = tile['MinMaxMean'].split(' ')
+
+
 
         print("Processing tile "+tileid+" metadata for Render.")
 
@@ -124,7 +127,8 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
             z=z,
             width=width,
             height=height,
-            minint=0, maxint=65535,
+            minint=int(intensities[0]),
+            maxint=int(intensities[1]),
             tforms=[tf_trans],
             sectionId=z,
             scopeId='SerialEM: ' + camline[camline.find('-')+1:].strip(' '),
