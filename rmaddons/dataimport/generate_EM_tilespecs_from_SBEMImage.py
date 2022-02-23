@@ -15,7 +15,7 @@ from rmaddons.dataimport.schemas import GenerateSBEMTileSpecsParameters
 from rmaddons.utilities.EMBL_file_utils import groupsharepath
 
 import time
-
+import requests
 import glob
 
 import json
