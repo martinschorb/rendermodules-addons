@@ -52,10 +52,11 @@ build_render_clientscripts:
     - export JAVA_HOME=`readlink -m ./render/deploy/*jdk*`
     - mvn package -pl render-ws-java-client  -am -DskipTests -f render/pom.xml
   cache:
-    paths:
-      - render
-    untracked: true
-    policy: push
+    - key: render
+        paths:
+          - render
+        untracked: true
+        policy: push
   when: manual
 
 
@@ -92,7 +93,7 @@ tests:
     - ls
     - ls render
     - ls tests
-    - ls tests/tes_files
+    - ls tests/test_files
     - export JAVA_HOME=`readlink -m ./render/deploy/*jdk*`
     - alias java=$JAVA_HOME/bin/java
     - echo $JAVA_HOME
