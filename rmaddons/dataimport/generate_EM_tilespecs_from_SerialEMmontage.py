@@ -69,7 +69,9 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
         # mat_t = np.concatenate((np.eye(3),[[tile['glob_x']],[tile['glob_y']],[tile['glob_z']]]),axis=1)
         # mat_t = np.concatenate((mat_t,[[0,0,0,1]]))
 
-        f1 = os.path.realpath([tile[key] for key in tile.keys() if '# [Image' in key][0])
+        imagefile = [tile[key] for key in tile.keys() if '# [Image' in key][0]
+
+        f1 = os.path.realpath(imagefile)
 
         filepath= groupsharepath(f1)
 
@@ -114,7 +116,7 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
                                  B0=xpos,
                                  B1=-ypos)
 
-        tileid = tile['# [Image'].strip('.tif')
+        tileid = os.path.splitext(imagefile)[0]
 
         intensities = tile['MinMaxMean']
 
@@ -238,12 +240,7 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
 
             pxs = float(tile['PixelSpacing'][0]) / 10
 
-
-
-            f1=idocfile
-            # debug values
-            # tilespeclist = [tile[key] for key in tile.keys() if '#' in key][0]
-
+            os.chdir(rawdir)
             f1,tilespeclist = self.ts_from_SerialEMtile(tile, camline, header)
 
             if os.path.exists(f1):
@@ -272,7 +269,7 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
 
             pxs = specs[2]
 
-            self.output_tilespecs_to_stack(specs[1])
+            # self.output_tilespecs_to_stack(specs[1])
 
         # create stack and fill resolution parameters
     
@@ -285,7 +282,6 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
             res = [pxs,pxs,z_res]
 
             requests.put(url, json=res)
-
 
 
 # I don know what this does... so leave it out
