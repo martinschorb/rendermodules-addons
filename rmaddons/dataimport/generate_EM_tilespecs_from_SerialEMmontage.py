@@ -69,7 +69,7 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
         # mat_t = np.concatenate((np.eye(3),[[tile['glob_x']],[tile['glob_y']],[tile['glob_z']]]),axis=1)
         # mat_t = np.concatenate((mat_t,[[0,0,0,1]]))
 
-        f1 = os.path.realpath(tile['# [Image'])
+        f1 = os.path.realpath([tile[key] for key in tile.keys() if '# [Image' in key][0])
 
         filepath= groupsharepath(f1)
 
@@ -241,9 +241,10 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
 
 
             f1=idocfile
-            tilespeclist = [tile[key] for key in tile.keys() if '#' in key][0]
+            # debug values
+            # tilespeclist = [tile[key] for key in tile.keys() if '#' in key][0]
 
-            # f1,tilespeclist = self.ts_from_SerialEMtile(tile, camline, header)
+            f1,tilespeclist = self.ts_from_SerialEMtile(tile, camline, header)
 
             if os.path.exists(f1):
                 tspecs.append(tilespeclist)
