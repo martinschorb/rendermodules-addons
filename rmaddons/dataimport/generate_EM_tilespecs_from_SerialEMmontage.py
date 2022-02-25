@@ -269,7 +269,7 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
 
             pxs = specs[2]
 
-            # self.output_tilespecs_to_stack(specs[1])
+            self.output_tilespecs_to_stack(specs[1])
 
         # create stack and fill resolution parameters
     
