@@ -6,6 +6,8 @@ Currently only idoc files are supported.
 """
 
 import os
+
+import numpy as np
 import renderapi
 from asap.module.render_module import StackOutputModule
 
@@ -33,7 +35,7 @@ example_input = {
         "client_scripts": (
             "/g/emcf/software/render/render-ws-java-client/"
             "src/main/scripts")},
-    "image_file": "/g/emcf/schorb/data/serialem_montages/idocmont/test2.idoc",
+    "image_file": os.path.abspath('tests/test_files/idoc_supermont_testdata/mont01.idoc'),
     "stack": "test_1",
     "overwrite_zlayer": True,
     "pool_size": 4,
@@ -155,39 +157,93 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
 
         """
         rawdir = os.path.dirname(idocfile)
-        os.chdir(rawdir)
 
 
         timestamp = time.localtime()
-        if not os.path.exists('conv_log'):os.makedirs('conv_log')
+        if not os.path.exists(os.path.join(rawdir,'conv_log')):os.makedirs(os.path.join(rawdir,'conv_log'))
         log_name = '_{}{:02d}{:02d}-{:02d}{:02d}'.format(timestamp.tm_year,timestamp.tm_mon,timestamp.tm_mday,timestamp.tm_hour,timestamp.tm_min)
 
 
         # mipmap_args = []
         # tilespecpaths = []
         logfile = os.path.join(rawdir,'conv_log','SerialEM_convert'+log_name+'.log')
+
         
-        
-        
-        idoc = em.loadtext(idocfile)            
+        idoc = em.loadtext(os.path.abspath(idocfile))
         
         i_info = em.parse_adoc(idoc)
-        
+
         if 'ImageFile' in i_info.keys():
             #MRC file
             #imfile = i_info['ImageFile'][0]
             raise(FileNotFoundError('MRC not yet supported'))
         else:
             # Tif files and idoc       
-            tiles = em.adoc_items(idoc, '[Image')    
+            tiles = em.adoc_items(idoc, '[Image')
+            items = em.adoc_items(idoc, '[')
+            montsecs = em.adoc_items(idoc, '[MontSection')
             header = em.adoc_items(idoc, '', header=True)   
-            camline = em.adoc_items(idoc,'[T =')[0]['# [T =']
-        
+            camlines = em.adoc_items(idoc,'[T =')[0]
+            camline = camlines[[k for k in camlines.keys()][0]]
+
+        stackname = self.args.get("output_stack")
         
         tspecs=[]
-        
-        for tile in tiles:              
-            f1,tilespeclist = self.ts_from_SerialEMtile(tile, camline, header)
+        allspecs = []
+        stack_suffix = ''
+        curr_navitem = ''
+
+        curr_mont = {}
+
+
+        if len(montsecs)>0:
+            curr_mont = montsecs[0]
+
+        multiple = True
+
+        if 'NavigatorLabel' in tiles[0].keys(): curr_navitem = tiles[0]['NavigatorLabel'][0].split('-')[0]
+
+        if all('SuperMontCoords' in tile.keys() for tile in tiles):
+
+            # exclusively one or more SuperMontage(s)
+            sm_navids = np.unique([tile['NavigatorLabel'][0].split('-')[0] for tile in tiles])
+            if len(sm_navids) < 1: multiple = False
+
+
+        for tile in tiles:
+            itemidx = items.index(tile)
+            if not 'NavigatorLabel' in tile.keys():
+                curr_navitem = [key for key in curr_mont.keys() if '#' in key][0].split('=')[1].strip(' []')
+
+                if items.index(curr_mont)<itemidx:
+                    nextmonts = []
+                    for item in items[itemidx:]:
+                        if len([item for key in item.keys() if '# [Mont' in key])>0:
+                            nextmonts.append(item)
+
+                    curr_mont = nextmonts[0]
+                    allspecs.append([stackname + stack_suffix, tspecs, pxs])
+                    tspecs = []
+            else:
+                # new (Super)montage starts
+                if not curr_navitem == 'nav_' +tile['NavigatorLabel'][0].split('-')[0]:
+                    curr_navitem = 'nav_' + tile['NavigatorLabel'][0].split('-')[0]
+                    allspecs.append([stackname + stack_suffix, tspecs, pxs])
+                    tspecs = []
+
+            if multiple:
+                stack_suffix = '_stack_' + curr_navitem
+
+
+
+            pxs = float(tile['PixelSpacing'][0]) / 10
+
+
+
+            f1=idocfile
+            tilespeclist = [tile[key] for key in tile.keys() if '#' in key][0]
+
+            # f1,tilespeclist = self.ts_from_SerialEMtile(tile, camline, header)
 
             if os.path.exists(f1):
                 tspecs.append(tilespeclist)
@@ -195,34 +251,39 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
                 fnf_error = 'ERROR: File '+f1+' does not exist'
                 print(fnf_error)
                 with open(logfile,'w') as log: log.writelines(fnf_error)
-        
-        
-        pxs = float(header[0]['PixelSpacing'][0])/10
 
+        allspecs.append([stackname + stack_suffix, tspecs, pxs])
         # print(pxs)
 
-
-        return tspecs,pxs
+        return allspecs
 
 
     def run(self):    
-        specs,pxs = self.ts_from_serialemmontage(self.args["image_file"])
+        allspecs = self.ts_from_serialemmontage(self.args["image_file"])
+
         z_res = self.args["z_spacing"]
         # self.args["output_stack"] = self.args["stack"]
 
-        self.output_tilespecs_to_stack(specs)
+        for specs in allspecs:
+            self.args["stack"] = specs[0]
+
+            self.args["output_stack"] = self.args["stack"]
+
+            pxs = specs[2]
+
+            self.output_tilespecs_to_stack(specs[1])
 
         # create stack and fill resolution parameters
     
-        url = self.args["render"]["host"]+':'+str(self.args["render"]["port"])
-        url += '/render-ws/v1/owner/'+self.args["render"]["owner"]
-        url += '/project/'+self.args["render"]["project"]
-        url += '/stack/'+self.args["output_stack"]
-        url += '/resolutionValues'
+            url = self.args["render"]["host"]+':'+str(self.args["render"]["port"])
+            url += '/render-ws/v1/owner/'+self.args["render"]["owner"]
+            url += '/project/'+self.args["render"]["project"]
+            url += '/stack/'+self.args["output_stack"]
+            url += '/resolutionValues'
 
-        res = [pxs,pxs,z_res]
+            res = [pxs,pxs,z_res]
 
-        requests.put(url, json=res)
+            requests.put(url, json=res)
 
 
 

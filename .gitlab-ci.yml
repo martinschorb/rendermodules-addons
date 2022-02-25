@@ -15,7 +15,6 @@ prepare_test_data:
   script:
     - pip install jinja2
     - python tests/test_data.py
-  when: manual
 
 
 build_render_ws_docker:
