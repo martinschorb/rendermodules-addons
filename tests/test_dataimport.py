@@ -122,9 +122,10 @@ def test_generate_SerialEM(render):
 
     mod.run()
 
-    assert os.path.exists(example_serialem + '/conv_log')
-    with open(os.path.join(example_serialem, 'conv_log', os.listdir(example_serialem + '/conv_log')[0])) as file:
-        importlog = file.read()
+    expected_tileIds = set(serialem_template['tileids'])
+
+
+
 
     ex['image_file'] = os.path.join(example_serialem, 'mont01.idoc')
 
@@ -132,9 +133,12 @@ def test_generate_SerialEM(render):
 
     mod.run()
 
+    assert os.path.exists(example_serialem + '/conv_log')
+    with open(os.path.join(example_serialem, 'conv_log', os.listdir(example_serialem + '/conv_log')[0])) as file:
+        importlog = file.read()
     assert importlog == serialem_template['errorlog0'] + example_serialem + serialem_template['errorlog1']
 
-    expected_tileIds = set(serialem_template['tileids'])
+
     delivered_tileIds = set(renderapi.stack.get_stack_tileIds(ex['stack'], render=render))
 
     # test if all tiles are imported

@@ -258,9 +258,10 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
 
         z_res = self.args["z_spacing"]
         # self.args["output_stack"] = self.args["stack"]
-
+        stacks = []
         for specs in allspecs:
             stack = specs[0]
+            stacks.append(stack)
             print('uploading stack '+stack)
             pxs = specs[2]
 
@@ -278,6 +279,7 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
 
             requests.put(url, json=res)
 
+        return stacks
 
 # I don know what this does... so leave it out
         # try:
@@ -288,4 +290,4 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
 
 if __name__ == "__main__":
     mod = GenerateSEMmontTileSpecs(input_data=example_input)
-    mod.run()
+    stacks = mod.run()
