@@ -263,22 +263,20 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
         # self.args["output_stack"] = self.args["stack"]
 
         for specs in allspecs:
-            self.args["stack"] = specs[0]
-            print(specs[0])
-            self.args["output_stack"] = self.args["stack"]
+            stack = specs[0]
 
             pxs = specs[2]
 
             print(self.args)
 
-            self.output_tilespecs_to_stack(specs[1])
+            self.output_tilespecs_to_stack(specs[1],output_stack=stack)
 
         # create stack and fill resolution parameters
     
             url = self.args["render"]["host"]+':'+str(self.args["render"]["port"])
             url += '/render-ws/v1/owner/'+self.args["render"]["owner"]
             url += '/project/'+self.args["render"]["project"]
-            url += '/stack/'+self.args["output_stack"]
+            url += '/stack/'+stack
             url += '/resolutionValues'
 
             res = [pxs,pxs,z_res]
