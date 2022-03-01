@@ -75,6 +75,21 @@ if not os.path.exists(example_sbem):
     except OSError as e:
         pass
 
+
+# example SerialEMmontage input data
+
+example_serialemz = os.path.join(example_dir,'testidoc.tgz')
+example_serialem = os.path.abspath(os.path.join(tempdir,'idoc_supermont_testdata'))
+
+if not os.path.exists(example_serialem):
+    try:
+        os.system('tar xvfz ' + example_serialemz + ' -C ' + example_dir)
+    except OSError as e:
+        pass
+
+
+
+
 # load template json files
 
 def render_json_template(env, template_file, **kwargs):
@@ -92,3 +107,8 @@ makexml_template = render_json_template(
 sbemimage_template = render_json_template(
         example_env,
         'dataimport_generate_EM_tilespecs_from_SBEMImage.json')
+
+serialem_template = render_json_template(
+        example_env,
+        'dataimport_generate_EM_tilespecs_from_SerialEMmontage.json')
+

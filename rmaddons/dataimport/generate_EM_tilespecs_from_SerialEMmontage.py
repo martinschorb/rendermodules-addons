@@ -35,7 +35,7 @@ example_input = {
         "client_scripts": (
             "/g/emcf/software/render/render-ws-java-client/"
             "src/main/scripts")},
-    "image_file": os.path.abspath('tests/test_files/idoc_supermont_testdata/mont01.idoc'),
+    "image_file": os.path.abspath('tests/test_files/idoc_supermont_testdata/supermont.idoc'),
     "stack": "test_1",
     "overwrite_zlayer": True,
     "pool_size": 4,
@@ -149,7 +149,7 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
         return f1,ts
 
 
-    def ts_from_serialemmontage (self,idocfile,mapsection=0,correct_gradient=True):
+    def ts_from_serialemmontage(self,idocfile,mapsection=0,correct_gradient=True):
         """
 
         :param str idocfile: input file (idoc)
@@ -214,6 +214,7 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
 
         for tile in tiles:
             itemidx = items.index(tile)
+            pxs = float(tile['PixelSpacing'][0]) / 10
             if not 'NavigatorLabel' in tile.keys():
                 curr_navitem = [key for key in curr_mont.keys() if '#' in key][0].split('=')[1].strip(' []')
 
@@ -235,10 +236,6 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
 
             if multiple:
                 stack_suffix = '_stack_' + curr_navitem
-
-
-
-            pxs = float(tile['PixelSpacing'][0]) / 10
 
             os.chdir(rawdir)
             f1,tilespeclist = self.ts_from_SerialEMtile(tile, camline, header)
@@ -266,8 +263,6 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
             stack = specs[0]
 
             pxs = specs[2]
-
-            print(self.args)
 
             self.output_tilespecs_to_stack(specs[1],output_stack=stack)
 

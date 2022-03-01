@@ -14,11 +14,14 @@ from marshmallow.exceptions import ValidationError
 # from asap.dataimport import generate_mipmaps
 # from asap.dataimport import apply_mipmaps_to_render
 
-from rmaddons.dataimport import generate_EM_tilespecs_from_SBEMImage
+from rmaddons.dataimport import (generate_EM_tilespecs_from_SBEMImage,
+                                 generate_EM_tilespecs_from_SerialEMmontage)
 
 from test_data import (render_params,
                        example_sbem,
-                       sbemimage_template
+                       sbemimage_template,
+                       example_serialem,
+                       serialem_template
                        )
 
 
@@ -94,5 +97,68 @@ def test_generate_SBEM(render):
     os.system('rm -rf ' + example_sbem)
     renderapi.stack.delete_stack(ex['stack'], render=render)
 
+
+
+def test_generate_SerialEM(render):
+    # print(render_params)
+    # os.system('ping '+render_params["host"] + ' -c 3')
+    assert isinstance(render, renderapi.render.Render)
+
+    ex = copy.deepcopy(generate_EM_tilespecs_from_SerialEMmontage.example_input)
+    ex['render'] = render.make_kwargs()
+
+    with tempfile.NamedTemporaryFile(suffix='.json') as probablyemptyfn:
+        outfile = probablyemptyfn.name
+
+    # test non existing image file
+    ex['image_file'] = os.path.join(example_serialem,'notexistingfile')
+
+    with pytest.raises(ValidationError):
+        mod1 = generate_EM_tilespecs_from_SerialEMmontage.GenerateSEMmontTileSpecs(input_data=ex)
+
+    ex['image_file'] = os.path.join(example_serialem,'supermont.idoc')
+
+    mod = generate_EM_tilespecs_from_SerialEMmontage.GenerateSEMmontTileSpecs(input_data=ex)
+
+    mod.run()
+
+    assert os.path.exists(example_serialem + '/conv_log')
+    with open(os.path.join(example_serialem, 'conv_log', os.listdir(example_serialem + '/conv_log')[0])) as file:
+        importlog = file.read()
+
+    ex['image_file'] = os.path.join(example_serialem, 'mont01.idoc')
+
+    mod = generate_EM_tilespecs_from_SerialEMmontage.GenerateSEMmontTileSpecs(input_data=ex)
+
+    mod.run()
+
+    assert importlog == serialem_template['errorlog0'] + example_serialem + serialem_template['errorlog1']
+
+    expected_tileIds = set(serialem_template['tileids'])
+    delivered_tileIds = set(renderapi.stack.get_stack_tileIds(ex['stack'], render=render))
+
+    # test if all tiles are imported
+    assert len(expected_tileIds.symmetric_difference(delivered_tileIds)) == 0
+
+    # url = 'http://'+render_params["host"] + ':' + str(render_params["port"])
+    # url += '/render-ws/v1/owner/' + render_params["owner"]
+    # url += '/project/' + render_params["project"]
+    # url += '/stack/' + ex["stack"]
+    # url += '/resolutionValues'
+    #
+    # r = requests.get(url)
+    # delivered_resolution = r.json()
+
+    md = renderapi.stack.get_stack_metadata(render=render, stack=ex['stack'])
+
+    expected_resolution = serialem_template['resolution']
+    delivered_resolution = [md.stackResolutionX,md.stackResolutionY,md.stackResolutionZ]
+
+    # test if resolution of stack is correct
+    assert (np.array(expected_resolution)-np.array(delivered_resolution)==[0,0,0]).all()
+
+    # cleanup
+    os.system('rm -rf ' + example_serialem)
+    renderapi.stack.delete_stack(ex['stack'], render=render)
 
 
