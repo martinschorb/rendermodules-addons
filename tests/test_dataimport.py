@@ -120,12 +120,28 @@ def test_generate_SerialEM(render):
 
     mod = generate_EM_tilespecs_from_SerialEMmontage.GenerateSEMmontTileSpecs(input_data=ex)
 
-    mod.run()
+    stacks = mod.run()
 
-    expected_tileIds = set(serialem_template['tileids'])
+    assert len(stacks) == 1
 
+    expected_stack0 = serialem_template['stack0']
 
+    assert stacks[0] == expected_stack0
 
+    expected_tileIds = set(serialem_template['tileids0'])
+
+    delivered_tileIds = set(renderapi.stack.get_stack_tileIds(stacks[0], render=render))
+
+    # test if all tiles are imported
+    assert len(expected_tileIds.symmetric_difference(delivered_tileIds)) == 0
+
+    md = renderapi.stack.get_stack_metadata(render=render, stack=stacks[0])
+
+    expected_resolution = serialem_template['resolution0']
+    delivered_resolution = [md.stackResolutionX,md.stackResolutionY,md.stackResolutionZ]
+
+    # test if resolution of stack is correct
+    assert (np.array(expected_resolution)-np.array(delivered_resolution)==[0,0,0]).all()
 
     ex['image_file'] = os.path.join(example_serialem, 'mont01.idoc')
 

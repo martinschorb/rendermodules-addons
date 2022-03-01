@@ -35,7 +35,7 @@ example_input = {
         "client_scripts": (
             "/g/emcf/software/render/render-ws-java-client/"
             "src/main/scripts")},
-    "image_file": os.path.abspath('tests/test_files/idoc_supermont_testdata/supermont.idoc'),
+    "image_file": os.path.abspath('tests/test_files/idoc_supermont_testdata/mont01.idoc'),
     "stack": "test_1",
     "overwrite_zlayer": True,
     "pool_size": 4,
@@ -194,7 +194,7 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
         allspecs = []
         stack_suffix = ''
         curr_navitem = ''
-
+        pxs = float(tiles[0]['PixelSpacing'][0]) / 10
         curr_mont = {}
 
 
@@ -214,10 +214,9 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
 
         for tile in tiles:
             itemidx = items.index(tile)
-            pxs = float(tile['PixelSpacing'][0]) / 10
+
             if not 'NavigatorLabel' in tile.keys():
                 curr_navitem = [key for key in curr_mont.keys() if '#' in key][0].split('=')[1].strip(' []')
-
                 if items.index(curr_mont)<itemidx:
                     nextmonts = []
                     for item in items[itemidx:]:
@@ -234,8 +233,9 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
                     if not tspecs==[]:allspecs.append([stackname + stack_suffix, tspecs, pxs])
                     tspecs = []
 
+            pxs = float(tile['PixelSpacing'][0]) / 10
             if multiple:
-                stack_suffix = '_stack_' + curr_navitem
+                stack_suffix = '_' + curr_navitem
 
             os.chdir(rawdir)
             f1,tilespeclist = self.ts_from_SerialEMtile(tile, camline, header)
