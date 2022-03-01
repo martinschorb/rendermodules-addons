@@ -225,13 +225,13 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
                             nextmonts.append(item)
 
                     curr_mont = nextmonts[0]
-                    allspecs.append([stackname + stack_suffix, tspecs, pxs])
+                    if not tspecs==[]:allspecs.append([stackname + stack_suffix, tspecs, pxs])
                     tspecs = []
             else:
                 # new (Super)montage starts
                 if not curr_navitem == 'nav_' +tile['NavigatorLabel'][0].split('-')[0]:
                     curr_navitem = 'nav_' + tile['NavigatorLabel'][0].split('-')[0]
-                    allspecs.append([stackname + stack_suffix, tspecs, pxs])
+                    if not tspecs==[]:allspecs.append([stackname + stack_suffix, tspecs, pxs])
                     tspecs = []
 
             if multiple:
@@ -261,7 +261,7 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
 
         for specs in allspecs:
             stack = specs[0]
-
+            print('uploading stack '+stack)
             pxs = specs[2]
 
             self.output_tilespecs_to_stack(specs[1],output_stack=stack)
