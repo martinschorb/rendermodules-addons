@@ -264,10 +264,12 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
 
         for specs in allspecs:
             self.args["stack"] = specs[0]
-
+            print(specs[0])
             self.args["output_stack"] = self.args["stack"]
 
             pxs = specs[2]
+
+            print(self.args)
 
             self.output_tilespecs_to_stack(specs[1])
 
