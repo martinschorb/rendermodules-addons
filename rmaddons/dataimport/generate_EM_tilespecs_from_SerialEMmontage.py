@@ -216,7 +216,7 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
             itemidx = items.index(tile)
 
             if not 'NavigatorLabel' in tile.keys():
-                curr_navitem = [key for key in curr_mont.keys() if '#' in key][0].split('=')[1].strip(' []')
+                curr_navitem = 'mont_' + [key for key in curr_mont.keys() if '#' in key][0].split('=')[1].strip(' []')
                 if items.index(curr_mont)<itemidx:
                     nextmonts = []
                     for item in items[itemidx:]:

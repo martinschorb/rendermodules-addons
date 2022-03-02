@@ -150,7 +150,7 @@ def test_generate_SerialEM(render):
     stacks = mod.run()
 
     print(stacks)
-    assert len(stacks)==3
+    assert len(stacks)==4
 
 
     assert os.path.exists(example_serialem + '/conv_log')
