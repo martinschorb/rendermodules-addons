@@ -120,22 +120,22 @@ def test_generate_SerialEM(render):
 
     mod = generate_EM_tilespecs_from_SerialEMmontage.GenerateSEMmontTileSpecs(input_data=ex)
 
-    stacks = mod.run()
+    stacks0 = mod.run()
 
-    assert len(stacks) == 1
+    assert len(stacks0) == 1
 
     expected_stack0 = serialem_template['stack0']
 
-    assert stacks[0] == expected_stack0
+    assert stacks0[0] == expected_stack0
 
     expected_tileIds = set(serialem_template['tileids0'])
 
-    delivered_tileIds = set(renderapi.stack.get_stack_tileIds(stacks[0], render=render))
+    delivered_tileIds = set(renderapi.stack.get_stack_tileIds(stacks0[0], render=render))
 
     # test if all tiles are imported
     assert len(expected_tileIds.symmetric_difference(delivered_tileIds)) == 0
 
-    md = renderapi.stack.get_stack_metadata(render=render, stack=stacks[0])
+    md = renderapi.stack.get_stack_metadata(render=render, stack=stacks0[0])
 
     expected_resolution = serialem_template['resolution0']
     delivered_resolution = [md.stackResolutionX,md.stackResolutionY,md.stackResolutionZ]
@@ -147,7 +147,11 @@ def test_generate_SerialEM(render):
 
     mod = generate_EM_tilespecs_from_SerialEMmontage.GenerateSEMmontTileSpecs(input_data=ex)
 
-    mod.run()
+    stacks = mod.run()
+
+    print(stacks)
+    assert len(stacks)==3
+
 
     assert os.path.exists(example_serialem + '/conv_log')
     with open(os.path.join(example_serialem, 'conv_log', os.listdir(example_serialem + '/conv_log')[0])) as file:
@@ -155,10 +159,6 @@ def test_generate_SerialEM(render):
     assert importlog == serialem_template['errorlog0'] + example_serialem + serialem_template['errorlog1']
 
 
-    delivered_tileIds = set(renderapi.stack.get_stack_tileIds(ex['stack'], render=render))
-
-    # test if all tiles are imported
-    assert len(expected_tileIds.symmetric_difference(delivered_tileIds)) == 0
 
     # url = 'http://'+render_params["host"] + ':' + str(render_params["port"])
     # url += '/render-ws/v1/owner/' + render_params["owner"]
@@ -169,16 +169,10 @@ def test_generate_SerialEM(render):
     # r = requests.get(url)
     # delivered_resolution = r.json()
 
-    md = renderapi.stack.get_stack_metadata(render=render, stack=ex['stack'])
-
-    expected_resolution = serialem_template['resolution']
-    delivered_resolution = [md.stackResolutionX,md.stackResolutionY,md.stackResolutionZ]
-
-    # test if resolution of stack is correct
-    assert (np.array(expected_resolution)-np.array(delivered_resolution)==[0,0,0]).all()
 
     # cleanup
     os.system('rm -rf ' + example_serialem)
+
     renderapi.stack.delete_stack(ex['stack'], render=render)
 
 

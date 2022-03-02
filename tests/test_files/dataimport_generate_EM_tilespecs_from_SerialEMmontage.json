@@ -1,8 +1,6 @@
 {
-  "stack_0" : "test_1_nav_7",
-  "resolution0" : [2.636,2.636,100],
-  "errorlog0" : "ERROR: File ",
-  "errorlog1" : "/tiles/g0000/t0008/test_example_g0000_t0008_s00005.jpg does not exist, skipping tile creation.",
+  "stack0" : "test_1_nav_7",
+  "resolution0" : [2.636,2.636,100]
   "tileids0" : ["test_0000",
      "test_0001",
      "test_0002",
@@ -22,5 +20,7 @@
      "test_0016",
      "test_0017",
      "test_0018",
-     "test_0019"]
+     "test_0019"],
+  "errorlog0" : "ERROR: File ",
+  "errorlog1" : "/tiles/g0000/t0008/test_example_g0000_t0008_s00005.jpg does not exist, skipping tile creation."
 }
