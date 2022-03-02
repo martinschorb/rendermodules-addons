@@ -35,7 +35,7 @@ example_input = {
         "client_scripts": (
             "/g/emcf/software/render/render-ws-java-client/"
             "src/main/scripts")},
-    "image_file": os.path.abspath('tests/test_files/idoc_supermont_testdata/mont01.idoc'),
+    "image_file": os.path.abspath('tests/test_files/idoc_supermont_testdata/supermont.idoc'),
     "stack": "test_1",
     "overwrite_zlayer": True,
     "pool_size": 4,
@@ -123,7 +123,6 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
 
         print("Processing tile "+tileid+" metadata for Render.")
 
-
         ts = renderapi.tilespec.TileSpec(
             tileId=tileid,
             imagePyramid=ip,
@@ -206,10 +205,9 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
         if 'NavigatorLabel' in tiles[0].keys(): curr_navitem = tiles[0]['NavigatorLabel'][0].split('-')[0]
 
         if all('SuperMontCoords' in tile.keys() for tile in tiles):
-
             # exclusively one or more SuperMontage(s)
             sm_navids = np.unique([tile['NavigatorLabel'][0].split('-')[0] for tile in tiles])
-            if len(sm_navids) < 1: multiple = False
+            if len(sm_navids) < 2: multiple = False
 
 
         for tile in tiles:
