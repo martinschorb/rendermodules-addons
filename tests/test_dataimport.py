@@ -149,16 +149,34 @@ def test_generate_SerialEM(render):
 
     stacks = mod.run()
 
-    print(stacks)
-    assert len(stacks)==4
+    assert len(stacks) == 5
+
+    assert stacks == serialem_template['stacks']
+
+    for stack in stacks:
+        expected_tileIds = set(serialem_template['tileids'][stack])
+
+        delivered_tileIds = set(renderapi.stack.get_stack_tileIds(stacks, render=render))
+
+        # test if all tiles are imported
+        assert len(expected_tileIds.symmetric_difference(delivered_tileIds)) == 0
+
+        md = renderapi.stack.get_stack_metadata(render=render, stack=stack)
+
+        expected_resolution = serialem_template['resolutions'][stack]
+        delivered_resolution = [md.stackResolutionX, md.stackResolutionY, md.stackResolutionZ]
+
+        # test if resolution of stack is correct
+        assert (np.array(expected_resolution) - np.array(delivered_resolution) == [0, 0, 0]).all()
+
+        #cleanup
+        renderapi.stack.delete_stack(stack, render=render)
 
 
     assert os.path.exists(example_serialem + '/conv_log')
     with open(os.path.join(example_serialem, 'conv_log', os.listdir(example_serialem + '/conv_log')[0])) as file:
         importlog = file.read()
     assert importlog == serialem_template['errorlog0'] + example_serialem + serialem_template['errorlog1']
-
-
 
     # url = 'http://'+render_params["host"] + ':' + str(render_params["port"])
     # url += '/render-ws/v1/owner/' + render_params["owner"]
@@ -172,7 +190,7 @@ def test_generate_SerialEM(render):
 
     # cleanup
     os.system('rm -rf ' + example_serialem)
+    renderapi.stack.delete_stack(stacks0[0], render=render)
 
-    renderapi.stack.delete_stack(ex['stack'], render=render)
 
 

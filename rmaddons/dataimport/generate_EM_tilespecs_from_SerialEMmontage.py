@@ -30,8 +30,8 @@ example_input = {
     "render": {
         "host": "render.embl.de",
         "port": 8080,
-        "owner": "SerialEM",
-        "project": "test",
+        "owner": "test",
+        "project": "test_project",
         "client_scripts": (
             "/g/emcf/software/render/render-ws-java-client/"
             "src/main/scripts")},
@@ -243,7 +243,7 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
             if os.path.exists(f1):
                 tspecs.append(tilespeclist)
             else:
-                fnf_error = 'ERROR: File '+f1+' does not exist'
+                fnf_error = 'ERROR: File '+f1+' does not exist. Skipping tile creation.'
                 print(fnf_error)
                 with open(logfile,'w') as log: log.writelines(fnf_error)
 
