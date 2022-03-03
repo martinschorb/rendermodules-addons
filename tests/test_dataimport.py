@@ -156,7 +156,7 @@ def test_generate_SerialEM(render):
     for stack in stacks:
         expected_tileIds = set(serialem_template['tileids'][stack])
 
-        delivered_tileIds = set(renderapi.stack.get_stack_tileIds(stacks, render=render))
+        delivered_tileIds = set(renderapi.stack.get_stack_tileIds(stack, render=render))
 
         # test if all tiles are imported
         assert len(expected_tileIds.symmetric_difference(delivered_tileIds)) == 0
