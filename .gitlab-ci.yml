@@ -90,12 +90,14 @@ tests:
     - ls $RENDER_CLIENT_SCRIPTS
     - useradd testuser
     - chmod 777 -R *
-    - su testuser -c "coverage run -m pytest"
+    - su testuser -c "coverage run -m pytest --junitxml=report.xml"
     - coverage xml
     - coverage-badge
     - coverage report
   artifacts:
     reports:
+      junit:
+         report.xml
       cobertura:
         coverage.xml
   coverage: '/TOTAL.+ ([0-9]{1,3}%)/'
