@@ -90,7 +90,7 @@ tests:
     - ls $RENDER_CLIENT_SCRIPTS
     - useradd testuser
     - chmod 777 -R *
-    - su testuser -c "coverage run -m pytest --junitxml=report.xml"
+    - su testuser -c 'coverage run -m "pytest --junit-xml=report.xml" '
     - coverage xml
     - coverage-badge
     - coverage report
