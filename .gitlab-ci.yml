@@ -1,24 +1,116 @@
-image: python:3.7-buster
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_VERSION: 18.09.7
+  RENDER_HOST: myrender
+  RENDER_PORT: 8080
 
-test:
-  stage: test
+prepare_test_data:
+  stage: build
+  image: 'python:3.7-bullseye'
+  cache:
+    paths:
+      - tests/test_files
+    untracked: true
+    policy: push
   script:
-  - apt install git
-  - pip install -U sphinx
-  - pip install git+https://github.com/AllenInstitute/asap-modules
-  - pip install git+https://git.embl.de/schorb/pyem
-  - pip install -r requirements.txt
-  - sphinx-build -b html docs public
+    - pip install jinja2
+    - python tests/test_data.py
+
+
+build_render_ws_docker:
+  cache:
+    paths:
+    - tests/test_files
+    untracked: true
+    policy: pull
+  stage: build
+  image: docker:$DOCKER_VERSION-git
+  tags:
+    - docker7
+  services:
+    - docker:$DOCKER_VERSION-dind
+  before_script:
+    - docker info
+    - touch tests/test_files/*.n5
+  script:
+    - git clone --depth 1 https://github.com/saalfeldlab/render.git render -b master
+    - cd render
+    - sed -i 's/MONGO_HOST=""/MONGO_HOST="mymongo"/' Dockerfile
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin && docker build -t $CI_REGISTRY_IMAGE --target render-ws . && docker push $CI_REGISTRY_IMAGE && echo $CI_REGISTRY_IMAGE
+  when: manual
+
+
+build_render_clientscripts:
+  stage: build
+  image: azul/zulu-openjdk:8
+  before_script:
+    - apt-get update && apt-get install -y git  curl  maven
+  script:
+    - git clone --depth 1 https://github.com/saalfeldlab/render.git render -b master
+    - ./render/render-ws/src/main/scripts/install.sh
+    - export JAVA_HOME=`readlink -m ./render/deploy/*jdk*`
+    - mvn package -pl render-ws-java-client  -am -DskipTests -f render/pom.xml
+  cache:
+    - key: render
+      paths:
+        - render
+      untracked: true
+      policy: push
+  when: manual
+
+
+tests:
+  image: 'python:3.7-bullseye'
+  stage: test
+  services:
+    - name: mongo:4
+      alias: mymongo
+    - name: git.embl.de:4567/schorb/rendermodules-addons
+      alias: myrender
+  cache:
+    - key: render
+      paths:
+        - render
+      untracked: true
+      policy: pull
+  before_script:
+#    - apt-get update && apt-get install -y git curl wget
+#    - "curl -X GET --header 'Accept: application/json' 'http://myrender:8080/render-ws/v1/serverProperties'"
+#    - pip install pymongo
+#    - python -c "from pymongo import MongoClient; client=MongoClient('mymongo'); print(client.server_info())"
+    - pip install git+https://github.com/constantinpape/pybdv
+    - pip install render-python
+    - pip install git+https://github.com/AllenInstitute/asap-modules/ --no-deps
+    - pip install git+https://git.embl.de/schorb/pyem
+    - pip install -r test_requirements.txt
+#    - git pull origin $CI_COMMIT_BRANCH
+  script:
+    - export JAVA_HOME=`readlink -m ./render/deploy/*jdk*`
+    - export PATH=$PATH:$JAVA_HOME/bin
+    - ls $RENDER_CLIENT_SCRIPTS
+    - useradd testuser
+    - chmod 777 -R *
+    - su testuser -c "coverage run -m pytest"
+    - coverage xml
+    - coverage-badge
+    - coverage report
+  artifacts:
+    reports:
+      cobertura:
+        coverage.xml
+  coverage: '/TOTAL.+ ([0-9]{1,3}%)/'
   rules:
     - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
     
 pages:
+  image: python:3.7-buster
   stage: deploy
   before_script:
   - apt install git
   - pip install -U sphinx
   - pip install git+https://github.com/AllenInstitute/asap-modules
   - pip install git+https://git.embl.de/schorb/pyem
+  - pip install git+https://github.com/constantinpape/pybdv
   - pip install -r requirements.txt
   script:
   - sphinx-build -b html docs public

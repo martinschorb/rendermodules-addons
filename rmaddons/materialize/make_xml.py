@@ -53,35 +53,26 @@ class MakeXML(argschema.ArgSchemaParser):
         """
         if path.endswith('n5'):
             xml_path = path.replace('.n5', '.xml')
-            is_h5=False
-        elif path.endswith('h5'):
-            xml_path = path.replace('.h5', '.xml')
-            is_h5=True
         else:
-            raise TypeError('Only h5 and n5 are currently supported.')
-    
+            raise TypeError('Only n5 format is currently supported.')
+
         attrs = {'channel': {'id': None}}
         attrs = validate_attributes(xml_path, attrs, setup_id=0,
                                     enforce_consistency=False)
         if scale_factors == [[1,1,1]]:
             scale_factors = get_n5scales(path)
-        
+
         write_xml_metadata(xml_path, path, unit, resolution,
-                           is_h5=is_h5,
+                           is_h5=False,
                            setup_id=0, timepoint=0,
                            setup_name=None,
                            affine=None,
                            attributes=attrs,
-                           overwrite=False,
+                           overwrite=True,
                            overwrite_data=False,
                            enforce_consistency=False)
         
-        if is_h5:
-            write_h5_metadata(path, scale_factors, resolution, setup_id=0, timepoint=0, overwrite=True)
-        else:
-            write_n5_metadata(path, scale_factors, resolution, setup_id=0, timepoint=0, overwrite=True)
-            
-            
+        write_n5_metadata(path, scale_factors, resolution, setup_id=0, timepoint=0, overwrite=True)
             
 
     def run(self):        

@@ -21,6 +21,8 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+test_logs/
+*.n5
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -42,6 +44,8 @@ nosetests.xml
 coverage.xml
 *.cover
 .hypothesis/
+tests/test_files/*testdata/
+
 
 # Translations
 *.mo

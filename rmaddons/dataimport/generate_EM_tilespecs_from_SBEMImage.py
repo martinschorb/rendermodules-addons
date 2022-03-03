@@ -15,7 +15,7 @@ from rmaddons.dataimport.schemas import GenerateSBEMTileSpecsParameters
 from rmaddons.utilities.EMBL_file_utils import groupsharepath
 
 import time
-
+import requests
 import glob
 
 import json
@@ -24,17 +24,16 @@ import json
 
 example_input = {
     "render": {
-        "host": "pc-emcf-16.embl.de",
+        "host": "localhost",
         "port": 8080,
         "owner": "SBEM",
         "project": "tests",
         "client_scripts": (
-            "/g/emcf/software/render/render-ws-java-client/"
-            "src/main/scripts")},
-    "image_directory": "/g/emcf/common/for_martin/SBEMdata/platy_20-05-27",
-    "stack": "test_resolution",
+            "/render/render-ws-java-client/src/main/scripts/")},
+    "image_directory": "",
+    "stack": "test_stack",
     "overwrite_zlayer": True,
-    "pool_size": 4,
+    "pool_size": 1,
     "close_stack": True,
     "z_index": 1,
     "output_stackVersion":{
@@ -69,6 +68,7 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
     
         return output
     
+    imgdir = []
 
     def ts_from_SBEMtile(self,line,pxs,rotation):
         """
@@ -96,7 +96,7 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
         # mat_t = np.concatenate((np.eye(3),[[tile['glob_x']],[tile['glob_y']],[tile['glob_z']]]),axis=1)
         # mat_t = np.concatenate((mat_t,[[0,0,0,1]]))
 
-        f1 = os.path.realpath(tile['filename'])
+        f1 = os.path.realpath(os.path.join(self.imgdir,tile['filename']))
 
         filepath= groupsharepath(f1)
 
@@ -159,21 +159,18 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
         :return: list of :class:`renderapi.tilespec.TileSpec` objects for all tiles.
 
         """
-        os.chdir(imgdir)
-
+        imgdir = os.path.realpath(imgdir)
+        self.imgdir = imgdir
 
         timestamp = time.localtime()
-        if not os.path.exists('conv_log'):os.makedirs('conv_log')
+
         log_name = '_{}{:02d}{:02d}-{:02d}{:02d}'.format(timestamp.tm_year,timestamp.tm_mon,timestamp.tm_mday,timestamp.tm_hour,timestamp.tm_min)
 
-
-        # mipmap_args = []
-        # tilespecpaths = []
         logfile = os.path.join(imgdir,'conv_log','Render_convert'+log_name+'.log')
 
-        if not os.path.exists('meta'): raise  FileNotFoundError('Change to proper directory!')
+        if not os.path.exists(os.path.join(imgdir,'meta')): raise  FileNotFoundError('Change to proper directory!')
 
-        mfile0 = os.path.join('meta','logs','imagelist_')
+        mfile0 = os.path.join(imgdir,'meta','logs','imagelist_')
 
         mfiles = glob.glob(mfile0+'*')
 
@@ -190,11 +187,11 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             # with open(mfile) as mf: ml = mf.read().splitlines()
             acq_suffix = mfile[mfile.rfind('_'):]
 
-            mdfile = os.path.join('meta','logs','metadata'+acq_suffix)
+            mdfile = os.path.join(imgdir,'meta','logs','metadata'+acq_suffix)
 
             with open(mdfile) as mdf: mdl = mdf.read().splitlines()
 
-            conffile = os.path.join('meta','logs','config'+acq_suffix)
+            conffile = os.path.join(imgdir,'meta','logs','config'+acq_suffix)
 
             with open(conffile) as cf: cl = cf.read().splitlines()
 
@@ -208,20 +205,21 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             resolution = [pxs,pxs,z_thick]
             rotation = float(config['rotation'][0].strip('[],'))
 
-            if not curr_res == -1:
-                if not resolution==curr_res:
-                    stack_idx += 1
-                    allspecs.append([stackname,tspecs,curr_res])
-                    stackname += '_' + '%02d' %stack_idx
-                    tspecs=[]
-                elif not rotation==curr_rot:
-                    stack_idx += 1
-                    allspecs.append([stackname,tspecs,curr_res])
-                    stackname += '_' + '%02d' % stack_idx
-                    tspecs=[]
-
-            curr_res = resolution
-            curr_rot = rotation
+### ----   CHECK if resolution or tile rotation changes during run (should work but never used so far...)
+            # if not curr_res == -1:
+            #     if not resolution==curr_res:
+            #         stack_idx += 1
+            #         allspecs.append([stackname,tspecs,curr_res])
+            #         stackname += '_' + '%02d' %stack_idx
+            #         tspecs=[]
+            #     elif not rotation==curr_rot:
+            #         stack_idx += 1
+            #         allspecs.append([stackname,tspecs,curr_res])
+            #         stackname += '_' + '%02d' % stack_idx
+            #         tspecs=[]
+            #
+            # curr_res = resolution
+            # curr_rot = rotation
 
             for line in mdl:
                 if line.startswith('TILE: '):
@@ -231,7 +229,8 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
                     if os.path.exists(f1):
                         tspecs.append(tilespeclist)
                     else:
-                        fnf_error = 'ERROR: File '+f1+' does not exist'
+                        fnf_error = 'ERROR: File '+f1+' does not exist, skipping tile creation.'
+                        if not os.path.exists(os.path.join(imgdir,'conv_log')):os.makedirs(os.path.join(imgdir,'conv_log'))
                         print(fnf_error)
                         with open(logfile,'w') as log: log.writelines(fnf_error)
 
@@ -255,17 +254,21 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
 
         for specs in allspecs:
 
-            resolution=specs[2]
 
-            self.args["output_stackVersion"]["stackResolutionX"]=resolution[0]
-            self.args["output_stackVersion"]["stackResolutionY"]=resolution[1]
-            self.args["output_stackVersion"]["stackResolutionZ"]=resolution[2]
 
             self.args["output_stack"] = specs[0]
 
-
+            # create stack and fill resolution parameters
             self.output_tilespecs_to_stack(specs[1])
 
+            resolution = specs[2]
+            url =  'http://'+self.args["render"]["host"].split('http://')[-1] + ':' + str(self.args["render"]["port"])
+            url += '/render-ws/v1/owner/' + self.args["render"]["owner"]
+            url += '/project/' + self.args["render"]["project"]
+            url += '/stack/' + self.args["output_stack"]
+            url += '/resolutionValues'
+
+            requests.put(url, json=resolution)
 
 
 if __name__ == "__main__":

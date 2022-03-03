@@ -1,0 +1,24 @@
+{
+  "rel_scales":[[1, 1, 1],[2, 2, 2],[2, 2, 2],[2, 2, 2],[2, 2, 2],[2, 2, 2]],
+  "size":[401,301,51],
+  "resolution":[1,2,3],
+  "n5_attribs":{
+    "setup0":{
+        "dataType": "uint8",
+        "downsamplingFactors":[[1, 1, 1],[2, 2, 2],[4, 4, 4],[8, 8, 8],[16, 16, 16],[32, 32, 32]],
+        "neuroglancer_supported": true
+      },
+    "setup0/timepoint0":{
+        "axes":["x", "y", "z"],
+        "multiScale": true,
+        "pixelResolution": {
+          "dimensions":[1.0, 2.0, 3.0],
+          "unit": "nm"
+        },
+      "resolution":[3.0, 2.0, 1.0],
+      "scales":[[1, 1, 1],[2, 2, 2],[4, 4, 4],[8, 8, 8],[16, 16, 16],[32, 32, 32]],
+      "translate":[-6900, -41000, 50],
+      "units":["nm", "nm", "nm"]
+      }
+    }
+}
