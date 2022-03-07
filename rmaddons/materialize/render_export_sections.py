@@ -8,7 +8,6 @@ from asap.materialize.schemas import (RenderSectionAtScaleOutput)
 
 from asap.materialize.render_downsample_sections import (check_stack_for_mipmaps,
                                                          create_tilespecs_without_mipmaps,
-                                                         WithThreadPool,
                                                          RenderSectionAtScale)
 
 from rmaddons.materialize.schemas import RenderSectionAtScale_extendedParameters
@@ -38,11 +37,29 @@ class RenderSectionAtScale_extended(RenderSectionAtScale):
     @classmethod
     def downsample_specific_mipmapLevel(
             cls, zvalues, input_stack=None, level=1, pool_size=1,
-            image_directory=None, scale=None, imgformat=None, doFilter=None,
-            fillWithNoise=None, filterListName=None,
-            render=None, do_mp=True, bounds=None, **kwargs):
-        # temporary hack for nested pooling woes
-        poolclass = (renderapi.client.WithPool if do_mp else WithThreadPool)
+            image_directory=None, scale=None, imgformat=None,
+            render=None, bounds=None, customPath=True,
+            minInt=None,maxInt=None,
+            **kwargs):
+        """
+        Exports a set of slices (or a subset defiuned by a bounding box) from a Render stack to image files.
+
+        :param list zvalues: List of z values to select sections to export
+        :param str input_stack: input stack name
+        :param int level: mipmap level until which to downscale
+        :param int pool_size: compute pool size
+        :param str image_directory: output image directory
+        :param float scale: output scaling
+        :param str imgformat: image format ('tif','png' or 'jpg')
+        :param renderapi.render.Render render: :class:`renderapi.render.Render` Render connection
+        :param dict bounds: :class:`asap.asap.materialize.schemas.Bounds` section boundaries
+        :param bool customPath: whether output path is the final data directoy or automatic sub-directories should be generated
+        :param int minInt: minimum Intensity to map the output
+        :param int maxInt: maximum intensity to map the output
+        :return: stack name that was processed
+        """
+
+        poolclass = renderapi.client.WithPool
 
         stack_has_mipmaps = check_stack_for_mipmaps(
             render, input_stack, zvalues)
@@ -81,16 +98,25 @@ class RenderSectionAtScale_extended(RenderSectionAtScale):
 
             ds_source = temp_no_mipmap_stack
 
+        if customPath:
+            cOF = '.'
+            cSF = '.'
+        else:
+            cOF = None
+            cSF = None
+
         render.run(renderapi.client.renderSectionClient,
                    ds_source,
                    image_directory,
                    zvalues,
                    scale=scale,
                    format=imgformat,
-                   doFilter=doFilter,
-                   fillWithNoise=fillWithNoise,
-                   filterListName=filterListName,
-                   bounds=bounds)
+                   bounds=bounds,
+                   customOutputFolder=cOF,
+                   customSubFolder=cSF,
+                   maxIntensity=maxInt,
+                   minIntensity=minInt,
+                   )
 
         if stack_has_mipmaps:
             # delete the temp stack

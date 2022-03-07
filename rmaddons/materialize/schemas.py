@@ -80,6 +80,21 @@ class MakeXMLOutput(argschema.schemas.DefaultSchema):
 
 
 class RenderSectionAtScale_extendedParameters(RenderSectionAtScaleParameters):
-    pass
+    customPath = Boolean(
+        required=False,
+        default=True,
+        missing=True,
+        description='Use custom path name (default - True)')
+    minInt = Int(
+        required=False,
+        default=-1,
+        missing=-1,
+        description='minimum intensity for scaling output contrast')
+    maxInt = Int(
+        required=False,
+        default=-1,
+        missing=-1,
+        description='maximum intensity for scaling output contrast')
+
 
 

@@ -47,7 +47,7 @@ class MakeXML(argschema.ArgSchemaParser):
 
         :param str path: path to the n5 container
         :param list scale_factors: downsampling scale factors of the n5
-        :param list resolution: resolutio of the volume
+        :param list resolution: resolution of the volume
         :param str unit: unit label for the axis
 
         """
