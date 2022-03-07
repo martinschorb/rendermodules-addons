@@ -37,7 +37,7 @@ class RenderSectionAtScale_extended(RenderSectionAtScale):
     @classmethod
     def downsample_specific_mipmapLevel(
             cls, zvalues, input_stack=None, level=1, pool_size=1,
-            image_directory=None, scale=None, imgformat=None,imtype=-1,
+            image_directory=None, scale=None, imgformat=None,
             render=None, bounds=None, customPath=True,
             minInt=None,maxInt=None,
             **kwargs):
@@ -51,7 +51,6 @@ class RenderSectionAtScale_extended(RenderSectionAtScale):
         :param str image_directory: output image directory
         :param float scale: output scaling
         :param str imgformat: image format ('tiff','png' or 'jpeg')
-        :param int imtype: 8,16,24 to specify what kind of image type to save
         :param renderapi.render.Render render: :class:`renderapi.render.Render` Render connection
         :param dict bounds: :class:`asap.asap.materialize.schemas.Bounds` section boundaries
         :param bool customPath: whether output path is the final data directoy or automatic sub-directories should be generated
@@ -106,9 +105,6 @@ class RenderSectionAtScale_extended(RenderSectionAtScale):
             cOF = None
             cSF = None
 
-        if imtype not in [8,16,24]:
-            imtype = None
-
         render.run(renderapi.client.renderSectionClient,
                    ds_source,
                    image_directory,
@@ -119,8 +115,7 @@ class RenderSectionAtScale_extended(RenderSectionAtScale):
                    customOutputFolder=cOF,
                    customSubFolder=cSF,
                    maxIntensity=maxInt,
-                   minIntensity=minInt,
-                   imageType=imtype
+                   minIntensity=minInt
                    )
 
         if stack_has_mipmaps:
