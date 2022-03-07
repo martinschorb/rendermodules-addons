@@ -105,6 +105,10 @@ class RenderSectionAtScale_extended(RenderSectionAtScale):
             cOF = None
             cSF = None
 
+        if minInt == -1: minInt=None
+        if maxInt == -1: maxInt=None
+
+
         render.run(renderapi.client.renderSectionClient,
                    ds_source,
                    image_directory,
