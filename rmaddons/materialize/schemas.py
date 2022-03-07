@@ -3,6 +3,7 @@ import os
 import sys
 from argschema.fields import (Str, OutputDir, Int, Boolean, Float,
                               List, Field, InputDir, Nested)
+from asap.materialize.schemas import (RenderSectionAtScaleParameters)
 
 from argschema.fields.files import validate_input_path
 
@@ -77,5 +78,8 @@ class MakeXMLParameters(argschema.ArgSchema):
 class MakeXMLOutput(argschema.schemas.DefaultSchema):
     pass
 
+
+class RenderSectionAtScale_extendedParameters(RenderSectionAtScaleParameters):
+    pass
 
 
