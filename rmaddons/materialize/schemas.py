@@ -95,6 +95,11 @@ class RenderSectionAtScale_extendedParameters(RenderSectionAtScaleParameters):
         default=-1,
         missing=-1,
         description='maximum intensity for scaling output contrast')
+    imtype = Int(
+        required=False,
+        default=-1,
+        missing=-1,
+        description='8,16,24 to specify what kind of image type to save')
 
 
 
