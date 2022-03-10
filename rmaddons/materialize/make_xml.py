@@ -56,6 +56,8 @@ class MakeXML(argschema.ArgSchemaParser):
         else:
             raise TypeError('Only n5 format is currently supported.')
 
+        base = os.path.basename(os.path.splitext(path)[0])
+
         attrs = {'channel': {'id': None}}
         attrs = validate_attributes(xml_path, attrs, setup_id=0,
                                     enforce_consistency=False)
@@ -65,7 +67,7 @@ class MakeXML(argschema.ArgSchemaParser):
         write_xml_metadata(xml_path, path, unit, resolution,
                            is_h5=False,
                            setup_id=0, timepoint=0,
-                           setup_name=None,
+                           setup_name=base,
                            affine=None,
                            attributes=attrs,
                            overwrite=True,
