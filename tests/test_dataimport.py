@@ -17,7 +17,7 @@ from marshmallow.exceptions import ValidationError
 from rmaddons.dataimport import (generate_EM_tilespecs_from_SBEMImage,
                                  generate_EM_tilespecs_from_SerialEMmontage)
 
-from test_data import (render_params,
+from .test_data import (render_params,
                        example_sbem,
                        sbemimage_template,
                        example_serialem,

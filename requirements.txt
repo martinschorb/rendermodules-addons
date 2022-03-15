@@ -9,3 +9,4 @@ jinja2
 six
 numpy
 requests
+mobie-utils-python

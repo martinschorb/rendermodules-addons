@@ -10,7 +10,7 @@ from marshmallow.exceptions import ValidationError
 
 import json
 from rmaddons.materialize import make_xml
-from test_data import (
+from .test_data import (
                        example_dir,
                        example_n5,
                        makexml_template
@@ -136,7 +136,7 @@ def test_make_xml():
         mod.make_render_xml(path=input_params['path'])
 
     # clean up
-    os.system('rm -rf ' + example_n5)
+    # os.system('rm -rf ' + example_n5)
     os.system('rm -rf ' + baddir)
 
-    os.system('rm ' + xml_path)
+    # os.system('rm ' + xml_path)

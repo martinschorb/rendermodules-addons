@@ -2,12 +2,13 @@ import argschema
 import os
 import sys
 from argschema.fields import (Str, OutputDir, Int, Boolean, Float,
-                              List, Field, InputDir, Nested)
+                              List, Field, InputFile, Nested)
 from asap.materialize.schemas import (RenderSectionAtScaleParameters)
 
 from argschema.fields.files import validate_input_path
 
 import marshmallow as mm
+
 
 
 class InFileOrDir(Str):
@@ -60,6 +61,15 @@ class ScaleList(List):
                     "Scale factors need to be consistent!")
 
 
+class XMLFile(InputFile):
+    def _validate(self, value):
+        if not os.path.splitext(value)[1].lower()=='.xml':
+            raise mm.exceptions.ValidationError(
+                "File type needs to be XML")
+
+
+
+
 class MakeXMLParameters(argschema.ArgSchema):
     path = InFileOrDir(required=True, description=(
         "Path to the image data. Supports N5 and HDF5"))
@@ -72,12 +82,42 @@ class MakeXMLParameters(argschema.ArgSchema):
                                 description=(
         "List of voxel resolution."),
         default = [0.05, 0.015, 0.015])
-    unit = mm.fields.Str(required=False,default='micrometer')
+    unit = mm.fields.Str(required=False,default='micrometer',
+                         description=(
+                             "Physical unit of the resolution values."))
 
 
 class MakeXMLOutput(argschema.schemas.DefaultSchema):
     pass
 
+class AddtoMoBIEParameters(argschema.ArgSchema):
+    xmlpath = XMLFile(required=True, description=(
+        "Path to the BDV XML metadata file"))
+    outpath = Str(required=True, description=(
+        "Output path Path of the MoBIE project."))
+    resolution = ResolutionList(Float,
+                                required=False,
+                                default=[-1, -1, -1],
+                                cli_as_single_argument=True,
+                                description=(
+                                    "List of voxel resolution."))
+    unit = mm.fields.Str(required=False,default='',
+                         description=(
+                             "Physical unit of the resolution values."))
+    dataset_name = mm.fields.Str(required=False,default='',
+                         description=(
+                             "MoBIE dataset name"))
+    image_name = mm.fields.Str(required=False,default='',
+                         description=(
+                             "MoBIE image name"))
+    menu_name = mm.fields.Str(required=False,default='',
+                         description=(
+                             "MoBIE menu name"))
+
+
+
+class AddtoMoBIEOutput(argschema.schemas.DefaultSchema):
+    pass
 
 class RenderSectionAtScale_extendedParameters(RenderSectionAtScaleParameters):
     customPath = Boolean(
