@@ -1,0 +1,71 @@
+{
+"project.json":{
+    "datasets": [
+      "rmaddons_test"
+    ],
+    "defaultDataset": "rmaddons_test",
+    "imageDataFormats": [
+      "bdv.n5"
+    ],
+    "specVersion": "0.2.0"
+  },
+"dataset.json": {
+    "is2D": false,
+    "sources": {
+      "rmaddons_test": {
+        "image": {
+          "imageData": {
+            "bdv.n5": {
+              "relativePath": "images/bdv-n5/rmaddons_test.xml"
+            }
+          }
+        }
+      }
+    },
+    "timepoints": 1,
+    "views": {
+      "default": {
+        "isExclusive": false,
+        "sourceDisplays": [
+          {
+            "imageDisplay": {
+              "color": "white",
+              "contrastLimits": [
+                0.0,
+                255.0
+              ],
+              "name": "rmaddons_test",
+              "opacity": 1.0,
+              "sources": [
+                "rmaddons_test"
+              ]
+            }
+          }
+        ],
+        "sourceTransforms": [],
+        "uiSelectionGroup": "bookmark"
+      },
+      "rmaddons_test": {
+        "isExclusive": false,
+        "sourceDisplays": [
+          {
+            "imageDisplay": {
+              "color": "white",
+              "contrastLimits": [
+                0.0,
+                255.0
+              ],
+              "name": "rmaddons_test",
+              "opacity": 1.0,
+              "sources": [
+                "rmaddons_test"
+              ]
+            }
+          }
+        ],
+        "sourceTransforms": [],
+        "uiSelectionGroup": "images"
+      }
+    }
+  }
+}

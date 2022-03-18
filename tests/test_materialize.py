@@ -9,11 +9,12 @@ import xml.etree.ElementTree as ET
 from marshmallow.exceptions import ValidationError
 
 import json
-from rmaddons.materialize import make_xml
-from .test_data import (
+from rmaddons.materialize import make_xml, addtomobie
+from test_data import (
                        example_dir,
                        example_n5,
-                       makexml_template
+                       makexml_template,
+                       mobie_template
                        )
 
 def test_make_xml():
@@ -135,8 +136,36 @@ def test_make_xml():
         mod = make_xml.MakeXML(input_data=input_params)
         mod.make_render_xml(path=input_params['path'])
 
+
+
+def test_mobie():
+    xml_path = example_n5.replace('.n5', '.xml')
+    assert os.path.exists(xml_path)
+
+    input_params0 = addtomobie.example.copy()
+
+    input_params0['xml_path']=os.path.join(example_dir,'materialize_makexml.json')
+
+    # test check for input filr type
+    with pytest.raises(ValidationError)
+        mod = addtomobie.AddtoMoBIE(input_data=input_params0)
+
+    input_params1 = addtomobie.example.copy()
+    mod = addtomobie.AddtoMoBIE(input_data=input_params1)
+
+    mod.run()
+
+
+
+
+
+
+
+
+
+def test_cleanup():
     # clean up
-    # os.system('rm -rf ' + example_n5)
+    os.system('rm -rf ' + example_n5)
     os.system('rm -rf ' + baddir)
 
-    # os.system('rm ' + xml_path)
+    os.system('rm ' + xml_path)

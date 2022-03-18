@@ -57,7 +57,7 @@ class MakeXML(argschema.ArgSchemaParser):
             raise TypeError('Only n5 format is currently supported.')
 
         base = os.path.basename(os.path.splitext(path)[0])
-
+        os.system('sleep 23')
         attrs = {'channel': {'id': None}}
         attrs = validate_attributes(xml_path, attrs, setup_id=0,
                                     enforce_consistency=False)

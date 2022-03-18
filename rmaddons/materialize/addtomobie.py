@@ -28,6 +28,7 @@ class AddtoMoBIE(argschema.ArgSchemaParser):
         :param str outpath: path to the output MoBIE project directory
 
         """
+        os.system('sleep 23')
 
         base = os.path.basename(os.path.splitext(xmlpath)[0])
 
