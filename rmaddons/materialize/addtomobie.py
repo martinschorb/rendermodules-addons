@@ -74,7 +74,7 @@ class AddtoMoBIE(argschema.ArgSchemaParser):
     def run(self):
 
         self.addtomobieproject(self.args['xmlpath'],self.args['outpath'])
-        
+        print('Done adding ' + self.args['xmlpath']+' to MoBIe project ' + self.args['outpath'] + '.')
         
         
 if __name__ == "__main__":

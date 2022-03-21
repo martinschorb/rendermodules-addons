@@ -79,6 +79,7 @@ class MakeXML(argschema.ArgSchemaParser):
 
     def run(self):        
         self.make_render_xml(self.args['path'], self.args['scale_factors'] , self.args['resolution'], self.args['unit'])
+        print('Done generating XML file for '+self.args['path']+'.')
         
         
         
