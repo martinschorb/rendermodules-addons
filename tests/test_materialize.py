@@ -17,6 +17,10 @@ from test_data import (
                        mobie_template
                        )
 
+baddir = os.path.join(example_dir,'fakedir')
+mobiedir = os.path.join(example_dir,'mobie')
+
+
 def test_make_xml():
     # test if n5 sample exists
     assert os.path.exists(example_n5)
@@ -26,7 +30,6 @@ def test_make_xml():
     assert rel_scales == makexml_template['rel_scales']
 
     # test directory check
-    baddir = example_dir+'/fakedir'
 
     os.makedirs(baddir,exist_ok=True)
     os.system('chmod -r '+baddir)
@@ -144,10 +147,10 @@ def test_mobie():
 
     input_params0 = addtomobie.example.copy()
 
-    input_params0['xml_path']=os.path.join(example_dir,'materialize_makexml.json')
+    input_params0['xmlpath']=os.path.join(example_dir,'materialize_makexml.json')
 
-    # test check for input filr type
-    with pytest.raises(ValidationError)
+    # test check for input file type
+    with pytest.raises(ValidationError):
         mod = addtomobie.AddtoMoBIE(input_data=input_params0)
 
     input_params1 = addtomobie.example.copy()
@@ -155,11 +158,48 @@ def test_mobie():
 
     mod.run()
 
+    # test output directory
+    assert os.path.exists(input_params1['outpath'])
+    
+    project_jsonf = os.path.join(input_params1['outpath'],'project.json')
 
 
+    # test project.json
+    assert os.path.exists(project_jsonf)
 
+    expected_project = set(mobie_template['project.json'])
+    with open(project_jsonf) as pj:    
+        delivered_project = set(json.load(pj))
 
+    assert len(expected_project.symmetric_difference(delivered_project)) == 0
 
+    # test dataset
+    expected_dsdir = os.path.join(input_params1['outpath'],mobie_template['project.json']["datasets"][0])
+
+    assert os.path.exists(expected_dsdir)
+    assert os.path.exists(os.path.join(expected_dsdir,'images'))
+
+    expected_dataset = set(mobie_template['dataset.json'])
+    with open(os.path.join(expected_dsdir,'dataset.json')) as pj:
+        delivered_dataset = set(json.load(pj))
+
+    assert len(expected_dataset.symmetric_difference(delivered_dataset)) == 0
+
+    imtype = list(mobie_template["dataset.json"]\
+                              ["sources"]\
+                              [mobie_template['project.json']["datasets"][0]]\
+                              ["image"]["imageData"].keys())[0]
+
+    imagedir = os.path.join(expected_dsdir,'images',imtype.replace('.','-'))
+
+    assert os.path.exists(imagedir)
+
+    xml_path = os.path.join(expected_dsdir,mobie_template["dataset.json"]\
+        ["sources"][mobie_template['project.json']["datasets"][0]]["image"]["imageData"]\
+        [imtype]["relativePath"])
+
+    assert os.path.exists(xml_path)
+    assert os.path.exists(os.path.splitext(xml_path)[0]+'.'+imtype.replace('bdv.',''))
 
 
 
@@ -168,4 +208,4 @@ def test_cleanup():
     os.system('rm -rf ' + example_n5)
     os.system('rm -rf ' + baddir)
 
-    os.system('rm ' + xml_path)
+    os.system('rm -rf ' + mobiedir)
