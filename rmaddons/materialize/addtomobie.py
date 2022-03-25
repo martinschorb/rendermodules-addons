@@ -28,9 +28,11 @@ class AddtoMoBIE(argschema.ArgSchemaParser):
         :param str outpath: path to the output MoBIE project directory
 
         """
-        os.system('sleep 23')
+
+
 
         base = os.path.basename(os.path.splitext(xmlpath)[0])
+        xmlpath = os.path.abspath(xmlpath)
 
         resolution = self.args.get("resolution")
 
@@ -59,7 +61,6 @@ class AddtoMoBIE(argschema.ArgSchemaParser):
         if menu_name == '':
             menu_name = None
 
-
         mobie.add_bdv_image(xmlpath,
                             outpath,
                             dataset_name=dataset_name,
@@ -72,7 +73,6 @@ class AddtoMoBIE(argschema.ArgSchemaParser):
             schema_type=schema_type, *args, **kwargs)
 
     def run(self):
-
         self.addtomobieproject(self.args['xmlpath'],self.args['outpath'])
         print('Done adding ' + self.args['xmlpath']+' to MoBIe project ' + self.args['outpath'] + '.')
         
