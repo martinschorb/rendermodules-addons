@@ -154,6 +154,8 @@ def test_mobie():
         mod = addtomobie.AddtoMoBIE(input_data=input_params0)
 
     input_params1 = addtomobie.example.copy()
+    input_params1['xmlpath'] = xml_path
+
     mod = addtomobie.AddtoMoBIE(input_data=input_params1)
 
     mod.run()

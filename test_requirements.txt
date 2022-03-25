@@ -9,4 +9,5 @@ jinja2
 pathlib2
 uri-handler
 zarr
+pybdv
 mobie_utils
