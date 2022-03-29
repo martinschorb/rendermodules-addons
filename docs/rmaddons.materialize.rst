@@ -7,6 +7,12 @@ rmaddons\.materialize\.make\_xml module
     :members:
     :show-inheritance:
 
+rmaddons\.materialize\.addtomobie module
+------------------------------------------
+.. automodule:: rmaddons.materialize.addtomobie
+    :members:
+    :show-inheritance:
+
 rmaddons\.materialize\.schemas module
 ------------------------------------------
 .. automodule:: rmaddons.materialize.schemas
