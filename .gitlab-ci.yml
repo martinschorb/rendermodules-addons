@@ -73,6 +73,11 @@ tests:
         - render
       untracked: true
       policy: pull
+    - key: conda
+        paths:
+          - /opt/conda/
+        untracked: true
+        policy: push-pull
   before_script:
 #    - apt-get update && apt-get install -y git curl wget
 #    - "curl -X GET --header 'Accept: application/json' 'http://myrender:8080/render-ws/v1/serverProperties'"
@@ -108,12 +113,18 @@ tests:
 pages:
   image: 'continuumio/miniconda3'
   stage: deploy
+  cache:
+    - key: conda
+      paths:
+        - /opt/conda/
+      untracked: true
+      policy: pull
   before_script:
   - conda install python=3.7 -y
   - conda install  git mobie_utils -c conda-forge -y
   - pip install -U sphinx
   - pip install git+https://github.com/AllenInstitute/asap-modules --no-deps
-  - pip install git+https://git.embl.de/schorb/pyem  -
+  - pip install git+https://git.embl.de/schorb/pyem
   - pip install -r requirements.txt
   script:
   - sphinx-build -b html docs public
