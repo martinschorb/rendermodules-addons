@@ -1,5 +1,4 @@
 asap-modules
-py-EM
 zarr
 pybdv
 render-python>=2.2.2
@@ -7,6 +6,4 @@ marshmallow<3.0
 argschema<2.0
 jinja2
 six
-numpy
 requests
-mobie-utils-python
