@@ -60,7 +60,7 @@ build_render_clientscripts:
 
 
 tests:
-  image: 'continuumio/anaconda3'
+  image: 'continuumio/miniconda3'
   stage: test
   services:
     - name: mongo:4
@@ -78,8 +78,8 @@ tests:
 #    - "curl -X GET --header 'Accept: application/json' 'http://myrender:8080/render-ws/v1/serverProperties'"
 #    - pip install pymongo
 #    - python -c "from pymongo import MongoClient; client=MongoClient('mymongo'); print(client.server_info())"
-    - conda install --override-channels -c main -c anaconda python=3.7 -y
-    - conda install --override-channels -c main -c anaconda mamba -c conda-forge -y
+    - conda install --override-channels -c main python=3.7 -y
+    - conda install --override-channels mamba -c conda-forge -y
     - mamba install  pip git mobie_utils -c conda-forge -y
     - pip install render-python
     - pip install git+https://github.com/AllenInstitute/asap-modules/ --no-deps
