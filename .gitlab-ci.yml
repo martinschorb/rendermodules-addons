@@ -78,8 +78,8 @@ tests:
 #    - "curl -X GET --header 'Accept: application/json' 'http://myrender:8080/render-ws/v1/serverProperties'"
 #    - pip install pymongo
 #    - python -c "from pymongo import MongoClient; client=MongoClient('mymongo'); print(client.server_info())"
-    - conda install python=3.7 -y
-    - conda install mamba -c conda-forge -y
+    - conda install --override-channels -c main -c anaconda python=3.7 -y
+    - conda install --override-channels -c main -c anaconda mamba -c conda-forge -y
     - mamba install  pip git mobie_utils -c conda-forge -y
     - pip install render-python
     - pip install git+https://github.com/AllenInstitute/asap-modules/ --no-deps
@@ -101,7 +101,6 @@ tests:
       cobertura:
         coverage.xml
   coverage: '/TOTAL.+ ([0-9]{1,3}%)/'
-  when: manual
   rules:
     - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
     
