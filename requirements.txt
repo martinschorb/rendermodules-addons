@@ -5,3 +5,4 @@ argschema<2.0
 jinja2
 six
 requests
+jsonschema

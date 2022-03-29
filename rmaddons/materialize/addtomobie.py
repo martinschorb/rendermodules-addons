@@ -1,11 +1,9 @@
 import os.path
 import argschema
-import xml.etree.ElementTree as ET
 
 from rmaddons.materialize.schemas import AddtoMoBIEParameters, AddtoMoBIEOutput
 import mobie
 
-import mobie.metadata as mom
 from pybdv.metadata import get_resolution, get_unit
 
 example = {
