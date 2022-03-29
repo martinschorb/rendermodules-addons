@@ -74,10 +74,10 @@ tests:
       untracked: true
       policy: pull
     - key: conda
-        paths:
-          - /opt/conda/
-        untracked: true
-        policy: push-pull
+      paths:
+        - /opt/conda/
+      untracked: true
+      policy: pull-push
   before_script:
 #    - apt-get update && apt-get install -y git curl wget
 #    - "curl -X GET --header 'Accept: application/json' 'http://myrender:8080/render-ws/v1/serverProperties'"
