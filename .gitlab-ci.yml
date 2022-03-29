@@ -60,7 +60,7 @@ build_render_clientscripts:
 
 
 tests:
-  image: 'python:3.7-bullseye'
+  image: 'continuumio/anaconda3'
   stage: test
   services:
     - name: mongo:4
