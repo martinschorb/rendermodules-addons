@@ -87,6 +87,7 @@ tests:
     - useradd testuser
     - mkdir /home/testuser
     - su testuser -c 'conda install python=3.7 -y'
+    - su testuser -c 'conda install anaconda=4.5 -y'
     - su testuser -c 'conda install  git mobie_utils -c conda-forge -y'
     - pip install render-python
     - pip install git+https://github.com/AllenInstitute/asap-modules/ --no-deps
@@ -99,10 +100,10 @@ tests:
     - export PATH=$PATH:$JAVA_HOME/bin
     - ls $RENDER_CLIENT_SCRIPTS
     - chmod 777 -R *
-#    - su testuser -c "coverage run -m pytest"
-#    - coverage xml
-#    - coverage-badge
-#    - coverage report
+    - su testuser -c "coverage run -m pytest"
+    - coverage xml
+    - coverage-badge
+    - coverage report
   artifacts:
     reports:
       cobertura:
