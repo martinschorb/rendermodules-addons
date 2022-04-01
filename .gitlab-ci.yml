@@ -75,7 +75,7 @@ tests:
       policy: pull
     - key: conda
       paths:
-        - /opt/conda/
+        - /opt/conda
       untracked: true
       policy: pull-push
   before_script:
@@ -86,8 +86,8 @@ tests:
     - chmod 777 -R /opt/conda/
     - useradd testuser
     - mkdir /home/testuser
+    - chmod 777 /home/testuser
     - su testuser -c 'conda install python=3.7 -y'
-    - su testuser -c 'conda install anaconda=4.5 -y'
     - su testuser -c 'conda install  git mobie_utils -c conda-forge -y'
     - pip install render-python
     - pip install git+https://github.com/AllenInstitute/asap-modules/ --no-deps
@@ -118,7 +118,7 @@ pages:
   cache:
     - key: conda
       paths:
-        - /opt/conda/
+        - /opt/conda
       untracked: true
       policy: pull
   before_script:
