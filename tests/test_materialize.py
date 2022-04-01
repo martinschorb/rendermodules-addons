@@ -209,5 +209,5 @@ def test_cleanup():
     # clean up
     os.system('rm -rf ' + example_n5)
     os.system('rm -rf ' + baddir)
-
+    os.system('rm -rf ' + example_n5.replace('.n5', '.xml'))
     os.system('rm -rf ' + mobiedir)
