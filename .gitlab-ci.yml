@@ -62,6 +62,8 @@ build_render_clientscripts:
 tests:
   image: 'continuumio/miniconda3'
   stage: test
+  tags:
+    - docker7
   services:
     - name: mongo:4
       alias: mymongo
