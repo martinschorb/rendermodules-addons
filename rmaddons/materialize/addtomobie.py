@@ -32,6 +32,9 @@ class AddtoMoBIE(argschema.ArgSchemaParser):
         base = os.path.basename(os.path.splitext(xmlpath)[0])
         xmlpath = os.path.abspath(xmlpath)
 
+        print(xmlpath)
+        assert os.path.exists(xmlpath)
+
         resolution = self.args.get("resolution")
 
         # get resolution from XML

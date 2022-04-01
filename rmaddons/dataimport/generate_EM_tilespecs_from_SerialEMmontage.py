@@ -174,7 +174,7 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
         
         i_info = em.parse_adoc(idoc)
 
-        if 'ImageFile' in i_info.keys():
+        if 'ImageFile' in i_info.keys(): # pragma: no cover
             #MRC file
             #imfile = i_info['ImageFile'][0]
             raise(FileNotFoundError('MRC not yet supported'))
