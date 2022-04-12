@@ -42,7 +42,7 @@ class RenderSectionAtScale_extended(RenderSectionAtScale):
             minInt=None,maxInt=None,
             **kwargs):
         """
-        Exports a set of slices (or a subset defiuned by a bounding box) from a Render stack to image files.
+        Exports a set of slices (or a subset defined by a bounding box) from a Render stack to image files.
 
         :param list zvalues: List of z values to select sections to export
         :param str input_stack: input stack name
