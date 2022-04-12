@@ -87,26 +87,26 @@ tests:
     - useradd testuser
     - su testuser -c 'conda install python=3.7 -y'
     - su testuser -c 'conda install  git mobie_utils -c conda-forge -y'
-    - pip install render-python
-    - pip install git+https://github.com/AllenInstitute/asap-modules/ --no-deps
-    - pip install git+https://git.embl.de/schorb/pyem
-    - pip install git+https://github.com/mobie/mobie-utils-python --no-deps
-    - pip install -r test_requirements.txt
+    - su testuser -c 'pip install render-python'
+    - su testuser -c 'pip install git+https://github.com/AllenInstitute/asap-modules/ --no-deps'
+    - su testuser -c 'pip install git+https://git.embl.de/schorb/pyem'
+    - su testuser -c 'pip install git+https://github.com/mobie/mobie-utils-python --no-deps'
+    - su testuser -c 'pip install -r test_requirements.txt'
 #    - git pull origin $CI_COMMIT_BRANCH
   script:
     - export JAVA_HOME=`readlink -m ./render/deploy/*jdk*`
     - export PATH=$PATH:$JAVA_HOME/bin
     - ls $RENDER_CLIENT_SCRIPTS
     - chmod 777 -R *
-    - su testuser -c "coverage run -m pytest"
-    - coverage xml
-    - coverage-badge
-    - coverage report
-  artifacts:
-    reports:
-      cobertura:
-        coverage.xml
-  coverage: '/TOTAL.+ ([0-9]{1,3}%)/'
+#    - su testuser -c "coverage run -m pytest"
+#    - coverage xml
+#    - coverage-badge
+#    - coverage report
+#  artifacts:
+#    reports:
+#      cobertura:
+#        coverage.xml
+#  coverage: '/TOTAL.+ ([0-9]{1,3}%)/'
   rules:
     - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
     
