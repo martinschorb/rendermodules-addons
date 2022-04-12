@@ -24,8 +24,6 @@ import pyEM as em
 
 from subprocess import Popen, PIPE
 
-
-
 example_input = {
     "render": {
         "host": "render.embl.de",
@@ -49,8 +47,7 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
     default_schema = GenerateSerialEMTileSpecsParameters
     default_output_schema = GenerateEMTileSpecsOutput
 
-
-    def ts_from_SerialEMtile(self,tile,camline,header,z=0):
+    def ts_from_SerialEMtile(self, tile, camline, header, z=0):
         """
 
         :param dict tile: :class:`pyEM.adoc_item` containg the montage slice
@@ -65,7 +62,7 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
         # curr_posid = [int(tile['tileid'].split('.')[0]),int(tile['tileid'].split('.')[1])]
         # curr_pos = tilepos[posid.index(str(curr_posid[0])+'.'+str(curr_posid[1]))]
 
-   # 2) The translation matrix to position the object in space (lower left corner)
+        # 2) The translation matrix to position the object in space (lower left corner)
         # mat_t = np.concatenate((np.eye(3),[[tile['glob_x']],[tile['glob_y']],[tile['glob_z']]]),axis=1)
         # mat_t = np.concatenate((mat_t,[[0,0,0,1]]))
 
@@ -73,28 +70,26 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
 
         f1 = os.path.realpath(imagefile)
 
-        filepath= groupsharepath(f1)
+        filepath = groupsharepath(f1)
 
         ip = renderapi.image_pyramid.ImagePyramid()
         ip[0] = renderapi.image_pyramid.MipMap(imageUrl='file://' + filepath)
 
-        pxs = float(tile['PixelSpacing'][0])/10 # in nm
+        pxs = float(tile['PixelSpacing'][0]) / 10  # in nm
 
         if 'SuperMontCoords' in tile:
-            xpos=float(tile['SuperMontCoords'][0])
-            ypos=float(tile['SuperMontCoords'][1])
+            xpos = float(tile['SuperMontCoords'][0])
+            ypos = float(tile['SuperMontCoords'][1])
         else:
-            xpos=float(tile['PieceCoordinates'][0])
-            ypos=float(tile['PieceCoordinates'][1])
-            
-            
+            xpos = float(tile['PieceCoordinates'][0])
+            ypos = float(tile['PieceCoordinates'][1])
+
         if 'AlignedPieceCoords' in tile:
             xpos = xpos + float(tile['AlignedPieceCoords'][0]) - float(tile['PieceCoordinates'][0])
             ypos = ypos + float(tile['AlignedPieceCoords'][1]) - float(tile['PieceCoordinates'][1])
         elif 'AlignedPieceCoordsVS' in tile:
             xpos = xpos + float(tile['AlignedPieceCoordsVS'][0]) - float(tile['PieceCoordinates'][0])
             ypos = ypos + float(tile['AlignedPieceCoordsVS'][1]) - float(tile['PieceCoordinates'][1])
-
 
         if 'UncroppedSize' in tile:
             width = abs(int(tile['UncroppedSize'][0]))
@@ -103,7 +98,6 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
             width = int(header[0]['ImageSize'][0])
             height = int(header[0]['ImageSize'][1])
 
-
         if 'StagePosition' in tile and 'ImageShift' in tile:
             stageX = float(tile['StagePosition'][0]) + float(tile['ImageShift'][0])
             stageY = float(tile['StagePosition'][1]) + float(tile['ImageShift'][1])
@@ -111,17 +105,15 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
             stageX = xpos * pxs
             stageY = ypos * pxs
 
-
         tf_trans = renderapi.transform.AffineModel(
-                                 B0=xpos,
-                                 B1=-ypos)
+            B0=xpos,
+            B1=-ypos)
 
         tileid = os.path.splitext(imagefile)[0]
 
         intensities = tile['MinMaxMean']
 
-
-        print("Processing tile "+tileid+" metadata for Render.")
+        print("Processing tile " + tileid + " metadata for Render.")
 
         ts = renderapi.tilespec.TileSpec(
             tileId=tileid,
@@ -133,22 +125,21 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
             maxint=int(intensities[1]),
             tforms=[tf_trans],
             sectionId=z,
-            scopeId='SerialEM: ' + camline[camline.find('-')+1:].strip(' '),
-            cameraId=camline[camline.find(':')+1:camline.find('-')].strip(' '),
-            stageX = stageX,
-            stageY = stageY,
-            pixelsize = pxs # in nm
-            )
-        
+            scopeId='SerialEM: ' + camline[camline.find('-') + 1:].strip(' '),
+            cameraId=camline[camline.find(':') + 1:camline.find('-')].strip(' '),
+            stageX=stageX,
+            stageY=stageY,
+            pixelsize=pxs  # in nm
+        )
+
         # json_file = os.path.realpath(os.path.join(tilespecdir,outputProject+'_'+outputOwner+'_'+outputStack+'_%04d.json'%z))
         # fd=open(json_file, "w")
         # renderapi.utils.renderdump(tilespeclist,fd,sort_keys=True, indent=4, separators=(',', ': '))
         # fd.close()
 
-        return f1,ts
+        return f1, ts
 
-
-    def ts_from_serialemmontage(self,idocfile,mapsection=0,correct_gradient=True):
+    def ts_from_serialemmontage(self, idocfile, mapsection=0, correct_gradient=True):
         """
 
         :param str idocfile: input file (idoc)
@@ -159,76 +150,78 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
         """
         rawdir = os.path.dirname(idocfile)
 
-
         timestamp = time.localtime()
-        if not os.path.exists(os.path.join(rawdir,'conv_log')):os.makedirs(os.path.join(rawdir,'conv_log'))
-        log_name = '_{}{:02d}{:02d}-{:02d}{:02d}'.format(timestamp.tm_year,timestamp.tm_mon,timestamp.tm_mday,timestamp.tm_hour,timestamp.tm_min)
+        if not os.path.exists(os.path.join(rawdir, 'conv_log')):
+            os.makedirs(os.path.join(rawdir, 'conv_log'))
 
+        log_name = '_{}{:02d}{:02d}-{:02d}{:02d}'.format(timestamp.tm_year, timestamp.tm_mon, timestamp.tm_mday,
+                                                         timestamp.tm_hour, timestamp.tm_min)
 
         # mipmap_args = []
         # tilespecpaths = []
-        logfile = os.path.join(rawdir,'conv_log','SerialEM_convert'+log_name+'.log')
+        logfile = os.path.join(rawdir, 'conv_log', 'SerialEM_convert' + log_name + '.log')
 
-        
         idoc = em.loadtext(os.path.abspath(idocfile))
-        
+
         i_info = em.parse_adoc(idoc)
 
         if 'ImageFile' in i_info.keys():
-            #MRC file
-            #imfile = i_info['ImageFile'][0]
-            raise(FileNotFoundError('MRC not yet supported'))
+            # MRC file
+            # imfile = i_info['ImageFile'][0]
+            raise (FileNotFoundError('MRC not yet supported'))
         else:
             # Tif files and idoc       
             tiles = em.adoc_items(idoc, '[Image')
             items = em.adoc_items(idoc, '[')
             montsecs = em.adoc_items(idoc, '[MontSection')
-            header = em.adoc_items(idoc, '', header=True)   
-            camlines = em.adoc_items(idoc,'[T =')[0]
+            header = em.adoc_items(idoc, '', header=True)
+            camlines = em.adoc_items(idoc, '[T =')[0]
             camline = camlines[[k for k in camlines.keys()][0]]
 
         stackname = self.args.get("output_stack")
-        
-        tspecs=[]
+
+        tspecs = []
         allspecs = []
         stack_suffix = ''
         curr_navitem = ''
         pxs = float(tiles[0]['PixelSpacing'][0]) / 10
         curr_mont = {}
 
-
-        if len(montsecs)>0:
+        if len(montsecs) > 0:
             curr_mont = montsecs[0]
 
         multiple = True
 
-        if 'NavigatorLabel' in tiles[0].keys(): curr_navitem = tiles[0]['NavigatorLabel'][0].split('-')[0]
+        if 'NavigatorLabel' in tiles[0].keys():
+            curr_navitem = tiles[0]['NavigatorLabel'][0].split('-')[0]
 
         if all('SuperMontCoords' in tile.keys() for tile in tiles):
             # exclusively one or more SuperMontage(s)
             sm_navids = np.unique([tile['NavigatorLabel'][0].split('-')[0] for tile in tiles])
-            if len(sm_navids) < 2: multiple = False
-
+            if len(sm_navids) < 2:
+                multiple = False
 
         for tile in tiles:
             itemidx = items.index(tile)
 
-            if not 'NavigatorLabel' in tile.keys():
+            if 'NavigatorLabel' not in tile.keys():
                 curr_navitem = 'mont_' + [key for key in curr_mont.keys() if '#' in key][0].split('=')[1].strip(' []')
-                if items.index(curr_mont)<itemidx:
+                if items.index(curr_mont) < itemidx:
                     nextmonts = []
                     for item in items[itemidx:]:
-                        if len([item for key in item.keys() if '# [Mont' in key])>0:
+                        if len([item for key in item.keys() if '# [Mont' in key]) > 0:
                             nextmonts.append(item)
 
                     curr_mont = nextmonts[0]
-                    if not tspecs==[]:allspecs.append([stackname + stack_suffix, tspecs, pxs])
+                    if not tspecs == []:
+                        allspecs.append([stackname + stack_suffix, tspecs, pxs])
                     tspecs = []
             else:
                 # new (Super)montage starts
-                if not curr_navitem == 'nav_' +tile['NavigatorLabel'][0].split('-')[0]:
+                if not curr_navitem == 'nav_' + tile['NavigatorLabel'][0].split('-')[0]:
                     curr_navitem = 'nav_' + tile['NavigatorLabel'][0].split('-')[0]
-                    if not tspecs==[]:allspecs.append([stackname + stack_suffix, tspecs, pxs])
+                    if not tspecs == []:
+                        allspecs.append([stackname + stack_suffix, tspecs, pxs])
                     tspecs = []
 
             pxs = float(tile['PixelSpacing'][0]) / 10
@@ -236,22 +229,22 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
                 stack_suffix = '_' + curr_navitem
 
             os.chdir(rawdir)
-            f1,tilespeclist = self.ts_from_SerialEMtile(tile, camline, header)
+            f1, tilespeclist = self.ts_from_SerialEMtile(tile, camline, header)
 
             if os.path.exists(f1):
                 tspecs.append(tilespeclist)
             else:
-                fnf_error = 'ERROR: File '+f1+' does not exist. Skipping tile creation.'
+                fnf_error = 'ERROR: File ' + f1 + ' does not exist. Skipping tile creation.'
                 print(fnf_error)
-                with open(logfile,'w') as log: log.writelines(fnf_error)
+                with open(logfile, 'w') as log:
+                    log.writelines(fnf_error)
 
         allspecs.append([stackname + stack_suffix, tspecs, pxs])
         # print(pxs)
 
         return allspecs
 
-
-    def run(self):    
+    def run(self):
         allspecs = self.ts_from_serialemmontage(self.args["image_file"])
 
         z_res = self.args["z_spacing"]
@@ -260,30 +253,31 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
         for specs in allspecs:
             stack = specs[0]
             stacks.append(stack)
-            print('uploading stack '+stack)
+            print('uploading stack ' + stack)
             pxs = specs[2]
 
-            self.output_tilespecs_to_stack(specs[1],output_stack=stack)
+            self.output_tilespecs_to_stack(specs[1], output_stack=stack)
 
-        # create stack and fill resolution parameters
-    
-            url = 'http://'+self.args["render"]["host"].split('http://')[-1]+':'+str(self.args["render"]["port"])
-            url += '/render-ws/v1/owner/'+self.args["render"]["owner"]
-            url += '/project/'+self.args["render"]["project"]
-            url += '/stack/'+stack
+            # create stack and fill resolution parameters
+
+            url = 'http://' + self.args["render"]["host"].split('http://')[-1] + ':' + str(self.args["render"]["port"])
+            url += '/render-ws/v1/owner/' + self.args["render"]["owner"]
+            url += '/project/' + self.args["render"]["project"]
+            url += '/stack/' + stack
             url += '/resolutionValues'
 
-            res = [pxs,pxs,z_res]
+            res = [pxs, pxs, z_res]
 
             requests.put(url, json=res)
 
         return stacks
 
+
 # I don know what this does... so leave it out
-        # try:
-        #     self.output({'stack': self.output_stack})
-        # except AttributeError as e:
-        #     self.logger.error(e)
+# try:
+#     self.output({'stack': self.output_stack})
+# except AttributeError as e:
+#     self.logger.error(e)
 
 
 if __name__ == "__main__":

@@ -4,17 +4,16 @@ import json
 from rmaddons.materialize.schemas import MakeXMLParameters, MakeXMLOutput
 from pybdv.metadata import write_xml_metadata, write_h5_metadata, write_n5_metadata, validate_attributes
 from pybdv.util import absolute_to_relative_scale_factors
-# import sys
 
+# import sys
 
 
 example = {
     "path": "-",
-    "scale_factors": [[1,1,1]],
+    "scale_factors": [[1, 1, 1]],
     "resolution": [0.05, 0.015, 0.015],
     "unit": 'micrometer'
 }
-
 
 
 def get_n5scales(path):
@@ -24,7 +23,7 @@ def get_n5scales(path):
     :param str path: path to n5 container
     :return: nested list of relative scale factors
     """
-    with open(os.path.join(path,'setup0','timepoint0','attributes.json')) as f:
+    with open(os.path.join(path, 'setup0', 'timepoint0', 'attributes.json')) as f:
         t0_attribs = json.load(f)
 
     # first need to reverse the axis order of the scale factors due to XYZ convention in java vs. ZYX convention in python
@@ -39,9 +38,8 @@ class MakeXML(argschema.ArgSchemaParser):
     default_schema = MakeXMLParameters
     default_output_schema = MakeXMLOutput
 
-
     @classmethod
-    def make_render_xml(self,path, scale_factors = [[1,1,1]] , resolution = [10,10,10], unit='nm'):
+    def make_render_xml(self, path, scale_factors=[[1, 1, 1]], resolution=[10, 10, 10], unit='nm'):
         """
         Generate valid n5 attributes and BDV XML file to enable visualisation of a Render/Neuroglancer n5 in BDV/MoBIE
 
@@ -61,7 +59,7 @@ class MakeXML(argschema.ArgSchemaParser):
         attrs = {'channel': {'id': None}}
         attrs = validate_attributes(xml_path, attrs, setup_id=0,
                                     enforce_consistency=False)
-        if scale_factors == [[1,1,1]]:
+        if scale_factors == [[1, 1, 1]]:
             scale_factors = get_n5scales(path)
 
         write_xml_metadata(xml_path, path, unit, resolution,
@@ -73,17 +71,14 @@ class MakeXML(argschema.ArgSchemaParser):
                            overwrite=True,
                            overwrite_data=False,
                            enforce_consistency=False)
-        
-        write_n5_metadata(path, scale_factors, resolution, setup_id=0, timepoint=0, overwrite=True)
-            
 
-    def run(self):        
-        self.make_render_xml(self.args['path'], self.args['scale_factors'] , self.args['resolution'], self.args['unit'])
-        print('Done generating XML file for '+self.args['path']+'.')
-        
-        
-        
+        write_n5_metadata(path, scale_factors, resolution, setup_id=0, timepoint=0, overwrite=True)
+
+    def run(self):
+        self.make_render_xml(self.args['path'], self.args['scale_factors'], self.args['resolution'], self.args['unit'])
+        print('Done generating XML file for ' + self.args['path'] + '.')
+
+
 if __name__ == "__main__":
     mod = MakeXML(input_data=example)
     mod.run()
- 

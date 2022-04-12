@@ -55,7 +55,7 @@ setup(name='rendermodules-addons',
       packages=find_packages(),
       package_data={
           '': ['LICENSE',
-              '*.md']},
+               '*.md']},
       install_requires=required,
       setup_requires=['flake8', 'setuptools_scm'],
       # tests_require=test_required,

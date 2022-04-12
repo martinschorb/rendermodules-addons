@@ -18,7 +18,7 @@ class AddtoMoBIE(argschema.ArgSchemaParser):
     default_schema = AddtoMoBIEParameters
     default_output_schema = AddtoMoBIEOutput
 
-    def addtomobieproject(self,xmlpath,outpath):
+    def addtomobieproject(self, xmlpath, outpath):
         """
         Add a BDV xml dataset to a MoBIE project folder. Will create all MoBIER project structure if not yet existing.
 
@@ -27,16 +27,14 @@ class AddtoMoBIE(argschema.ArgSchemaParser):
 
         """
 
-
-
         base = os.path.basename(os.path.splitext(xmlpath)[0])
         xmlpath = os.path.abspath(xmlpath)
 
         resolution = self.args.get("resolution")
 
         # get resolution from XML
-        if resolution == [-1,-1,-1]:
-            resolution = get_resolution(xmlpath,0)
+        if resolution == [-1, -1, -1]:
+            resolution = get_resolution(xmlpath, 0)
 
         unit = self.args.get("unit")
 
@@ -71,11 +69,10 @@ class AddtoMoBIE(argschema.ArgSchemaParser):
             schema_type=schema_type, *args, **kwargs)
 
     def run(self):
-        self.addtomobieproject(self.args['xmlpath'],self.args['outpath'])
-        print('Done adding ' + self.args['xmlpath']+' to MoBIe project ' + self.args['outpath'] + '.')
-        
-        
+        self.addtomobieproject(self.args['xmlpath'], self.args['outpath'])
+        print('Done adding ' + self.args['xmlpath'] + ' to MoBIe project ' + self.args['outpath'] + '.')
+
+
 if __name__ == "__main__":
     mod = AddtoMoBIE(input_data=example)
     mod.run()
- 

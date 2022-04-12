@@ -13,19 +13,18 @@ render_port = os.environ.get(
 render_test_owner = os.environ.get(
     'RENDER_TEST_OWNER', 'test'
 )
-render_dir = os.environ.get('RENDER_DIR',os.path.abspath('./render'))
+render_dir = os.environ.get('RENDER_DIR', os.path.abspath('./render'))
 
 client_script_location = os.environ.get(
     'RENDER_CLIENT_SCRIPTS',
-    (render_dir+'/render-ws-java-client/'
-     'src/main/scripts/'))
+    (render_dir + '/render-ws-java-client/'
+                  'src/main/scripts/'))
 
 # asap test compares with integer
 try:
     render_port = int(render_port)
 except ValueError:
     pass
-
 
 render_params = {
     "host": render_host,
@@ -34,7 +33,6 @@ render_params = {
     "project": "test_project",
     "client_scripts": client_script_location
 }
-
 
 log_dir = os.environ.get(
     'LOG_DIR',
@@ -50,12 +48,12 @@ except OSError as e:
 example_dir = os.path.join(os.path.dirname(__file__), 'test_files')
 example_env = Environment(loader=FileSystemLoader(example_dir))
 
-tempdir = os.environ.get('TEMPDIR',example_dir)
+tempdir = os.environ.get('TEMPDIR', example_dir)
 
 # example N5 output data
 
-example_n5z =  os.path.join(example_dir,'testn5.tgz')
-example_n5 = os.path.abspath(os.path.join(tempdir,'rmaddons_test.n5'))
+example_n5z = os.path.join(example_dir, 'testn5.tgz')
+example_n5 = os.path.abspath(os.path.join(tempdir, 'rmaddons_test.n5'))
 
 if not os.path.exists(example_n5):
     try:
@@ -63,11 +61,10 @@ if not os.path.exists(example_n5):
     except OSError as e:
         pass
 
-
 # example SBEMImage input data
 
-example_sbemz = os.path.join(example_dir,'testsbemimage.tgz')
-example_sbem = os.path.abspath(os.path.join(tempdir,'sbemimage_testdata'))
+example_sbemz = os.path.join(example_dir, 'testsbemimage.tgz')
+example_sbem = os.path.abspath(os.path.join(tempdir, 'sbemimage_testdata'))
 
 if not os.path.exists(example_sbem):
     try:
@@ -75,19 +72,16 @@ if not os.path.exists(example_sbem):
     except OSError as e:
         pass
 
-
 # example SerialEMmontage input data
 
-example_serialemz = os.path.join(example_dir,'testidoc.tgz')
-example_serialem = os.path.abspath(os.path.join(tempdir,'idoc_supermont_testdata'))
+example_serialemz = os.path.join(example_dir, 'testidoc.tgz')
+example_serialem = os.path.abspath(os.path.join(tempdir, 'idoc_supermont_testdata'))
 
 if not os.path.exists(example_serialem):
     try:
         os.system('tar xvfz ' + example_serialemz + ' -C ' + example_dir)
     except OSError as e:
         pass
-
-
 
 
 # load template json files
@@ -101,17 +95,17 @@ def render_json_template(env, template_file, **kwargs):
 # define test templates
 
 makexml_template = render_json_template(
-        example_env,
-        'materialize_makexml.json')
+    example_env,
+    'materialize_makexml.json')
 
 sbemimage_template = render_json_template(
-        example_env,
-        'dataimport_generate_EM_tilespecs_from_SBEMImage.json')
+    example_env,
+    'dataimport_generate_EM_tilespecs_from_SBEMImage.json')
 
 serialem_template = render_json_template(
-        example_env,
-        'dataimport_generate_EM_tilespecs_from_SerialEMmontage.json')
+    example_env,
+    'dataimport_generate_EM_tilespecs_from_SerialEMmontage.json')
 
 mobie_template = render_json_template(
-        example_env,
-        'materialize_addtomobie.json')
+    example_env,
+    'materialize_addtomobie.json')

@@ -88,15 +88,14 @@ def test_generate_SBEM(render):
     md = renderapi.stack.get_stack_metadata(render=render, stack=ex['stack'])
 
     expected_resolution = sbemimage_template['resolution']
-    delivered_resolution = [md.stackResolutionX,md.stackResolutionY,md.stackResolutionZ]
+    delivered_resolution = [md.stackResolutionX, md.stackResolutionY, md.stackResolutionZ]
 
     # test if resolution of stack is correct
-    assert (np.array(expected_resolution)-np.array(delivered_resolution)==[0,0,0]).all()
+    assert (np.array(expected_resolution) - np.array(delivered_resolution) == [0, 0, 0]).all()
 
     # cleanup
     os.system('rm -rf ' + example_sbem)
     renderapi.stack.delete_stack(ex['stack'], render=render)
-
 
 
 def test_generate_SerialEM(render):
@@ -111,12 +110,12 @@ def test_generate_SerialEM(render):
         outfile = probablyemptyfn.name
 
     # test non existing image file
-    ex['image_file'] = os.path.join(example_serialem,'notexistingfile')
+    ex['image_file'] = os.path.join(example_serialem, 'notexistingfile')
 
     with pytest.raises(ValidationError):
         mod1 = generate_EM_tilespecs_from_SerialEMmontage.GenerateSEMmontTileSpecs(input_data=ex)
 
-    ex['image_file'] = os.path.join(example_serialem,'supermont.idoc')
+    ex['image_file'] = os.path.join(example_serialem, 'supermont.idoc')
 
     mod = generate_EM_tilespecs_from_SerialEMmontage.GenerateSEMmontTileSpecs(input_data=ex)
 
@@ -138,10 +137,10 @@ def test_generate_SerialEM(render):
     md = renderapi.stack.get_stack_metadata(render=render, stack=stacks0[0])
 
     expected_resolution = serialem_template['resolution0']
-    delivered_resolution = [md.stackResolutionX,md.stackResolutionY,md.stackResolutionZ]
+    delivered_resolution = [md.stackResolutionX, md.stackResolutionY, md.stackResolutionZ]
 
     # test if resolution of stack is correct
-    assert (np.array(expected_resolution)-np.array(delivered_resolution)==[0,0,0]).all()
+    assert (np.array(expected_resolution) - np.array(delivered_resolution) == [0, 0, 0]).all()
 
     ex['image_file'] = os.path.join(example_serialem, 'mont01.idoc')
 
@@ -169,9 +168,8 @@ def test_generate_SerialEM(render):
         # test if resolution of stack is correct
         assert (np.array(expected_resolution) - np.array(delivered_resolution) == [0, 0, 0]).all()
 
-        #cleanup
+        # cleanup
         renderapi.stack.delete_stack(stack, render=render)
-
 
     assert os.path.exists(example_serialem + '/conv_log')
     with open(os.path.join(example_serialem, 'conv_log', os.listdir(example_serialem + '/conv_log')[0])) as file:
@@ -187,10 +185,6 @@ def test_generate_SerialEM(render):
     # r = requests.get(url)
     # delivered_resolution = r.json()
 
-
     # cleanup
     os.system('rm -rf ' + example_serialem)
     renderapi.stack.delete_stack(stacks0[0], render=render)
-
-
-

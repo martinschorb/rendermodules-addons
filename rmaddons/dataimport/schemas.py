@@ -1,12 +1,11 @@
-
 from argschema.fields import (
     InputDir, InputFile, Str, Int, Boolean, Float, List)
 
 from asap.module.schemas import (
     StackTransitionParameters, InputStackParameters, OutputStackParameters)
 
+
 class GenerateSBEMTileSpecsParameters(OutputStackParameters):
-    
     image_directory = InputDir(
         required=True,
         description=("directory used in determining absolute paths to images. "
@@ -19,13 +18,10 @@ class GenerateSBEMTileSpecsParameters(OutputStackParameters):
             "the metadata_uri if omitted"))
 
 
-
 class GenerateSerialEMTileSpecsParameters(OutputStackParameters):
-    
     image_file = InputFile(
         required=True,
         description="metadata file containing SerialEM acquisition data (idoc)")
     z_spacing = Float(
         required=False, default=100.0,
         description="spacing between slices/ section thickness")
-    

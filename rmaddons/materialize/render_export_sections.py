@@ -12,15 +12,14 @@ from asap.materialize.render_downsample_sections import (check_stack_for_mipmaps
 
 from rmaddons.materialize.schemas import RenderSectionAtScale_extendedParameters
 
-
 example = {
-    "render":{
+    "render": {
         "host": "render.embl.de",
         "port": 8080,
         "owner": "SBEM",
         "project": "test",
         "client_scripts": (
-        "/g/emcf/software/render/render-ws-java-client/src/main/scripts")},
+            "/g/emcf/software/render/render-ws-java-client/src/main/scripts")},
     "input_stack": "pp",
     "image_directory": "/g/emcf/schorb/data",
     "imgformat": "jpg",
@@ -39,7 +38,7 @@ class RenderSectionAtScale_extended(RenderSectionAtScale):
             cls, zvalues, input_stack=None, level=1, pool_size=1,
             image_directory=None, scale=None, imgformat=None,
             render=None, bounds=None, customPath=True,
-            minInt=None,maxInt=None,
+            minInt=None, maxInt=None,
             **kwargs):
         """
         Exports a set of slices (or a subset defined by a bounding box) from a Render stack to image files.
@@ -105,9 +104,10 @@ class RenderSectionAtScale_extended(RenderSectionAtScale):
             cOF = None
             cSF = None
 
-        if minInt == -1: minInt=None
-        if maxInt == -1: maxInt=None
-
+        if minInt == -1:
+            minInt = None
+        if maxInt == -1:
+            maxInt = None
 
         render.run(renderapi.client.renderSectionClient,
                    ds_source,
@@ -127,6 +127,7 @@ class RenderSectionAtScale_extended(RenderSectionAtScale):
             render.run(renderapi.stack.delete_stack,
                        temp_no_mipmap_stack)
         return ds_source
+
 
 if __name__ == "__main__":
     mod = RenderSectionAtScale_extended(input_data=example)
