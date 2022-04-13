@@ -33,8 +33,8 @@ class AddtoMoBIE(argschema.ArgSchemaParser):
         resolution = self.args.get("resolution")
 
         # get resolution from XML
-        if resolution == [-1, -1, -1]:
-            resolution = get_resolution(xmlpath, 0)
+        # if resolution == [-1, -1, -1]:
+        #     resolution = get_resolution(xmlpath, 0)
 
         unit = self.args.get("unit")
 

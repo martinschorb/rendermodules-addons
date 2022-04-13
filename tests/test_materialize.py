@@ -199,10 +199,10 @@ def test_mobie():
     assert os.path.exists(xml_path)
     assert os.path.exists(os.path.splitext(xml_path)[0] + '.' + imtype.replace('bdv.', ''))
 
-#
-# def test_cleanup():
-#     # clean up
-#     os.system('rm -rf ' + example_n5)
-#     os.system('rm -rf ' + baddir)
-#
-#     os.system('rm -rf ' + mobiedir)
+
+def test_cleanup():
+    # clean up
+    os.system('rm -rf ' + example_n5)
+    os.system('rm -rf ' + baddir)
+
+    os.system('rm -rf ' + mobiedir)
