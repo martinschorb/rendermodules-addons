@@ -59,6 +59,18 @@ build_render_clientscripts:
   when: manual
 
 
+build_test_docker:
+  stage: build
+  image: docker:$DOCKER_VERSION-git
+  tags:
+    - docker7
+  before_script:
+    - docker info
+  script:
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin && docker build -t rmaddons-test . && docker push rmadons-test
+  when: manual
+
+
 tests:
   image: 'continuumio/miniconda3'
   stage: test
