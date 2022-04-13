@@ -86,11 +86,6 @@ tests:
         - render
       untracked: true
       policy: pull
-    - key: conda
-      paths:
-        - /opt/conda
-      untracked: true
-      policy: pull-push
   before_script:
 #    - apt-get update && apt-get install -y git curl wget
 #    - "curl -X GET --header 'Accept: application/json' 'http://myrender:8080/render-ws/v1/serverProperties'"
@@ -124,20 +119,13 @@ tests:
     - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
     
 pages:
-  image: 'continuumio/miniconda3'
+  image: git.embl.de:4567/schorb/rendermodules-addons/rmaddons-test
   stage: deploy
-  cache:
-    - key: conda
-      paths:
-        - /opt/conda/
-      untracked: true
-      policy: pull
+
   before_script:
-  - conda install python=3.7 -y
-  - conda install  git mobie_utils -c conda-forge -y
   - pip install -U sphinx
-  - pip install git+https://github.com/AllenInstitute/asap-modules --no-deps
-  - pip install git+https://git.embl.de/schorb/pyem
+#  - pip install git+https://github.com/AllenInstitute/asap-modules --no-deps
+#  - pip install git+https://git.embl.de/schorb/pyem
   - pip install -r requirements.txt
   script:
   - sphinx-build -b html docs public
