@@ -80,7 +80,7 @@ tests:
   services:
     - name: mongo:4
       alias: mymongo
-#    - name: git.embl.de:4567/schorb/rendermodules-addons/render
+    - git.embl.de:4567/schorb/rendermodules-addons/render
 #      alias: myrender
   cache:
     - key: render
@@ -90,7 +90,7 @@ tests:
       policy: pull
   before_script:
 #    - apt-get update && apt-get install -y git curl wget
-#    - "curl -X GET --header 'Accept: application/json' 'http://myrender:8080/render-ws/v1/serverProperties'"
+    - "curl -X GET --header 'Accept: application/json' 'http://git.embl.de:8080/render-ws/v1/serverProperties'"
     - pip install pymongo
   script:
     - python -c "from pymongo import MongoClient; client=MongoClient('mymongo'); print(client.server_info())"
