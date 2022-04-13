@@ -58,12 +58,13 @@ build_render_clientscripts:
       policy: push
   when: manual
 
-
 build_test_docker:
   stage: build
   image: docker:$DOCKER_VERSION-git
   tags:
     - docker7
+  services:
+    - docker:$DOCKER_VERSION-dind
   before_script:
     - docker info
   script:
