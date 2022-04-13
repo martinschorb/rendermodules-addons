@@ -73,12 +73,12 @@ build_test_docker:
 
 
 tests:
-  image: 'continuumio/miniconda3'
+  image: git.embl.de:4567/schorb/rendermodules-addons/rmaddons-test
   stage: test
   services:
     - name: mongo:4
       alias: mymongo
-    - name: git.embl.de:4567/schorb/rendermodules-addons
+    - name: git.embl.de:4567/schorb/rendermodules-addons/render
       alias: myrender
   cache:
     - key: render
