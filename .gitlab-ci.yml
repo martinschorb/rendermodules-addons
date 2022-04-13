@@ -51,11 +51,11 @@ build_render_clientscripts:
     - export JAVA_HOME=`readlink -m ./render/deploy/*jdk*`
     - mvn package -pl render-ws-java-client  -am -DskipTests -f render/pom.xml
   cache:
-    - key: render
-      paths:
-        - render
-      untracked: true
-      policy: push
+    key: render
+    paths:
+      - render
+    untracked: true
+    policy: push
   when: manual
 
 build_test_docker:
@@ -83,11 +83,11 @@ tests:
     - name: git.embl.de:4567/schorb/rendermodules-addons/render
       alias: myrender
   cache:
-    - key: render
-      paths:
-        - render
-      untracked: true
-      policy: pull
+    key: render
+    paths:
+      - render
+    untracked: true
+    policy: pull
   variables:
     FF_NETWORK_PER_BUILD: 1
   before_script:
