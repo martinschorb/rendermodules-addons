@@ -17,15 +17,15 @@ example = {
         "host": "render.embl.de",
         "port": 8080,
         "owner": "SBEM",
-        "project": "test",
+        "project": "tests",
         "client_scripts": (
             "/g/emcf/software/render/render-ws-java-client/src/main/scripts")},
-    "input_stack": "pp",
-    "image_directory": "/g/emcf/schorb/data",
+    "input_stack": "test_stack",
+    "image_directory": "./slicedata",
     "imgformat": "jpg",
     "scale": 0.1,
-    "minZ": 444,
-    "maxZ": 448
+    "minZ": 2,
+    "maxZ": 5
 }
 
 

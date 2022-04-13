@@ -7,15 +7,23 @@ import copy
 import pytest
 import xml.etree.ElementTree as ET
 from marshmallow.exceptions import ValidationError
+import renderapi
+from renderapi.errors import RenderError, RenderModuleException
 
 import json
-from rmaddons.materialize import make_xml, addtomobie
-from test_data import (
-    example_dir,
-    example_n5,
-    makexml_template,
-    mobie_template
-)
+from rmaddons.materialize import make_xml, addtomobie, render_export_sections
+from test_data import (render_params,
+                       example_dir,
+                       example_n5,
+                       makexml_template,
+                       mobie_template
+                       )
+
+
+@pytest.fixture(scope='module')
+def render():
+    return renderapi.connect(**render_params)
+
 
 baddir = os.path.join(example_dir, 'fakedir')
 mobiedir = os.path.join(example_dir, 'mobie')
@@ -198,6 +206,38 @@ def test_mobie():
 
     assert os.path.exists(xml_path)
     assert os.path.exists(os.path.splitext(xml_path)[0] + '.' + imtype.replace('bdv.', ''))
+
+
+def test_render_export_sections(render):
+    # print(render_params)
+    # os.system('ping '+render_params["host"] + ' -c 3')
+    assert isinstance(render, renderapi.render.Render)
+
+    ex = copy.deepcopy(render_export_sections.example)
+    ex['render'] = render.make_kwargs()
+
+    stacktest = copy.deepcopy(ex)
+
+    stacktest['input_stack'] = "thisstackclearlydoesnotexist"
+
+    mod0 = render_export_sections.RenderSectionAtScale_extended(input_data=stacktest)
+
+    # test check for non-existing stack
+    with pytest.raises(RenderError):
+        mod0.run()
+
+    slicetest = copy.deepcopy(ex)
+    slicetest['minZ'] = 5
+
+    mod1 = render_export_sections.RenderSectionAtScale_extended(input_data=slicetest)
+
+    # test check for non-existing slice
+    with pytest.raises(RenderError):
+        mod1.run()
+
+
+
+
 
 
 def test_cleanup():

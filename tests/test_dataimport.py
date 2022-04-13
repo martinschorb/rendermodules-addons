@@ -95,7 +95,7 @@ def test_generate_SBEM(render):
 
     # cleanup
     os.system('rm -rf ' + example_sbem)
-    renderapi.stack.delete_stack(ex['stack'], render=render)
+    # renderapi.stack.delete_stack(ex['stack'], render=render)
 
 
 def test_generate_SerialEM(render):
