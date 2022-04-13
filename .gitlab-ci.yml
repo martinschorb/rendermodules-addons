@@ -16,7 +16,6 @@ prepare_test_data:
     - pip install jinja2
     - python tests/test_data.py
 
-
 build_render_ws_docker:
   cache:
     paths:
@@ -41,6 +40,8 @@ build_render_ws_docker:
 
 
 build_render_clientscripts:
+  tags:
+    - docker7
   stage: build
   image: azul/zulu-openjdk:8
   before_script:
@@ -109,7 +110,8 @@ tests:
 #    - export JAVA_HOME=`readlink -m ./render/deploy/*jdk*`
 #    - export PATH=$PATH:$JAVA_HOME/bin
     - chmod 777 -R *
-    - ls $RENDER_CLIENT_SCRIPTS
+    - pwd
+    - ls
 #    - su testuser -c 'coverage run -m pytest'
 #    - coverage xml
 #    - coverage-badge
