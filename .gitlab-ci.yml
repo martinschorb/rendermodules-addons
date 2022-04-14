@@ -3,7 +3,7 @@ variables:
   DOCKER_VERSION: 18.09.7
   RENDER_HOST: myrender
   RENDER_PORT: 8080
-  FF_NETWORK_PER_BUILD: 1
+
 
 prepare_test_data:
   stage: build
@@ -19,6 +19,8 @@ prepare_test_data:
   when: manual
 
 build_render_ws_docker:
+  variables:
+    FF_NETWORK_PER_BUILD: 1
   cache:
     paths:
     - tests/test_files
@@ -85,6 +87,8 @@ tests:
       alias: mymongo
     - name: git.embl.de:4567/schorb/rendermodules-addons/render
       alias: myrender
+  variables:
+    FF_NETWORK_PER_BUILD: 1
   cache:
     key: render
     paths:
