@@ -174,6 +174,9 @@ def test_mobie():
 
     mod = addtomobie.AddtoMoBIE(input_data=input_params1)
 
+    # addresses stupid mount issue in CI
+    os.chdir(os.getcwd())
+
     mod.run()
 
     # test output directory
