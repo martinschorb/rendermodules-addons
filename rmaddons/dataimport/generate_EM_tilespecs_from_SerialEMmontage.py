@@ -28,13 +28,13 @@ example_input = {
     "render": {
         "host": "render.embl.de",
         "port": 8080,
-        "owner": "test",
-        "project": "test_project",
+        "owner": "SerialEM",
+        "project": "test",
         "client_scripts": (
             "/g/emcf/software/render/render-ws-java-client/"
             "src/main/scripts")},
     "image_file": os.path.abspath('tests/test_files/idoc_supermont_testdata/supermont.idoc'),
-    "stack": "test_1",
+    "stack": "test_stack",
     "overwrite_zlayer": True,
     "pool_size": 4,
     "close_stack": True,
@@ -68,7 +68,11 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
 
         imagefile = [tile[key] for key in tile.keys() if '# [Image' in key][0]
 
-        f1 = os.path.realpath(imagefile)
+        rawdir = os.path.dirname(self.args.get("image_file"))
+
+        f1 = os.path.realpath(os.path.join(rawdir,imagefile))
+
+        print(f1)
 
         filepath = groupsharepath(f1)
 
@@ -150,6 +154,7 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
         """
         rawdir = os.path.dirname(idocfile)
 
+
         timestamp = time.localtime()
         if not os.path.exists(os.path.join(rawdir, 'conv_log')):
             os.makedirs(os.path.join(rawdir, 'conv_log'))
@@ -230,7 +235,7 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
 
             f1, tilespeclist = self.ts_from_SerialEMtile(tile, camline, header)
 
-            if os.path.exists(os.path.join(rawdir,f1)):
+            if os.path.exists(f1):
                 tspecs.append(tilespeclist)
             else:
                 fnf_error = 'ERROR: File ' + f1 + ' does not exist. Skipping tile creation.'
