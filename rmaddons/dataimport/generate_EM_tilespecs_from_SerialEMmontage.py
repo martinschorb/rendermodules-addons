@@ -228,10 +228,9 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
             if multiple:
                 stack_suffix = '_' + curr_navitem
 
-            os.chdir(rawdir)
             f1, tilespeclist = self.ts_from_SerialEMtile(tile, camline, header)
 
-            if os.path.exists(f1):
+            if os.path.exists(os.path.join(rawdir,f1)):
                 tspecs.append(tilespeclist)
             else:
                 fnf_error = 'ERROR: File ' + f1 + ' does not exist. Skipping tile creation.'
