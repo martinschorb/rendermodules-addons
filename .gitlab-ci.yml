@@ -3,6 +3,7 @@ variables:
   DOCKER_VERSION: 18.09.7
   RENDER_HOST: myrender
   RENDER_PORT: 8080
+  FF_NETWORK_PER_BUILD: 1
 
 prepare_test_data:
   stage: build
@@ -15,6 +16,7 @@ prepare_test_data:
   script:
     - pip install jinja2
     - python tests/test_data.py
+  when: manual
 
 build_render_ws_docker:
   cache:
@@ -89,8 +91,6 @@ tests:
       - render
     untracked: true
     policy: pull
-  variables:
-    FF_NETWORK_PER_BUILD: 1
   before_script:
 #    - apt-get update && apt-get install -y git curl wget
 #    - "curl -X GET --header 'Accept: application/json' 'http://myrender:8080/render-ws/v1/serverProperties'"
