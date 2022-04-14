@@ -78,15 +78,15 @@ build_test_docker:
 tests:
   image: git.embl.de:4567/schorb/rendermodules-addons/rmaddons-test
   stage: test
-#  tags:
-#    - docker7
-#  services:
-#    - name: mongo:4
-#      alias: mymongo
-#    - name: git.embl.de:4567/schorb/rendermodules-addons/render
-#      alias: myrender
-#  variables:
-#    FF_NETWORK_PER_BUILD: 1
+  tags:
+    - docker7
+  services:
+    - name: mongo:4
+      alias: mymongo
+    - name: git.embl.de:4567/schorb/rendermodules-addons/render
+      alias: myrender
+  variables:
+    FF_NETWORK_PER_BUILD: 1
   cache:
     key: render
     paths:
