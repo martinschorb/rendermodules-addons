@@ -34,7 +34,7 @@ example_input = {
             "/g/emcf/software/render/render-ws-java-client/"
             "src/main/scripts")},
     "image_file": os.path.abspath('tests/test_files/idoc_supermont_testdata/supermont.idoc'),
-    "stack": "test_stack",
+    "stack": "test_1",
     "overwrite_zlayer": True,
     "pool_size": 4,
     "close_stack": True,

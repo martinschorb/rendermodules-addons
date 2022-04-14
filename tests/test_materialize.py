@@ -221,7 +221,7 @@ def test_mobie():
     assert os.path.exists(xml_path)
     assert os.path.exists(os.path.splitext(xml_path)[0] + '.' + imtype.replace('bdv.', ''))
 
-    cleanup
+    # cleanup
     os.system('rm -rf ' + input_params1['outpath'])
 
 #
