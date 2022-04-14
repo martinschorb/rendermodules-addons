@@ -35,7 +35,7 @@ from test_data import (render_params,
 
 baddir = os.path.join(example_dir, 'fakedir')
 
-
+@pytest.mark.dependency()
 def test_make_xml():
     # test if n5 sample exists
     assert os.path.exists(example_n5)
@@ -152,7 +152,7 @@ def test_make_xml():
         mod = make_xml.MakeXML(input_data=input_params)
         mod.make_render_xml(path=input_params['path'])
 
-
+@pytest.mark.dependency(depends=["test_make_xml"])
 def test_mobie():
     xml_path = example_n5.replace('.n5', '.xml')
     assert os.path.exists(xml_path)
@@ -221,8 +221,8 @@ def test_mobie():
     assert os.path.exists(xml_path)
     assert os.path.exists(os.path.splitext(xml_path)[0] + '.' + imtype.replace('bdv.', ''))
 
-    # cleanup
-    # os.system('rm -rf ' + input_params1['outpath'])
+    cleanup
+    os.system('rm -rf ' + input_params1['outpath'])
 
 #
 # def test_render_export_sections(render):
@@ -313,8 +313,8 @@ def test_mobie():
 #     os.system('rm -rf ' + ex['image_directory'])
 #
 
-#
-# def test_cleanup():
-#     # clean up
-#     os.system('rm -rf ' + example_n5)
-#     os.system('rm -rf ' + baddir)
+@pytest.mark.dependency(depends=["test_make_xml", "test_mobie"])
+def test_cleanup():
+    # clean up
+    os.system('rm -rf ' + example_n5)
+    os.system('rm -rf ' + baddir)
