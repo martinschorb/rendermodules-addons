@@ -42,8 +42,8 @@ build_render_ws_docker:
 
 
 build_render_clientscripts:
-#  tags:
-#    - docker7
+  tags:
+    - docker7
   stage: build
   image: azul/zulu-openjdk:8
   before_script:
@@ -78,8 +78,8 @@ build_test_docker:
 tests:
   image: git.embl.de:4567/schorb/rendermodules-addons/rmaddons-test
   stage: test
-#  tags:
-#    - docker7
+  tags:
+    - docker7
   services:
     - name: mongo:4
       alias: mymongo
@@ -109,8 +109,8 @@ tests:
     - pip install -r test_requirements.txt
 #    - git pull origin $CI_COMMIT_BRANCH
   script:
-#    - export JAVA_HOME=`readlink -m ./render/deploy/*jdk*`
-#    - export PATH=$PATH:$JAVA_HOME/bin
+    - export JAVA_HOME=`readlink -m ./render/deploy/*jdk*`
+    - export PATH=$PATH:$JAVA_HOME/bin
     - chmod 777 -R *
 #    - pwd
 #    - ls
