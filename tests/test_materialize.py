@@ -302,13 +302,13 @@ def test_mobie():
 #
 #     mod3 = render_export_sections.RenderSectionAtScale_extended(input_data=scaletest)
 #     mod3.run()
-
-
-
-
-    # cleanup
-    os.system('rm -rf ' + ex['image_directory'])
-
+#
+#
+#
+#
+#     # cleanup
+#     os.system('rm -rf ' + ex['image_directory'])
+#
 
 
 def test_cleanup():
