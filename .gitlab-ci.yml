@@ -42,8 +42,8 @@ build_render_ws_docker:
 
 
 build_render_clientscripts:
-  tags:
-    - docker7
+#  tags:
+#    - docker7
   stage: build
   image: azul/zulu-openjdk:8
   before_script:
