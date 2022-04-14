@@ -19,8 +19,6 @@ prepare_test_data:
   when: manual
 
 build_render_ws_docker:
-  variables:
-    FF_NETWORK_PER_BUILD: 1
   cache:
     paths:
     - tests/test_files
