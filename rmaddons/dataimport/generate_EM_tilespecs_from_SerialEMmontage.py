@@ -170,18 +170,20 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
 
         i_info = em.parse_adoc(idoc)
 
-        if 'ImageFile' in i_info.keys():
-            # MRC file
-            # imfile = i_info['ImageFile'][0]
-            raise (FileNotFoundError('MRC not yet supported'))
-        else:
-            # Tif files and idoc       
+        if 'ImageFile' not in i_info.keys():
+            # Tif files and idoc
             tiles = em.adoc_items(idoc, '[Image')
             items = em.adoc_items(idoc, '[')
             montsecs = em.adoc_items(idoc, '[MontSection')
             header = em.adoc_items(idoc, '', header=True)
             camlines = em.adoc_items(idoc, '[T =')[0]
             camline = camlines[[k for k in camlines.keys()][0]]
+        # else:
+        #     # MRC file NOT YET IMPLEMENTED !!!!
+        #     # imfile = i_info['ImageFile'][0]
+        #     raise (FileNotFoundError('MRC not yet supported'))
+
+
 
         stackname = self.args.get("output_stack")
 
