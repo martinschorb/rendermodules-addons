@@ -44,7 +44,7 @@ example_input = {
 
 
 class GenerateTifStackTileSpecs(StackOutputModule):
-    default_schema = GenerateSBEMTileSpecsParameters
+    default_schema = GenerateTifStackTileSpecsParameters
     default_output_schema = GenerateEMTileSpecsOutput
 
     def ts_from_tifpath(self, imgdir):
@@ -134,5 +134,5 @@ class GenerateTifStackTileSpecs(StackOutputModule):
 
 
 if __name__ == "__main__":
-    mod = GenerateGenerateTifStackTileSpecs(input_data=example_input)
+    mod = GenerateTifStackTileSpecs(input_data=example_input)
     mod.run()
