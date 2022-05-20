@@ -10,7 +10,7 @@ from asap.module.render_module import StackOutputModule
 
 from asap.dataimport.schemas import GenerateEMTileSpecsOutput
 
-from rmaddons.dataimport.schemas import GenerateSBEMTileSpecsParameters
+from rmaddons.dataimport.schemas import GenerateTifStackTileSpecsParameters
 
 from rmaddons.utilities.EMBL_file_utils import groupsharepath
 
