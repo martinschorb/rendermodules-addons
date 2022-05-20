@@ -17,6 +17,8 @@ from rmaddons.utilities.EMBL_file_utils import groupsharepath
 import time
 import requests
 import glob
+import numpy as np
+from tifffile import TiffFile
 
 import json
 
@@ -74,9 +76,11 @@ class GenerateTifStackTileSpecs(StackOutputModule):
         stackname = self.args.get("output_stack")
         resolution = self.args.get("pxs")  # in um
 
+
         for idx,imfile in enumerate(imfiles):
 
-            f1 = os.path.realpath(os.path.join(self.imgdir, imfile))
+            # f1 = os.path.realpath(os.path.join(self.imgdir, imfile))
+            f1 = '/'+os.path.realpath(imfile).lstrip('/Users/schorb')
 
             filepath = groupsharepath(f1)
 
@@ -92,18 +96,22 @@ class GenerateTifStackTileSpecs(StackOutputModule):
 
             print("Importing " + slice + " for Render.")
 
+            with TiffFile(imfile) as im:
+                width = im.pages.pages[0].imagewidth
+                height = im.pages.pages[0].imagelength
+                dtype = im.pages.pages[0].dtype.type
+
             tspecs.append(renderapi.tilespec.TileSpec(
                 tileId=slice,
                 imagePyramid=ip,
-                z=int,
-                width=tile['tile_width'],
-                height=tile['tile_height'],
-                minint=0, maxint=255,
-                sectionId=tile['slice_counter'],
+                z=idx,
+                width=width,
+                height=height,
+                minint=np.iinfo(dtype).min,
+                maxint=np.iinfo(dtype).max,
+                sectionId=idx,
                 scopeId='TIFslice',
                 cameraId='TIFslice',
-                stageX=pos[0],
-                stageY=pos[1],
                 pixelsize=pxs))
 
         return tspecs
