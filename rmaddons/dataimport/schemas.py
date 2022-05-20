@@ -4,6 +4,7 @@ from argschema.fields import (
 from asap.module.schemas import (
     StackTransitionParameters, InputStackParameters, OutputStackParameters)
 
+from rmaddons.materialize.schemas import ResolutionList
 
 class GenerateSBEMTileSpecsParameters(OutputStackParameters):
     image_directory = InputDir(
@@ -11,11 +12,14 @@ class GenerateSBEMTileSpecsParameters(OutputStackParameters):
         description=("directory used in determining absolute paths to images. "
                      "Defaults to parent directory containing metafile "
                      "if omitted."))
-    image_prefix = Str(
-        required=False, description=(
-            "prefix used in determining full uris of images in metadata. "
-            "Defaults to using the / delimited prefix to "
-            "the metadata_uri if omitted"))
+
+class GenerateTifStackTileSpecsParameters(GenerateSBEMTileSpecsParameters):
+    pxs = ResolutionList(Float,
+                         required=True,
+                         cli_as_single_argument=True,
+                         description=(
+                             "List of voxel resolution."),
+                         default=[0.05, 0.05, 0.05])
 
 
 class GenerateSerialEMTileSpecsParameters(OutputStackParameters):
