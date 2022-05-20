@@ -69,8 +69,6 @@ class GenerateTifStackTileSpecs(StackOutputModule):
         if imfiles is []:
             raise FileNotFoundError('No TIF files found!')
 
-        imfile0 = os.path.join(imgdir,imfiles[0])
-
         tspecs = []
 
         stackname = self.args.get("output_stack")
