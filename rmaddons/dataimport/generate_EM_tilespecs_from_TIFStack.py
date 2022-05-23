@@ -77,7 +77,7 @@ class GenerateTifStackTileSpecs(StackOutputModule):
         resolution = self.args.get("pxs")[-1]  # in um
 
 
-        for idx,imfile in enumerate(imfiles[:25]):
+        for idx,imfile in enumerate(imfiles):
 
             f1 = os.path.realpath(os.path.join(imgdir, imfile))
 
