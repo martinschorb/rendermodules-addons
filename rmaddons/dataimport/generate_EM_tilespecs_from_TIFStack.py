@@ -66,7 +66,7 @@ class GenerateTifStackTileSpecs(StackOutputModule):
 
         logfile = os.path.join(imgdir, 'conv_log', 'Render_convert' + log_name + '.log')
 
-        imfiles = glob.glob('*.[Tt][Ii][(F)(f)]')
+        imfiles = glob.glob(os.path.join(imgdir,'*.[Tt][Ii][(F)(f)]'))
 
         if imfiles is []:
             raise FileNotFoundError('No TIF files found!')
@@ -74,20 +74,19 @@ class GenerateTifStackTileSpecs(StackOutputModule):
         tspecs = []
 
         stackname = self.args.get("output_stack")
-        resolution = self.args.get("pxs")  # in um
+        resolution = self.args.get("pxs")[-1]  # in um
 
 
-        for idx,imfile in enumerate(imfiles):
+        for idx,imfile in enumerate(imfiles[:25]):
 
-            # f1 = os.path.realpath(os.path.join(self.imgdir, imfile))
-            f1 = '/'+os.path.realpath(imfile).lstrip('/Users/schorb')
+            f1 = os.path.realpath(os.path.join(imgdir, imfile))
 
             filepath = groupsharepath(f1)
 
             ip = renderapi.image_pyramid.ImagePyramid()
             ip[0] = renderapi.image_pyramid.MipMap(imageUrl='file://' + filepath)
 
-            slice = os.path.splitext(imfile)[0]
+            slice = os.path.basename(os.path.splitext(imfile)[0])
 
             slsplit = slice.split('_')
 
@@ -112,7 +111,7 @@ class GenerateTifStackTileSpecs(StackOutputModule):
                 sectionId=idx,
                 scopeId='TIFslice',
                 cameraId='TIFslice',
-                pixelsize=pxs))
+                pixelsize=resolution))
 
         return tspecs
 
