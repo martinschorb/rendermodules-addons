@@ -4,7 +4,7 @@ Create tilespecs from SBEMImage dataset
 """
 
 import os
-import numpy as np
+
 import renderapi
 from asap.module.render_module import StackOutputModule
 
@@ -14,13 +14,10 @@ from rmaddons.dataimport.schemas import GenerateTifStackTileSpecsParameters
 
 from rmaddons.utilities.EMBL_file_utils import groupsharepath
 
-import time
 import requests
 import glob
 import numpy as np
 from tifffile import TiffFile
-
-import json
 
 # from pyEM import parse_adoc
 
@@ -32,8 +29,10 @@ example_input = {
         "project": "tests",
         "client_scripts": (
             "/g/emcf/software/render/render-ws-java-client/src/main/scripts/")},
-    "image_directory": "/g/emcf/ronchi/FINISHED/Arendt-Jake/Arendt_sponge_19-11-27/FIBSEM/jake_19-12-11_spongilla77-5/19-12-11_spongilla77-5_run",
-    "pxs": [0.01,0.01,0.01],
+    "image_directory":
+        "/g/emcf/ronchi/FINISHED/Arendt-Jake/Arendt_sponge_19-11-27/FIBSEM/jake_19-12-11_spongilla77-5/"
+        "19-12-11_spongilla77-5_run",
+    "pxs": [0.01, 0.01, 0.01],
     "stack": "test_stack",
     "overwrite_zlayer": True,
     "pool_size": 1,
@@ -57,27 +56,17 @@ class GenerateTifStackTileSpecs(StackOutputModule):
 
         """
         imgdir = os.path.realpath(imgdir)
-        self.imgdir = imgdir
 
-        timestamp = time.localtime()
-
-        log_name = '_{}{:02d}{:02d}-{:02d}{:02d}'.format(timestamp.tm_year, timestamp.tm_mon, timestamp.tm_mday,
-                                                         timestamp.tm_hour, timestamp.tm_min)
-
-        logfile = os.path.join(imgdir, 'conv_log', 'Render_convert' + log_name + '.log')
-
-        imfiles = glob.glob(os.path.join(imgdir,'*.[Tt][Ii][(F)(f)]'))
+        imfiles = glob.glob(os.path.join(imgdir, '*.[Tt][Ii][(F)(f)]'))
 
         if imfiles is []:
             raise FileNotFoundError('No TIF files found!')
 
         tspecs = []
 
-        stackname = self.args.get("output_stack")
         resolution = self.args.get("pxs")[-1]  # in um
 
-
-        for idx,imfile in enumerate(imfiles):
+        for idx, imfile in enumerate(imfiles):
 
             f1 = os.path.realpath(os.path.join(imgdir, imfile))
 
@@ -90,7 +79,7 @@ class GenerateTifStackTileSpecs(StackOutputModule):
 
             slsplit = slice.split('_')
 
-            if slsplit[0]=='slice' and slsplit[1].isnumeric():
+            if slsplit[0] == 'slice' and slsplit[1].isnumeric():
                 idx = int(slsplit[1])
 
             print("Importing " + slice + " for Render.")
@@ -103,12 +92,12 @@ class GenerateTifStackTileSpecs(StackOutputModule):
             tspecs.append(renderapi.tilespec.TileSpec(
                 tileId=slice,
                 imagePyramid=ip,
-                z=idx+1,
+                z=idx + 1,
                 width=width,
                 height=height,
                 minint=np.iinfo(dtype).min,
                 maxint=np.iinfo(dtype).max,
-                sectionId=idx+1,
+                sectionId=idx + 1,
                 scopeId='TIFslice',
                 cameraId='TIFslice',
                 pixelsize=resolution))
@@ -128,7 +117,7 @@ class GenerateTifStackTileSpecs(StackOutputModule):
         # create stack and fill resolution parameters
         self.output_tilespecs_to_stack(tspecs)
 
-        resolution = pxs
+        resolution = self.args.get("pxs")
         url = 'http://' + self.args["render"]["host"].split('http://')[-1] + ':' + str(self.args["render"]["port"])
         url += '/render-ws/v1/owner/' + self.args["render"]["owner"]
         url += '/project/' + self.args["render"]["project"]
