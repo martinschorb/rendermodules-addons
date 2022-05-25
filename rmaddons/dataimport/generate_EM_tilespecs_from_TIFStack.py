@@ -84,8 +84,9 @@ class GenerateTifStackTileSpecs(StackOutputModule):
             if slsplit[0] == 'slice' and slsplit[1].isnumeric():
                 idx = int(slsplit[1])
 
-            print("Importing " + slice + " for Render.")
-
+            if idx % 50 == 0:
+                print("Importing " + slice + " for Render.")
+                print("\n...")
             with TiffFile(imfile) as im:
                 width = im.pages.pages[0].imagewidth
                 height = im.pages.pages[0].imagelength
