@@ -95,13 +95,13 @@ class GenerateTifStackTileSpecs(StackOutputModule):
             tspecs.append(renderapi.tilespec.TileSpec(
                 tileId=slice,
                 imagePyramid=ip,
-                z=idx + 1,
+                z=idx,
                 width=width,
                 height=height,
                 minint=np.iinfo(dtype).min,
                 maxint=np.iinfo(dtype).max,
                 tforms=[transform],
-                sectionId=idx + 1,
+                sectionId=idx,
                 scopeId='TIFslice',
                 cameraId='TIFslice',
                 pixelsize=resolution))
