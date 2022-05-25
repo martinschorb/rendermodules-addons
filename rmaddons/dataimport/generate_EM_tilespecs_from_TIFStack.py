@@ -66,6 +66,8 @@ class GenerateTifStackTileSpecs(StackOutputModule):
 
         resolution = self.args.get("pxs")[-1]  # in um
 
+        transform = renderapi.transform.AffineModel(B0=0, B1=0)
+
         for idx, imfile in enumerate(imfiles):
 
             f1 = os.path.realpath(os.path.join(imgdir, imfile))
@@ -97,6 +99,7 @@ class GenerateTifStackTileSpecs(StackOutputModule):
                 height=height,
                 minint=np.iinfo(dtype).min,
                 maxint=np.iinfo(dtype).max,
+                tforms=[transform],
                 sectionId=idx + 1,
                 scopeId='TIFslice',
                 cameraId='TIFslice',
