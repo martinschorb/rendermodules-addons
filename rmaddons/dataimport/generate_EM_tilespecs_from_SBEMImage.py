@@ -26,12 +26,12 @@ example_input = {
     "render": {
         "host": "localhost",
         "port": 8080,
-        "owner": "SBEM",
+        "owner": "000tests",
         "project": "tests",
         "client_scripts": (
             "/render/render-ws-java-client/src/main/scripts/")},
     "image_directory": "",
-    "stack": "test_stack",
+    "stack": "test_sbem",
     "overwrite_zlayer": True,
     "pool_size": 1,
     "close_stack": True,

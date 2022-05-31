@@ -28,13 +28,13 @@ example_input = {
     "render": {
         "host": "render.embl.de",
         "port": 8080,
-        "owner": "test",
+        "owner": "00tests",
         "project": "test_project",
         "client_scripts": (
             "/g/emcf/software/render/render-ws-java-client/"
             "src/main/scripts")},
     "image_file": os.path.abspath('tests/test_files/idoc_supermont_testdata/supermont.idoc'),
-    "stack": "test_1",
+    "stack": "test_SerialEM",
     "overwrite_zlayer": True,
     "pool_size": 4,
     "close_stack": True,

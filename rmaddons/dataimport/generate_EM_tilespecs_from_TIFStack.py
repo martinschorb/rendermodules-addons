@@ -26,12 +26,12 @@ example_input = {
         "host": "render.embl.de",
         "port": 8080,
         "owner": "FIBSEM",
-        "project": "tests",
+        "project": "00tests",
         "client_scripts": (
             "/g/emcf/software/render/render-ws-java-client/src/main/scripts/")},
     "image_directory":
-        "/g/emcf/ronchi/FINISHED/Arendt-Jake/Arendt_sponge_19-11-27/FIBSEM/jake_19-12-11_spongilla77-5/"
-        "19-12-11_spongilla77-5_run",
+        "/g/emcf/ronchi/Rompani-Andres/F128_test_voxelsize_22-05-18/"
+	"F128_Santiago_Brain_8nm_XB550_22-05-18",
     "pxs": [0.01, 0.01, 0.01],
     "stack": "test_stack",
     "overwrite_zlayer": True,

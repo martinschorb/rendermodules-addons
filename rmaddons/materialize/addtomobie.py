@@ -28,19 +28,19 @@ class AddtoMoBIE(argschema.ArgSchemaParser):
         """
 
         base = os.path.basename(os.path.splitext(xmlpath)[0])
-        xmlpath = os.path.abspath(xmlpath)
+        xmlpath = os.path.abspath(os.path.relpath(xmlpath))
 
-        resolution = self.args.get("resolution")
-
-        # get resolution from XML
-        if resolution == [-1, -1, -1]:
-            resolution = get_resolution(xmlpath, 0)
-
-        unit = self.args.get("unit")
-
-        # get unit from XML
-        if unit == '':
-            unit = get_unit(xmlpath, 0)
+        # resolution = self.args.get("resolution")
+        #
+        # # get resolution from XML
+        # if resolution == [-1, -1, -1]:
+        #     resolution = get_resolution(xmlpath, 0)
+        #
+        # unit = self.args.get("unit")
+        #
+        # # get unit from XML
+        # if unit == '':
+        #     unit = get_unit(xmlpath, 0)
 
         dataset_name = self.args.get("dataset_name")
 
@@ -70,7 +70,7 @@ class AddtoMoBIE(argschema.ArgSchemaParser):
 
     def run(self):
         self.addtomobieproject(self.args['xmlpath'], self.args['outpath'])
-        print('Done adding ' + self.args['xmlpath'] + ' to MoBIe project ' + self.args['outpath'] + '.')
+        print('Done adding ' + self.args['xmlpath'] + ' to MoBIE project ' + self.args['outpath'] + '.')
 
 
 if __name__ == "__main__":
