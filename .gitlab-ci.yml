@@ -42,8 +42,6 @@ build_render_ws_docker:
 
 
 build_render_clientscripts:
-  tags:
-    - docker7
   stage: build
   image: azul/zulu-openjdk:8
   before_script:
@@ -78,8 +76,6 @@ build_test_docker:
 tests:
   image: git.embl.de:4567/schorb/rendermodules-addons/rmaddons-test
   stage: test
-  tags:
-    - docker7
   services:
     - name: mongo:4
       alias: mymongo
