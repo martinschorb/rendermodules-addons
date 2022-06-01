@@ -68,7 +68,9 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
 
         imagefile = [tile[key] for key in tile.keys() if '# [Image' in key][0]
 
-        f1 = os.path.realpath(imagefile)
+        rawdir = os.path.dirname(self.args.get("image_file"))
+
+        f1 = os.path.realpath(os.path.join(rawdir, imagefile))
 
         filepath = groupsharepath(f1)
 
@@ -228,10 +230,9 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
             if multiple:
                 stack_suffix = '_' + curr_navitem
 
-            os.chdir(rawdir)
             f1, tilespeclist = self.ts_from_SerialEMtile(tile, camline, header)
 
-            if os.path.exists(f1):
+            if os.path.exists(os.path.join(rawdir,f1)):
                 tspecs.append(tilespeclist)
             else:
                 fnf_error = 'ERROR: File ' + f1 + ' does not exist. Skipping tile creation.'
