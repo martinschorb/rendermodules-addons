@@ -3,24 +3,39 @@
 '''
 import os
 import copy
+import random
+import string
 
 import pytest
 import xml.etree.ElementTree as ET
+
+import skimage.io
 from marshmallow.exceptions import ValidationError
+import renderapi
+from renderapi.errors import RenderError
+from asap.module.render_module import RenderModuleException
+
+from skimage.io import imread
 
 import json
-from rmaddons.materialize import make_xml, addtomobie
-from test_data import (
-    example_dir,
-    example_n5,
-    makexml_template,
-    mobie_template
-)
+from rmaddons.materialize import make_xml, addtomobie, render_export_sections
+from test_data import (render_params,
+                       example_dir,
+                       example_n5,
+                       makexml_template,
+                       mobie_template,
+                       sliceexport_template
+                       )
+
+#
+# @pytest.fixture(scope='module')
+# def render():
+#     return renderapi.connect(**render_params)
+
 
 baddir = os.path.join(example_dir, 'fakedir')
-mobiedir = os.path.join(example_dir, 'mobie')
 
-
+@pytest.mark.dependency()
 def test_make_xml():
     # test if n5 sample exists
     assert os.path.exists(example_n5)
@@ -137,7 +152,7 @@ def test_make_xml():
         mod = make_xml.MakeXML(input_data=input_params)
         mod.make_render_xml(path=input_params['path'])
 
-
+@pytest.mark.dependency(depends=["test_make_xml"])
 def test_mobie():
     xml_path = example_n5.replace('.n5', '.xml')
     assert os.path.exists(xml_path)
@@ -153,7 +168,14 @@ def test_mobie():
     input_params1 = addtomobie.example.copy()
     input_params1['xmlpath'] = xml_path
 
+    # check if test dir exists already:
+    while os.path.exists(input_params1['outpath']):
+        input_params1['outpath'] = os.path.join(input_params1['outpath'],''.join(random.choices(string.ascii_uppercase, k=8)))
+
     mod = addtomobie.AddtoMoBIE(input_data=input_params1)
+
+    # addresses stupid mount issue in CI
+    os.chdir(os.getcwd())
 
     mod.run()
 
@@ -199,10 +221,100 @@ def test_mobie():
     assert os.path.exists(xml_path)
     assert os.path.exists(os.path.splitext(xml_path)[0] + '.' + imtype.replace('bdv.', ''))
 
+    # cleanup
+    os.system('rm -rf ' + input_params1['outpath'])
 
+#
+# def test_render_export_sections(render):
+#     # print(render_params)
+#     # os.system('ping '+render_params["host"] + ' -c 3')
+#     assert isinstance(render, renderapi.render.Render)
+#
+#     ex = copy.deepcopy(render_export_sections.example)
+#     ex['render'] = render.make_kwargs()
+#     ex['output_json'] = './slices_out.json'
+#
+#     # check if test dir exists already:
+#     while os.path.exists(ex['image_directory']):
+#         ex['image_directory'] = os.path.join(ex['image_directory'],''.join(random.choices(string.ascii_uppercase, k=8)))
+#
+#     stacktest = copy.deepcopy(ex)
+#
+#     stacktest['input_stack'] = "thisstackclearlydoesnotexist"
+#
+#     mod0 = render_export_sections.RenderSectionAtScale_extended(input_data=stacktest)
+#
+#     # test check for non-existing stack
+#     with pytest.raises(RenderError):
+#         mod0.run()
+#
+#     slicetest = copy.deepcopy(ex)
+#     slicetest['minZ'] = 5e12
+#
+#     mod1 = render_export_sections.RenderSectionAtScale_extended(input_data=slicetest)
+#
+#     # test check for non-existing slice
+#     with pytest.raises(RenderModuleException):
+#         mod1.run()
+#
+#     dirtest = copy.deepcopy(ex)
+#     dirtest['customPath'] = False
+#
+#     # test default directories
+#     mod2 = render_export_sections.RenderSectionAtScale_extended(input_data=dirtest)
+#
+#     mod2.run()
+#
+#     outdir = os.path.join(ex['image_directory'], ex['render']['project'], ex['input_stack'],
+#                           sliceexport_template['fullpath'])
+#     assert os.path.exists(outdir)
+#
+#     flist = sliceexport_template['images'].copy()
+#
+#     for outfile in os.listdir(outdir):
+#         flist.remove(outfile.split('.' + ex['imgformat'])[0])
+#
+#     assert flist == []
+#
+#     # test one file
+#     imfile = '3.0.jpg'
+#     im = imread(os.path.join(outdir, imfile))
+#
+#     assert str(im) == sliceexport_template[imfile]
+#
+#     # test output formats
+#
+#     for outformat in ['tiff', 'png', 'jpg']:
+#         formattest = copy.deepcopy(ex)
+#         formattest['imgformat'] = outformat
+#
+#         mod = render_export_sections.RenderSectionAtScale_extended(input_data=dirtest)
+#         mod.run()
+#
+#         for outfile in os.listdir(ex['image_directory']):
+#             flist.remove(outfile.split('.' + formattest['imgformat'])[0])
+#
+#         assert flist == []
+#
+#     # test scale and intensity
+#
+#     scaletest = copy.deepcopy(ex)
+#     scaletest['scale'] = 0.05
+#     scaletest['minInt'] = 123
+#     scaletest['maxInt'] = 125
+#
+#     mod3 = render_export_sections.RenderSectionAtScale_extended(input_data=scaletest)
+#     mod3.run()
+#
+#
+#
+#
+#     # cleanup
+#     os.system('rm -rf ' + ex['image_directory'])
+#
+
+@pytest.mark.dependency(depends=["test_make_xml", "test_mobie"])
 def test_cleanup():
     # clean up
     os.system('rm -rf ' + example_n5)
     os.system('rm -rf ' + baddir)
-
-    os.system('rm -rf ' + mobiedir)

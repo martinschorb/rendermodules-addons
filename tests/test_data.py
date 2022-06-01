@@ -109,3 +109,7 @@ serialem_template = render_json_template(
 mobie_template = render_json_template(
     example_env,
     'materialize_addtomobie.json')
+
+sliceexport_template = render_json_template(
+    example_env,
+    'materialize_render_export_sections.json')

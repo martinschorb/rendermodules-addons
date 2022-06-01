@@ -4,6 +4,7 @@ variables:
   RENDER_HOST: myrender
   RENDER_PORT: 8080
 
+
 prepare_test_data:
   stage: build
   image: 'python:3.7-bullseye'
@@ -15,7 +16,7 @@ prepare_test_data:
   script:
     - pip install jinja2
     - python tests/test_data.py
-
+  when: manual
 
 build_render_ws_docker:
   cache:
@@ -36,11 +37,13 @@ build_render_ws_docker:
     - git clone --depth 1 https://github.com/saalfeldlab/render.git render -b master
     - cd render
     - sed -i 's/MONGO_HOST=""/MONGO_HOST="mymongo"/' Dockerfile
-    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin && docker build -t $CI_REGISTRY_IMAGE --target render-ws . && docker push $CI_REGISTRY_IMAGE && echo $CI_REGISTRY_IMAGE
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin && docker build -t "$CI_REGISTRY_IMAGE"/render --target render-ws . && docker push "$CI_REGISTRY_IMAGE"/render
   when: manual
 
 
 build_render_clientscripts:
+  tags:
+    - docker7
   stage: build
   image: azul/zulu-openjdk:8
   before_script:
@@ -51,54 +54,67 @@ build_render_clientscripts:
     - export JAVA_HOME=`readlink -m ./render/deploy/*jdk*`
     - mvn package -pl render-ws-java-client  -am -DskipTests -f render/pom.xml
   cache:
-    - key: render
-      paths:
-        - render
-      untracked: true
-      policy: push
+    key: render
+    paths:
+      - render
+    untracked: true
+    policy: push
+  when: manual
+
+build_test_docker:
+  stage: build
+  image: docker:$DOCKER_VERSION-git
+  tags:
+    - docker7
+  services:
+    - docker:$DOCKER_VERSION-dind
+  before_script:
+    - docker info
+  script:
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin && docker build -t "$CI_REGISTRY_IMAGE"/rmaddons-test . && docker push "$CI_REGISTRY_IMAGE"/rmaddons-test
   when: manual
 
 
 tests:
-  image: 'continuumio/miniconda3'
+  image: git.embl.de:4567/schorb/rendermodules-addons/rmaddons-test
   stage: test
+  tags:
+    - docker7
   services:
     - name: mongo:4
       alias: mymongo
-    - name: git.embl.de:4567/schorb/rendermodules-addons
+    - name: git.embl.de:4567/schorb/rendermodules-addons/render
       alias: myrender
+  variables:
+    FF_NETWORK_PER_BUILD: 1
   cache:
-    - key: render
-      paths:
-        - render
-      untracked: true
-      policy: pull
-    - key: conda
-      paths:
-        - /opt/conda/
-      untracked: true
-      policy: pull-push
+    key: render
+    paths:
+      - render
+    untracked: true
+    policy: pull
   before_script:
 #    - apt-get update && apt-get install -y git curl wget
 #    - "curl -X GET --header 'Accept: application/json' 'http://myrender:8080/render-ws/v1/serverProperties'"
 #    - pip install pymongo
 #    - python -c "from pymongo import MongoClient; client=MongoClient('mymongo'); print(client.server_info())"
-    - chmod 777 -R /opt/conda/
-    - useradd testuser
-    - su testuser -c 'conda install python=3.7 -y'
-    - su testuser -c 'conda install  git mobie_utils -c conda-forge -y'
-    - pip install render-python
-    - pip install git+https://github.com/AllenInstitute/asap-modules/ --no-deps
-    - pip install git+https://git.embl.de/schorb/pyem
-    - pip install git+https://github.com/mobie/mobie-utils-python --no-deps
+#    - chmod 777 -R /opt/conda/
+#    - useradd testuser
+#    - su testuser -c 'conda install python=3.7 -y'
+#    - su testuser -c 'conda install  git mobie_utils -c conda-forge -y'
+#    - pip install render-python
+#    - pip install git+https://github.com/AllenInstitute/asap-modules/ --no-deps
+#    - pip install git+https://git.embl.de/schorb/pyem
+#    - pip install git+https://github.com/mobie/mobie-utils-python --no-deps
     - pip install -r test_requirements.txt
 #    - git pull origin $CI_COMMIT_BRANCH
   script:
     - export JAVA_HOME=`readlink -m ./render/deploy/*jdk*`
     - export PATH=$PATH:$JAVA_HOME/bin
-    - ls $RENDER_CLIENT_SCRIPTS
-    - chmod 777 -R *
-    - su testuser -c "coverage run -m pytest"
+    - chmod +rx -R *
+#    - pwd
+#    - ls
+    - su testuser -c 'coverage run -m pytest'
     - coverage xml
     - coverage-badge
     - coverage report
@@ -111,20 +127,13 @@ tests:
     - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
     
 pages:
-  image: 'continuumio/miniconda3'
+  image: git.embl.de:4567/schorb/rendermodules-addons/rmaddons-test
   stage: deploy
-  cache:
-    - key: conda
-      paths:
-        - /opt/conda/
-      untracked: true
-      policy: pull
+
   before_script:
-  - conda install python=3.7 -y
-  - conda install  git mobie_utils -c conda-forge -y
   - pip install -U sphinx
-  - pip install git+https://github.com/AllenInstitute/asap-modules --no-deps
-  - pip install git+https://git.embl.de/schorb/pyem
+#  - pip install git+https://github.com/AllenInstitute/asap-modules --no-deps
+#  - pip install git+https://git.embl.de/schorb/pyem
   - pip install -r requirements.txt
   script:
   - sphinx-build -b html docs public

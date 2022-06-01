@@ -17,15 +17,16 @@ example = {
         "host": "render.embl.de",
         "port": 8080,
         "owner": "SBEM",
-        "project": "test",
+        "project": "tests",
         "client_scripts": (
             "/g/emcf/software/render/render-ws-java-client/src/main/scripts")},
-    "input_stack": "pp",
-    "image_directory": "/g/emcf/schorb/data",
+    "input_stack": "test_stack",
+    "image_directory": "./slicedata",
     "imgformat": "jpg",
     "scale": 0.1,
-    "minZ": 444,
-    "maxZ": 448
+    "minZ": 2,
+    "maxZ": 5,
+    "output_json": './sliceexport.json'
 }
 
 
@@ -33,11 +34,11 @@ class RenderSectionAtScale_extended(RenderSectionAtScale):
     default_schema = RenderSectionAtScale_extendedParameters
     default_output_schema = RenderSectionAtScaleOutput
 
-    @classmethod
+
     def downsample_specific_mipmapLevel(
-            cls, zvalues, input_stack=None, level=1, pool_size=1,
+            self, zvalues, input_stack=None, level=1, pool_size=1,
             image_directory=None, scale=None, imgformat=None,
-            render=None, bounds=None, customPath=True,
+            render=None, bounds=None,
             minInt=None, maxInt=None,
             **kwargs):
         """
@@ -52,7 +53,6 @@ class RenderSectionAtScale_extended(RenderSectionAtScale):
         :param str imgformat: image format ('tiff','png' or 'jpeg')
         :param renderapi.render.Render render: :class:`renderapi.render.Render` Render connection
         :param dict bounds: :class:`asap.asap.materialize.schemas.Bounds` section boundaries
-        :param bool customPath: whether output path is the final data directoy or automatic sub-directories should be generated
         :param int minInt: minimum Intensity to map the output
         :param int maxInt: maximum intensity to map the output
         :return: stack name that was processed
@@ -97,7 +97,7 @@ class RenderSectionAtScale_extended(RenderSectionAtScale):
 
             ds_source = temp_no_mipmap_stack
 
-        if customPath:
+        if self.args.get("customPath"):
             cOF = '.'
             cSF = '.'
         else:
