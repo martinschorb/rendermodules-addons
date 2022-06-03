@@ -7,11 +7,6 @@ import numpy as np
 import renderapi
 from marshmallow.exceptions import ValidationError
 
-# from asap.module.render_module import RenderModuleException
-# from asap.dataimport import generate_EM_tilespecs_from_metafile
-# from asap.dataimport import generate_mipmaps
-# from asap.dataimport import apply_mipmaps_to_render
-
 from rmaddons.dataimport import (generate_EM_tilespecs_from_SBEMImage,
                                  generate_EM_tilespecs_from_SerialEMmontage)
 
