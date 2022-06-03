@@ -30,8 +30,8 @@ from test_data import (render_params,
                        sliceexport_template
                        )
 
-
 baddir = os.path.join(example_dir, 'fakedir')
+
 
 @pytest.fixture(scope='module')
 def render():
@@ -173,7 +173,8 @@ def render():
 #
 #     # check if test dir exists already:
 #     while os.path.exists(input_params1['outpath']):
-#         input_params1['outpath'] = os.path.join(input_params1['outpath'],''.join(random.choices(string.ascii_uppercase, k=8)))
+#         input_params1['outpath'] = os.path.join(input_params1['outpath'],
+#                                                 ''.join(random.choices(string.ascii_uppercase, k=8)))
 #
 #     mod = addtomobie.AddtoMoBIE(input_data=input_params1)
 #
@@ -229,7 +230,6 @@ def render():
 
 @pytest.mark.dependency(depends=["test_generate_SerialEM"])
 def test_render_export_sections(render):
-
     assert isinstance(render, renderapi.render.Render)
 
     ex = copy.deepcopy(render_export_sections.example)
@@ -241,7 +241,8 @@ def test_render_export_sections(render):
 
     # check if test dir exists already:
     while os.path.exists(ex['image_directory']):
-        ex['image_directory'] = os.path.join(ex['image_directory'],''.join(random.choices(string.ascii_uppercase, k=8)))
+        ex['image_directory'] = os.path.join(example_dir, ex['image_directory'],
+                                             ''.join(random.choices(string.ascii_uppercase, k=8)))
 
     stacktest = copy.deepcopy(ex)
 
@@ -310,7 +311,6 @@ def test_render_export_sections(render):
 
     mod3 = render_export_sections.RenderSectionAtScale_extended(input_data=scaletest)
     mod3.run()
-
 
     # cleanup
     os.system('rm -rf ' + ex['image_directory'])
