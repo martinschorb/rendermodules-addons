@@ -49,8 +49,7 @@ except OSError as e:
 example_dir = os.path.join(os.path.dirname(__file__), 'test_files')
 example_env = Environment(loader=FileSystemLoader(example_dir))
 
-tempdir = os.environ.get('TEMPDIR', example_dir)
-
+tempdir = example_dir
 # example N5 output data
 
 example_n5z = os.path.join(example_dir, 'testn5.tgz')
