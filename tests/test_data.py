@@ -1,7 +1,7 @@
 import os
 import json
-import tempfile
-
+import renderapi
+import pytest
 from jinja2 import Environment, FileSystemLoader
 
 pool_size = os.environ.get('TEST_POOL_SIZE', 5)
@@ -11,7 +11,7 @@ render_host = os.environ.get(
 render_port = os.environ.get(
     'RENDER_PORT', 8080)
 render_test_owner = os.environ.get(
-    'RENDER_TEST_OWNER', 'test'
+    'RENDER_TEST_OWNER', '000tests'
 )
 render_dir = os.environ.get('RENDER_DIR', os.path.abspath('./render'))
 

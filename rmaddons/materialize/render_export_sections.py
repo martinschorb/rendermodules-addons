@@ -20,7 +20,7 @@ example = {
         "project": "tests",
         "client_scripts": (
             "/g/emcf/software/render/render-ws-java-client/src/main/scripts")},
-    "input_stack": "test_stack",
+    "input_stack": "test_sliceexport",
     "image_directory": "./slicedata",
     "imgformat": "jpg",
     "scale": 0.1,
