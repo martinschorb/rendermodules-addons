@@ -83,6 +83,17 @@ if not os.path.exists(example_serialem):
     except OSError as e:
         pass
 
+# example TIFF Stack input data
+
+example_tifz = os.path.join(example_dir, 'testtiff.tgz')
+example_tif = os.path.abspath(os.path.join(tempdir, 'tif_testdata'))
+
+if not os.path.exists(example_tif):
+    try:
+        os.system('tar xvfz ' + example_tifz + ' -C ' + example_dir)
+    except OSError as e:
+        pass
+
 
 # load template json files
 
@@ -113,3 +124,7 @@ mobie_template = render_json_template(
 sliceexport_template = render_json_template(
     example_env,
     'materialize_render_export_sections.json')
+
+tif_template = render_json_template(
+    example_env,
+    'dataimport_generate_EM_tilespecs_from_TIFStack.json')

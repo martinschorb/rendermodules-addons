@@ -13,6 +13,12 @@ rmaddons\.materialize\.addtomobie module
     :members:
     :show-inheritance:
 
+rmaddons\.materialize\.render_export_sections module
+------------------------------------------
+.. automodule:: rmaddons.materialize.render_export_sections
+    :members:
+    :show-inheritance:
+
 rmaddons\.materialize\.schemas module
 ------------------------------------------
 .. automodule:: rmaddons.materialize.schemas

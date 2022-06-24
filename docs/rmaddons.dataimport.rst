@@ -15,6 +15,12 @@ rmaddons\.dataimport\.generate\_EM\_tilespecs\_from\_SerialEMmontage
     :undoc-members:
     :show-inheritance:
 
+rmaddons\.dataimport\.generate\_EM\_tilespecs\_from\_TIFStack
+-------------------------------------------------------------
+.. automodule:: rmaddons.dataimport.generate_EM_tilespecs_from_TIFStack
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 rmaddons\.dataimport\.schemas
 ------------------------------------------

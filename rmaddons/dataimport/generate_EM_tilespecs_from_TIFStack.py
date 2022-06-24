@@ -30,7 +30,7 @@ example_input = {
     "image_directory":
         "/g/emcf/ronchi/Rompani-Andres/F128_test_voxelsize_22-05-18/"
         "F128_Santiago_Brain_8nm_XB550_22-05-18",
-    "pxs": [0.01, 0.01, 0.01],
+    "pxs": [10, 10, 20],
     "stack": "test_stack",
     "overwrite_zlayer": True,
     "pool_size": 1,
@@ -55,7 +55,10 @@ class GenerateTifStackTileSpecs(StackOutputModule):
         """
         imgdir = os.path.realpath(imgdir)
 
-        imfiles = glob.glob(os.path.join(imgdir, '*.[Tt][Ii][(F)(f)]'))
+        imfiles = glob.glob(os.path.join(imgdir, '*.[Tt][Ii][Ff]'))
+        imfiles.extend(glob.glob(os.path.join(imgdir, '*.[Tt][Ii][Ff][Ff]')))
+
+        imfiles.sort()
 
         if imfiles == []:
             raise FileNotFoundError('No TIF files found!')

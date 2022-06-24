@@ -156,6 +156,7 @@ def test_make_xml():
         mod = make_xml.MakeXML(input_data=input_params)
         mod.make_render_xml(path=input_params['path'])
 
+
 @pytest.mark.dependency(depends=["test_make_xml"])
 def test_mobie():
     xml_path = example_n5.replace('.n5', '.xml')
@@ -228,6 +229,7 @@ def test_mobie():
 
     # cleanup
     os.system('rm -rf ' + input_params1['outpath'])
+
 
 @pytest.mark.dependency(depends=["test_generate_SerialEM"])
 def test_render_export_sections(render):
@@ -319,25 +321,25 @@ def test_render_export_sections(render):
     scaletest['customPath'] = True
     scaletest['image_directory'] += '/scale'
 
-
     mod3 = render_export_sections.RenderSectionAtScale_extended(input_data=scaletest)
     mod3.run()
 
     # test one file
     imfile = '4.0.jpg'
 
-    im1 = imread(os.path.join(scaletest['image_directory'],imfile))
+    im1 = imread(os.path.join(scaletest['image_directory'], imfile))
 
     assert str(im1) == sliceexport_template[imfile]
 
     # cleanup
     os.system('rm -rf ' + ex['image_directory'])
 
-#
-# @pytest.mark.dependency(depends=["test_make_xml", "test_mobie","test_render_export_sections"])
-# def test_cleanup(render):
-#     # clean up
-#     os.system('rm -rf ' + example_n5)
-#     os.system('rm -rf ' + baddir)
-#     os.system('rm -rf ' + example_sbem)
-#     renderapi.stack.delete_stack(generate_EM_tilespecs_from_SBEMImage.example_input['stack'], render=render)
+
+@pytest.mark.dependency(depends=["test_make_xml", "test_mobie","test_render_export_sections"])
+def test_cleanup(render):
+    # clean up
+    os.system('rm -rf ' + example_n5)
+    os.system('rm -rf ' + baddir)
+    os.system('rm -rf ' + example_sbem)
+    os.system('rm -rf ' + 'slicedata')
+    renderapi.stack.delete_stack(generate_EM_tilespecs_from_SBEMImage.example_input['stack'], render=render)
