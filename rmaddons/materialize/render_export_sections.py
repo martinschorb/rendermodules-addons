@@ -26,6 +26,7 @@ example = {
     "scale": 0.1,
     "minZ": 2,
     "maxZ": 5,
+    "customPath": True,
     "output_json": './sliceexport.json'
 }
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Create tilespecs from SBEMImage dataset
+Create tilespecs from a directory containing aplhabetically ordered tif files
 """
 
 import os
@@ -19,8 +19,6 @@ import glob
 import numpy as np
 from tifffile import TiffFile
 
-# from pyEM import parse_adoc
-
 example_input = {
     "render": {
         "host": "render.embl.de",
@@ -31,7 +29,7 @@ example_input = {
             "/g/emcf/software/render/render-ws-java-client/src/main/scripts/")},
     "image_directory":
         "/g/emcf/ronchi/Rompani-Andres/F128_test_voxelsize_22-05-18/"
-	"F128_Santiago_Brain_8nm_XB550_22-05-18",
+        "F128_Santiago_Brain_8nm_XB550_22-05-18",
     "pxs": [0.01, 0.01, 0.01],
     "stack": "test_stack",
     "overwrite_zlayer": True,
@@ -59,7 +57,7 @@ class GenerateTifStackTileSpecs(StackOutputModule):
 
         imfiles = glob.glob(os.path.join(imgdir, '*.[Tt][Ii][(F)(f)]'))
 
-        if imfiles is []:
+        if imfiles == []:
             raise FileNotFoundError('No TIF files found!')
 
         tspecs = []
