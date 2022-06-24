@@ -75,6 +75,10 @@ class GenerateTifStackTileSpecs(StackOutputModule):
 
             filepath = groupsharepath(f1)
 
+            basefile = os.path.splitext(filep)[0]
+
+            os.system('mv filepath basefile'+'.tif')
+
             ip = renderapi.image_pyramid.ImagePyramid()
             ip[0] = renderapi.image_pyramid.MipMap(imageUrl='file://' + filepath)
 
