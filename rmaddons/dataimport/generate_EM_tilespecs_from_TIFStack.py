@@ -75,7 +75,7 @@ class GenerateTifStackTileSpecs(StackOutputModule):
 
             filepath = groupsharepath(f1)
 
-            basefile = os.path.splitext(filep)[0]
+            basefile = os.path.splitext(filepath)[0]
 
             os.system('mv filepath basefile'+'.tif')
 
