@@ -342,4 +342,4 @@ def test_cleanup(render):
     os.system('rm -rf ' + baddir)
     os.system('rm -rf ' + example_sbem)
     os.system('rm -rf ' + 'slicedata')
-    renderapi.stack.delete_stack(generate_EM_tilespecs_from_SBEMImage.example_input['stack'], render=render)
+    # renderapi.stack.delete_stack(generate_EM_tilespecs_from_SBEMImage.example_input['stack'], render=render)
