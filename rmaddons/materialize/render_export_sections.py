@@ -27,6 +27,7 @@ example = {
     "minZ": 2,
     "maxZ": 5,
     "customPath": True,
+    "resolutionUnit": "nm",
     "output_json": './sliceexport.json'
 }
 
@@ -39,7 +40,7 @@ class RenderSectionAtScale_extended(RenderSectionAtScale):
     def downsample_specific_mipmapLevel(
             self, zvalues, input_stack=None, level=1, pool_size=1,
             image_directory=None, scale=None, imgformat=None,
-            render=None, bounds=None,
+            resolutionUnit=None, render=None, bounds=None,
             minInt=None, maxInt=None,
             **kwargs):
         """
@@ -52,6 +53,7 @@ class RenderSectionAtScale_extended(RenderSectionAtScale):
         :param str image_directory: output image directory
         :param float scale: output scaling
         :param str imgformat: image format ('tiff','png' or 'jpeg')
+        :param str resolutionUnit: if output is TIF, include the resolution into the files' header(s)
         :param renderapi.render.Render render: :class:`renderapi.render.Render` Render connection
         :param dict bounds: :class:`asap.asap.materialize.schemas.Bounds` section boundaries
         :param int minInt: minimum Intensity to map the output
@@ -120,7 +122,8 @@ class RenderSectionAtScale_extended(RenderSectionAtScale):
                    customOutputFolder=cOF,
                    customSubFolder=cSF,
                    maxIntensity=maxInt,
-                   minIntensity=minInt
+                   minIntensity=minInt,
+                   resolutionUnit=resolutionUnit
                    )
 
         if stack_has_mipmaps:
