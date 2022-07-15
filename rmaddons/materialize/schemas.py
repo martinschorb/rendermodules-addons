@@ -135,3 +135,7 @@ class RenderSectionAtScale_extendedParameters(RenderSectionAtScaleParameters):
         default=-1,
         missing=-1,
         description='maximum intensity for scaling output contrast')
+    resolutionUnit = Str(
+        required=False,
+        description='If TIF export, unit in which to store stack resolution into TIF header.')
+
