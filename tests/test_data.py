@@ -68,7 +68,7 @@ example_sbem = os.path.abspath(os.path.join(tempdir, 'sbemimage_testdata'))
 
 if not os.path.exists(example_sbem):
     try:
-        os.system('tar xvfz ' + example_sbemz + ' -C ' + tempdir)
+        os.system('tar xvfz ' + example_sbemz + ' -C ' + example_dir)
     except OSError as e:
         pass
 
@@ -79,7 +79,7 @@ example_serialem = os.path.abspath(os.path.join(tempdir, 'idoc_supermont_testdat
 
 if not os.path.exists(example_serialem):
     try:
-        os.system('tar xvfz ' + example_serialemz + ' -C ' + tempdir)
+        os.system('tar xvfz ' + example_serialemz + ' -C ' + example_dir)
     except OSError as e:
         pass
 
@@ -90,7 +90,7 @@ example_tif = os.path.abspath(os.path.join(tempdir, 'tif_testdata'))
 
 if not os.path.exists(example_tif):
     try:
-        os.system('tar xvfz ' + example_tifz + ' -C ' + tempdir)
+        os.system('tar xvfz ' + example_tifz + ' -C ' + example_dir)
     except OSError as e:
         pass
 
