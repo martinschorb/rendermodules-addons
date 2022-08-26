@@ -80,6 +80,8 @@ class GenerateTifStackTileSpecs(StackOutputModule):
             # need to rename files to *.tif extension, otherwise render won't work
             os.system('mv ' + filepath + ' ' + basefile + '.tif')
 
+            filepath =  basefile + '.tif'
+
             ip = renderapi.image_pyramid.ImagePyramid()
             ip[0] = renderapi.image_pyramid.MipMap(imageUrl='file://' + filepath)
 
