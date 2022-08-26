@@ -95,7 +95,8 @@ class GenerateTifStackTileSpecs(StackOutputModule):
             if idx % 50 == 0:
                 print("Importing " + slice + " for Render.")
                 print("\n...")
-            with TiffFile(imfile) as im:
+
+            with TiffFile(filepath) as im:
                 width = im.pages.pages[0].imagewidth
                 height = im.pages.pages[0].imagelength
                 dtype = im.pages.pages[0].dtype.type
