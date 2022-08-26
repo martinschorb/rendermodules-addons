@@ -211,6 +211,12 @@ def test_generate_TIF(render):
     expected_tileIds = set(tif_template['tileids'])
     delivered_tileIds = set(renderapi.stack.get_stack_tileIds(ex['stack'], render=render))
 
+    # test if files have been renamed to "*.tif'
+
+    for imfile in os.listdir(example_tif):
+        assert os.path.splitext(imfile)[-1] == 'tif'
+
+
     # test if all tiles are imported
     assert len(expected_tileIds.symmetric_difference(delivered_tileIds)) == 0
 
