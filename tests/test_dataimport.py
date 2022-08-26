@@ -214,7 +214,7 @@ def test_generate_TIF(render):
     # test if files have been renamed to "*.tif'
 
     for imfile in os.listdir(example_tif):
-        assert os.path.splitext(imfile)[-1] == 'tif'
+        assert os.path.splitext(imfile)[-1] == '.tif'
 
 
     # test if all tiles are imported
