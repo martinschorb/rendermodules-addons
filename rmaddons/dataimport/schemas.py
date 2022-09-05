@@ -20,6 +20,11 @@ class GenerateTifStackTileSpecsParameters(GenerateSBEMTileSpecsParameters):
                          description=(
                              "List of voxel resolution."),
                          default=[0.05, 0.05, 0.05])
+    autocrop = Boolean(required=False,
+                       default=False,
+                       description=(
+                           "Crop padded zero values automatically?"),
+                       )
 
 
 class GenerateSerialEMTileSpecsParameters(OutputStackParameters):

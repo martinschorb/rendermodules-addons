@@ -5,6 +5,9 @@ Create tilespecs from a directory containing aplhabetically ordered tif files
 
 import os
 
+import tifffile
+from skimage import measure
+
 import renderapi
 from asap.module.render_module import StackOutputModule
 
@@ -28,9 +31,9 @@ example_input = {
         "client_scripts": (
             "/g/emcf/software/render/render-ws-java-client/src/main/scripts/")},
     "image_directory":
-        "/g/emcf/ronchi/Rompani-Andres/F128_test_voxelsize_22-05-18/"
-        "F128_Santiago_Brain_8nm_XB550_22-05-18",
+        "/g/emcf/schorb/data/FIBSEMtest/",
     "pxs": [10, 10, 20],
+    "autocrop": False,
     "stack": "test_stack",
     "overwrite_zlayer": True,
     "pool_size": 1,
@@ -53,6 +56,7 @@ class GenerateTifStackTileSpecs(StackOutputModule):
         :return: list of :class:`renderapi.tilespec.TileSpec` objects for all tiles.
 
         """
+
         imgdir = os.path.realpath(imgdir)
 
         imfiles = glob.glob(os.path.join(imgdir, '*.[Tt][Ii][Ff]'))
@@ -66,6 +70,7 @@ class GenerateTifStackTileSpecs(StackOutputModule):
         tspecs = []
 
         resolution = self.args.get("pxs")[-1]  # in um
+        autocrop = self.args.get("autocrop")
 
         transform = renderapi.transform.AffineModel(B0=0, B1=0)
 
@@ -80,7 +85,26 @@ class GenerateTifStackTileSpecs(StackOutputModule):
             # need to rename files to *.tif extension, otherwise render won't work
             os.system('mv ' + filepath + ' ' + basefile + '.tif')
 
-            filepath =  basefile + '.tif'
+            filepath = basefile + '.tif'
+
+            with TiffFile(filepath) as im:
+                width = im.pages.pages[0].imagewidth
+                height = im.pages.pages[0].imagelength
+                dtype = im.pages.pages[0].dtype.type
+                if autocrop:
+                    image = im.asarray()
+                    r0, c0, r1, c1 = measure.regionprops(measure.label(image > 0))[0].bbox
+                    imcrop = image[r0:r1, c0:c1]
+                    width = c1 - c0
+                    height = r1 - r0
+                    transform = renderapi.transform.AffineModel(B0=r0, B1=c0)
+                    fdir = os.path.dirname(filepath)
+                    if not os.path.exists(os.path.join(fdir,'autocrop')):
+                        os.mkdir(os.path.join(fdir,'autocrop'))
+
+                    filepath = os.path.join(fdir,'autocrop',os.path.basename(filepath))
+                    tifffile.imsave(filepath,imcrop)
+                    im.close()
 
             ip = renderapi.image_pyramid.ImagePyramid()
             ip[0] = renderapi.image_pyramid.MipMap(imageUrl='file://' + filepath)
@@ -95,11 +119,6 @@ class GenerateTifStackTileSpecs(StackOutputModule):
             if idx % 50 == 0:
                 print("Importing " + slice + " for Render.")
                 print("\n...")
-
-            with TiffFile(filepath) as im:
-                width = im.pages.pages[0].imagewidth
-                height = im.pages.pages[0].imagelength
-                dtype = im.pages.pages[0].dtype.type
 
             tspecs.append(renderapi.tilespec.TileSpec(
                 tileId=slice,
