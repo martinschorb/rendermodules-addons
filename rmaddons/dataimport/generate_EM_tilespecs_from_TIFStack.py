@@ -93,11 +93,17 @@ class GenerateTifStackTileSpecs(StackOutputModule):
                 dtype = im.pages.pages[0].dtype.type
                 if autocrop:
                     image = im.asarray()
-                    r0, c0, r1, c1 = measure.regionprops(measure.label(image > 0))[0].bbox
-                    imcrop = image[r0:r1, c0:c1]
-                    width = c1 - c0
-                    height = r1 - r0
-                    transform = renderapi.transform.AffineModel(B0=r0, B1=c0)
+                    imcontent = np.argwhere(image != 0)  # assume blackground is zero
+                    min_x = imcontent[:, 0].min()
+                    max_x = imcontent[:, 0].max()
+                    min_y = imcontent[:, 1].min()
+                    max_y = imcontent[:, 1].max()
+
+
+                    imcrop = image[min_x:max_x+1, min_y:max_y+1]
+                    width = max_x - min_x
+                    height = max_y - min_y
+                    transform = renderapi.transform.AffineModel(B0=min_x, B1=min_y)
                     fdir = os.path.dirname(filepath)
                     if not os.path.exists(os.path.join(fdir,'autocrop')):
                         os.mkdir(os.path.join(fdir,'autocrop'))
