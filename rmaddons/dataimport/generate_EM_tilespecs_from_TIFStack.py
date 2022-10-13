@@ -82,7 +82,8 @@ class GenerateTifStackTileSpecs(StackOutputModule):
             basefile = os.path.splitext(filepath)[0]
 
             # need to rename files to *.tif extension, otherwise render won't work
-            os.system('mv ' + filepath + ' ' + basefile + '.tif')
+            os.system('mv ' + filepath + ' ' + basefile + '.temp')
+            os.system('mv ' + basefile + '.temp ' + basefile + '.tif')
 
             filepath = basefile + '.tif'
 
