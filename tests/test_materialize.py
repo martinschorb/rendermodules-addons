@@ -285,7 +285,7 @@ def test_render_export_sections(render):
     assert flist == []
 
     # test one file
-    imfile = '3.0.jpg'
+    imfile = '3.0.tif'
     im = imread(os.path.join(outdir, imfile))
 
     assert str(im) == sliceexport_template[imfile]
@@ -324,7 +324,7 @@ def test_render_export_sections(render):
     mod3.run()
 
     # test one file
-    imfile = '4.0.jpg'
+    imfile = '4.0.tif'
 
     im1 = imread(os.path.join(scaletest['image_directory'], imfile))
 
