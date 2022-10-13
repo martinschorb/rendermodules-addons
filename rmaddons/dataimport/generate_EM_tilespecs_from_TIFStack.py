@@ -6,7 +6,6 @@ Create tilespecs from a directory containing aplhabetically ordered tif files
 import os
 
 import tifffile
-from skimage import measure
 
 import renderapi
 from asap.module.render_module import StackOutputModule

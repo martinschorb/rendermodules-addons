@@ -6,6 +6,5 @@ jinja2
 six
 requests
 jsonschema
-skimage
 numpy
 tifffile

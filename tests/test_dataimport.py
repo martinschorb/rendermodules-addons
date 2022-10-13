@@ -3,7 +3,7 @@ import pytest
 import copy
 import os
 import numpy as np
-from skimage import io
+import tifffile
 
 import renderapi
 from marshmallow.exceptions import ValidationError
@@ -229,8 +229,8 @@ def test_generate_TIF(render):
 
     assert sorted(os.listdir(os.path.join(example_tif, 'autocrop'))) == sorted(o_tifs)
 
-    im0 = io.imread(os.path.join(example_tif, 'autocrop',tif_template['tileids'][0],'.tif'))
-    im1 = io.imread(os.path.join(example_tif, tif_template['tileids'][0],'.tif'))
+    im0 = tifffile.imread(os.path.join(example_tif, 'autocrop',tif_template['tileids'][0],'.tif'))
+    im1 = tifffile.imread(os.path.join(example_tif, tif_template['tileids'][0],'.tif'))
 
     assert (np.array(im1.shape) - np.array(im0.shape) == [1, 1]).all()
 
