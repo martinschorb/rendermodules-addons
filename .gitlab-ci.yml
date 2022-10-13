@@ -74,12 +74,12 @@ build_test_docker:
 
 
 tests:
-  image: git.embl.de:4567/schorb/rendermodules-addons/rmaddons-test
+  image: registry.git.embl.de/schorb/rendermodules-addons/rmaddons-test
   stage: test
   services:
     - name: mongo:4
       alias: mymongo
-    - name: git.embl.de:4567/schorb/rendermodules-addons/render
+    - name: registry.git.embl.de/schorb/rendermodules-addons/render
       alias: myrender
   variables:
     FF_NETWORK_PER_BUILD: 1
@@ -119,7 +119,7 @@ tests:
 #    - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
 
 pages:
-  image: git.embl.de:4567/schorb/rendermodules-addons/rmaddons-test
+  image: registry.git.embl.de/schorb/rendermodules-addons/rmaddons-test
   stage: deploy
 
   before_script:
