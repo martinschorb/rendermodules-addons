@@ -104,7 +104,7 @@ tests:
 #    - pip install git+https://github.com/mobie/mobie-utils-python --no-deps
     - pip install -r requirements.txt
     - pip install -r test_requirements.txt
-    - pip install git+https://github.com/mobie/mobie-utils-python --no-deps
+    - pip install git+https://github.com/mobie/mobie-utils-python
 #    - git pull origin $CI_COMMIT_BRANCH
   script:
     - export JAVA_HOME=`readlink -m ./render/deploy/*jdk*`
