@@ -101,9 +101,10 @@ tests:
 #    - pip install render-python
 #    - pip install git+https://github.com/AllenInstitute/asap-modules/ --no-deps
 #    - pip install git+https://git.embl.de/schorb/pyem
-    - pip install git+https://github.com/mobie/mobie-utils-python --no-deps
+#    - pip install git+https://github.com/mobie/mobie-utils-python --no-deps
     - pip install -r requirements.txt
     - pip install -r test_requirements.txt
+    - pip install git+https://github.com/mobie/mobie-utils-python --no-deps
 #    - git pull origin $CI_COMMIT_BRANCH
   script:
     - export JAVA_HOME=`readlink -m ./render/deploy/*jdk*`
