@@ -26,9 +26,9 @@ from test_data import (render_params,
 def render():
     return renderapi.connect(**render_params)
 
+
 @pytest.mark.dependency()
 def test_generate_SBEM(render):
-
     assert isinstance(render, renderapi.render.Render)
 
     ex = copy.deepcopy(generate_EM_tilespecs_from_SBEMImage.example_input)
@@ -37,7 +37,7 @@ def test_generate_SBEM(render):
     with tempfile.NamedTemporaryFile(suffix='.json') as probablyemptyfn:
         outfile = probablyemptyfn.name
 
-    # test non existing directory
+    # test non-existing directory
     ex['image_directory'] = example_sbem + 'notexistingdir'
 
     with pytest.raises(ValidationError):
@@ -56,7 +56,7 @@ def test_generate_SBEM(render):
     os.rename(example_sbem + '/meta123', example_sbem + '/meta')
 
     # test missing tile image reporting to log
-    os.remove(example_sbem + '/tiles/g0000/t0008/test_example_g0000_t0008_s00005.tif')
+    os.remove(example_sbem + '/tiles/g0000/t0008/test_example_g0000_t0008_s00005.jpg')
 
     mod.run()
 
@@ -88,7 +88,6 @@ def test_generate_SBEM(render):
 
 @pytest.mark.dependency()
 def test_generate_SerialEM(render):
-
     assert isinstance(render, renderapi.render.Render)
 
     ex = copy.deepcopy(generate_EM_tilespecs_from_SerialEMmontage.example_input)
@@ -168,9 +167,9 @@ def test_generate_SerialEM(render):
     os.system('rm -rf ' + example_serialem)
     renderapi.stack.delete_stack(stacks0[0], render=render)
 
+
 @pytest.mark.dependency()
 def test_generate_TIF(render):
-
     assert isinstance(render, renderapi.render.Render)
 
     ex = copy.deepcopy(generate_EM_tilespecs_from_TIFStack.example_input)
@@ -198,7 +197,6 @@ def test_generate_TIF(render):
 
     with pytest.raises(ValidationError):
         mod1 = generate_EM_tilespecs_from_TIFStack.GenerateTifStackTileSpecs(input_data=ex)
-
 
     ex = copy.deepcopy(generate_EM_tilespecs_from_TIFStack.example_input)
     ex['render'] = render.make_kwargs()

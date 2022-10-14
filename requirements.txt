@@ -8,3 +8,5 @@ requests
 jsonschema
 numpy
 tifffile
+skimage
+mobie

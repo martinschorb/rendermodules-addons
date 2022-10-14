@@ -15,7 +15,7 @@ import renderapi
 from renderapi.errors import RenderError
 from asap.module.render_module import RenderModuleException
 
-from tifffile import imread
+from skimage.io import imread
 
 import json
 from rmaddons.materialize import make_xml, addtomobie, render_export_sections
@@ -285,7 +285,7 @@ def test_render_export_sections(render):
     assert flist == []
 
     # test one file
-    imfile = '3.0.tif'
+    imfile = '3.0.jpg'
     im = imread(os.path.join(outdir, imfile))
 
     assert str(im) == sliceexport_template[imfile]
@@ -324,7 +324,7 @@ def test_render_export_sections(render):
     mod3.run()
 
     # test one file
-    imfile = '4.0.tif'
+    imfile = '4.0.jpg'
 
     im1 = imread(os.path.join(scaletest['image_directory'], imfile))
 
