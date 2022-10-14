@@ -8,5 +8,5 @@ requests
 jsonschema
 numpy
 tifffile
-scikit-image
+scikit-image>0.18
 mobie
