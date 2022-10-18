@@ -84,10 +84,19 @@ class GenerateTifStackTileSpecs(StackOutputModule):
 
         return tspecs
 
-
-
-
     def tiffile_to_ts(self, autocrop, imgdir, resolution, transform, inputkey):
+        """
+        Generates Render tilespecs for a single TIF image
+
+        :param bool autocrop: if black borders should be auto-cropped
+        :param str imgdir: the image directory
+        :param list resolution: pixel resolution
+        :param renderapi.transform.AffineModel transform: tile transform
+        :param tuple inputkey: (image_name, section index)
+        :return: ts
+        :rtype: renderapi.tilespec.TileSpec
+        """
+
         imfile, idx = inputkey
         f1 = os.path.realpath(os.path.join(imgdir, imfile))
 
