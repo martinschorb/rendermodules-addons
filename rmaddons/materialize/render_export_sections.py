@@ -114,7 +114,7 @@ class RenderSectionAtScale_extended(RenderSectionAtScale):
 
         imtype = None
 
-        if 'tif'in imgformat:
+        if 'tif' in imgformat:
             imtype = 8
 
         render.run(renderapi.client.renderSectionClient,
