@@ -36,9 +36,9 @@ class RenderSectionAtScale_extended(RenderSectionAtScale):
     default_schema = RenderSectionAtScale_extendedParameters
     default_output_schema = RenderSectionAtScaleOutput
 
-
+    @classmethod
     def downsample_specific_mipmapLevel(
-            self, zvalues, input_stack=None, level=1, pool_size=1,
+            cls, zvalues, input_stack=None, level=1, pool_size=1,
             image_directory=None, scale=None, imgformat=None,
             resolutionUnit=None, render=None, bounds=None,
             minInt=None, maxInt=None,
@@ -100,7 +100,7 @@ class RenderSectionAtScale_extended(RenderSectionAtScale):
 
             ds_source = temp_no_mipmap_stack
 
-        if self.args.get("customPath"):
+        if cls.args.get("customPath"):
             cOF = '.'
             cSF = '.'
         else:
@@ -111,6 +111,11 @@ class RenderSectionAtScale_extended(RenderSectionAtScale):
             minInt = None
         if maxInt == -1:
             maxInt = None
+
+        imtype = None
+
+        if 'tif'in imgformat:
+            imtype = 8
 
         render.run(renderapi.client.renderSectionClient,
                    ds_source,
@@ -123,7 +128,8 @@ class RenderSectionAtScale_extended(RenderSectionAtScale):
                    customSubFolder=cSF,
                    maxIntensity=maxInt,
                    minIntensity=minInt,
-                   resolutionUnit=resolutionUnit
+                   resolutionUnit=resolutionUnit,
+                   imageType=imtype
                    )
 
         if stack_has_mipmaps:
