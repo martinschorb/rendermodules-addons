@@ -111,10 +111,11 @@ class RenderSectionAtScale_extended(RenderSectionAtScale):
         if maxInt == -1:
             maxInt = None
 
-        imtype = None
-
-        if 'tif' in imgformat:
-            imtype = 8
+        # not implemented in render client scripts...
+        # imtype = None
+        #
+        # if 'tif' in imgformat:
+        #     imtype = 8
 
         render.run(renderapi.client.renderSectionClient,
                    ds_source,
@@ -127,8 +128,7 @@ class RenderSectionAtScale_extended(RenderSectionAtScale):
                    customSubFolder=cSF,
                    maxIntensity=maxInt,
                    minIntensity=minInt,
-                   resolutionUnit=resolutionUnit,
-                   imageType=imtype
+                   resolutionUnit=resolutionUnit
                    )
 
         if stack_has_mipmaps:
