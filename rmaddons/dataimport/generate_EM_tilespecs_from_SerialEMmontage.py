@@ -170,7 +170,7 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
         if 'ImageFile' in i_info.keys():
             # MRC file
             # imfile = i_info['ImageFile'][0]
-            raise (FileNotFoundError('MRC not yet supported'))
+            raise (NotImplementedError('MRC not yet supported'))
         else:
             # Tif files and idoc       
             tiles = em.adoc_items(idoc, '[Image')

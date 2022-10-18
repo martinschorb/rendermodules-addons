@@ -105,8 +105,7 @@ tests:
     - pip install -r requirements.txt
     - pip install -r test_requirements.txt
     - pip install git+https://github.com/mobie/mobie-utils-python
-    - python -c "from skimage import __version__ ; print(__version__)"
-    - python -c "from skimage.draw import disk ; print(disk)"
+
   #    - git pull origin $CI_COMMIT_BRANCH
   script:
     - export JAVA_HOME=`readlink -m ./render/deploy/*jdk*`
