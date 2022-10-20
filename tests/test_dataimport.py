@@ -260,6 +260,7 @@ def test_generate_TIF(render):
     ex["output_stack"] = 'test_bounds'
 
     mod2 = generate_EM_tilespecs_from_TIFStack.GenerateTifStackTileSpecs(input_data=ex)
+    mod2.run()
 
     expected_tileIds = tif_template['tileids'][2]
     delivered_tileIds = renderapi.stack.get_stack_tileIds(ex['output_stack'], render=render)
