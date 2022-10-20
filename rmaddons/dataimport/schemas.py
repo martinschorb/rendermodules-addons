@@ -6,12 +6,14 @@ from asap.module.schemas import (
 
 from rmaddons.materialize.schemas import ResolutionList
 
+
 class GenerateSBEMTileSpecsParameters(OutputStackParameters):
     image_directory = InputDir(
         required=True,
         description=("directory used in determining absolute paths to images. "
                      "Defaults to parent directory containing metafile "
                      "if omitted."))
+
 
 class GenerateTifStackTileSpecsParameters(GenerateSBEMTileSpecsParameters):
     pxs = ResolutionList(Float,
@@ -25,6 +27,17 @@ class GenerateTifStackTileSpecsParameters(GenerateSBEMTileSpecsParameters):
                        description=(
                            "Crop padded zero values automatically?"),
                        )
+    startidx = Int(required=False,
+                   default=0,
+                   description=(
+                       "start index to split file list for processing"),
+                   )
+    endidx = Int(required=False,
+                 default=-1,
+                 description=(
+                     "end index (included) to split file list for processing"),
+                 )
+
 
 
 class GenerateSerialEMTileSpecsParameters(OutputStackParameters):

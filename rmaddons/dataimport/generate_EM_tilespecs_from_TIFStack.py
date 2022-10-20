@@ -34,11 +34,11 @@ example_input = {
         "/g/emcf/schorb/data/FIBSEMtest/",
     "pxs": [10, 10, 20],
     "autocrop": False,
-    "stack": "test_stack",
+    "output_stack": "test_stack",
     "overwrite_zlayer": True,
     "pool_size": 1,
     "close_stack": True,
-    "z_index": 1,
+    "z": 1,
     "startidx": 0,
     "endidx": -1,
     "output_stackVersion": {
@@ -68,6 +68,14 @@ class GenerateTifStackTileSpecs(StackOutputModule):
         imfiles.extend(glob.glob(os.path.join(imgdir, '*.[Tt][Ii][Ff][Ff]')))
 
         imfiles.sort()
+
+        startidx = self.args.get("startidx")
+        endidx = self.args.get("endidx")
+
+        if endidx == -1:
+            imfiles = imfiles[startidx:]
+        else:
+            imfiles = imfiles[startidx:endidx+1]
 
         if imfiles == []:
             raise FileNotFoundError('No TIF files found!')

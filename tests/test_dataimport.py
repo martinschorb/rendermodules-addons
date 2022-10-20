@@ -210,7 +210,7 @@ def test_generate_TIF(render):
     mod3.run()
 
     expected_tileIds = set(tif_template['tileids'])
-    delivered_tileIds = set(renderapi.stack.get_stack_tileIds(ex['stack'], render=render))
+    delivered_tileIds = set(renderapi.stack.get_stack_tileIds(ex['output_stack'], render=render))
 
     # test if files have been renamed to "*.tif'
 
@@ -235,7 +235,7 @@ def test_generate_TIF(render):
     # test if all tiles are imported
     assert len(expected_tileIds.symmetric_difference(delivered_tileIds)) == 0
 
-    md = renderapi.stack.get_stack_metadata(render=render, stack=ex['stack'])
+    md = renderapi.stack.get_stack_metadata(render=render, stack=ex['output_stack'])
 
     expected_resolution = tif_template['resolution']
     delivered_resolution = [md.stackResolutionX, md.stackResolutionY, md.stackResolutionZ]
@@ -243,6 +243,30 @@ def test_generate_TIF(render):
     # test if resolution of stack is correct
     assert (np.array(expected_resolution) - np.array(delivered_resolution) == [0, 0, 0]).all()
 
+    # test wrong bounds
+    ex["startidx"] = 2
+    ex["endidx"] = 1
+
+    mod2 = generate_EM_tilespecs_from_TIFStack.GenerateTifStackTileSpecs(input_data=ex)
+
+    with pytest.raises(FileNotFoundError):
+        mod.run()
+
+    stack0 = ex['output_stack']
+
+    # test bounds
+
+    ex["endidx"] = 2
+    ex["output_stack"] = 'test_bounds'
+
+    mod2 = generate_EM_tilespecs_from_TIFStack.GenerateTifStackTileSpecs(input_data=ex)
+
+    expected_tileIds = tif_template['tileids'][2]
+    delivered_tileIds = renderapi.stack.get_stack_tileIds(ex['output_stack'], render=render)
+
+    assert expected_tileIds == delivered_tileIds[0]
+
     # cleanup
     os.system('rm -rf ' + example_tif)
-    renderapi.stack.delete_stack(ex['stack'], render=render)
+    renderapi.stack.delete_stack(ex['output_stack'], render=render)
+    renderapi.stack.delete_stack(stack0, render=render)
