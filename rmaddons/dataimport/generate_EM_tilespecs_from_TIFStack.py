@@ -59,8 +59,6 @@ class GenerateTifStackTileSpecs(StackOutputModule):
 
         """
 
-        assert "COVERAGE_PROCESS_START" in os.environ.keys()
-
         poolclass = renderapi.client.WithPool
         pool_size = self.args.get("pool_size")
 
@@ -91,6 +89,8 @@ class GenerateTifStackTileSpecs(StackOutputModule):
 
         with poolclass(pool_size) as pool:
             tspecs = pool.map(mypartial, list(zip(imfiles, range(len(imfiles)))))
+            pool.close()
+            pool.join()
 
         return tspecs
 
