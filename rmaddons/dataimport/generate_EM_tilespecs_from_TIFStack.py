@@ -59,7 +59,7 @@ class GenerateTifStackTileSpecs(StackOutputModule):
 
         """
 
-        assert "COVERAGE_PROCESS_START" not in os.environ.keys()
+        assert "COVERAGE_PROCESS_START" in os.environ.keys()
 
         poolclass = renderapi.client.WithPool
         pool_size = self.args.get("pool_size")
