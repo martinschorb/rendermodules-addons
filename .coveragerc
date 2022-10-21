@@ -27,5 +27,7 @@ exclude_lines =
     # Don't complain when checking for specific OS:
     if sys.platform*
     if os.name*
+    if * in sys.platform*
+    if * in os.name*
 
 ignore_errors = True
