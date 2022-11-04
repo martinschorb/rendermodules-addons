@@ -127,6 +127,12 @@ class GenerateTifStackTileSpecs(StackOutputModule):
                 image = im.asarray()
                 imcontent = np.argwhere(image != 0)  # assume blackground is zero
 
+                fdir = os.path.dirname(filepath)
+                filepath1 = os.path.join(fdir, 'autocrop', os.path.basename(filepath))
+
+                if not os.path.exists(os.path.join(fdir, 'autocrop')):
+                    os.makedirs(os.path.join(fdir, 'autocrop'), exist_ok=True)
+
                 if imcontent.size > 0:
                     min_x = imcontent[:, 0].min()
                     max_x = imcontent[:, 0].max()
@@ -137,14 +143,10 @@ class GenerateTifStackTileSpecs(StackOutputModule):
                     width = max_x - min_x
                     height = max_y - min_y
                     transform = renderapi.transform.AffineModel(B0=min_x, B1=min_y)
+                    tifffile.imsave(filepath1, imcrop)
+                else:
+                    os.system('cp ' + filepath + ' ' + filepath1)
 
-                fdir = os.path.dirname(filepath)
-
-                if not os.path.exists(os.path.join(fdir, 'autocrop')):
-                    os.makedirs(os.path.join(fdir, 'autocrop'), exist_ok=True)
-
-                filepath = os.path.join(fdir, 'autocrop', os.path.basename(filepath))
-                tifffile.imsave(filepath, imcrop)
                 im.close()
 
         ip = renderapi.image_pyramid.ImagePyramid()
