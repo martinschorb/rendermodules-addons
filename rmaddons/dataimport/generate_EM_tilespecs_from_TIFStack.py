@@ -135,10 +135,10 @@ class GenerateTifStackTileSpecs(StackOutputModule):
                     os.makedirs(os.path.join(fdir, 'autocrop'), exist_ok=True)
 
                 if imcontent.size > 0:
-                    min_x = imcontent[:, 1].min()
-                    max_x = imcontent[:, 1].max()
-                    min_y = imcontent[:, 0].min()
-                    max_y = imcontent[:, 0].max()
+                    min_x = imcontent[:, 0].min()
+                    max_x = imcontent[:, 0].max()
+                    min_y = imcontent[:, 1].min()
+                    max_y = imcontent[:, 1].max()
 
                     imcrop = image[min_x:max_x + 1, min_y:max_y + 1]
                     width = max_x - min_x
