@@ -118,6 +118,7 @@ class GenerateTifStackTileSpecs(StackOutputModule):
         os.system('mv ' + filepath + ' ' + basefile + '.temp')
         os.system('mv ' + basefile + '.temp ' + basefile + '.tif')
         filepath = basefile + '.tif'
+        filepath1 = filepath
 
         with TiffFile(filepath) as im:
             width = im.pages.pages[0].imagewidth
@@ -150,7 +151,7 @@ class GenerateTifStackTileSpecs(StackOutputModule):
                 im.close()
 
         ip = renderapi.image_pyramid.ImagePyramid()
-        ip[0] = renderapi.image_pyramid.MipMap(imageUrl='file://' + filepath)
+        ip[0] = renderapi.image_pyramid.MipMap(imageUrl='file://' + filepath1)
         slice = os.path.basename(os.path.splitext(imfile)[0])
         slsplit = slice.split('_')
 
