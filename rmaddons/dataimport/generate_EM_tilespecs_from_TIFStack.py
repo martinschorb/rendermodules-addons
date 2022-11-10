@@ -141,11 +141,15 @@ class GenerateTifStackTileSpecs(StackOutputModule):
                     max_y = imcontent[:, 1].max()
 
                     imcrop = image[min_x:max_x + 1, min_y:max_y + 1]
-                    width = max_x - min_x
-                    height = max_y - min_y
+                    width = max_y - min_y
+                    height = max_x - min_x
                     transform = renderapi.transform.AffineModel(B0=min_x, B1=min_y)
                     tifffile.imsave(filepath1, imcrop)
                 else:
+                    min_x = 0
+                    max_x = width
+                    min_y = 0
+                    max_y = height
                     os.system('cp ' + filepath + ' ' + filepath1)
 
                 im.close()
@@ -161,9 +165,16 @@ class GenerateTifStackTileSpecs(StackOutputModule):
             print("Importing " + slice + " for Render.")
             print("\n...")
 
+        with open(os.path.join(imgdir,'trafo.txt'),'a') as f:
+            f.write(str(transform))
+
         ts = renderapi.tilespec.TileSpec(
             tileId=slice,
             imagePyramid=ip,
+            minX=min_x,
+            minY=min_y,
+            maxX=max_x,
+            maxY=max_y,
             z=idx,
             width=width,
             height=height,
