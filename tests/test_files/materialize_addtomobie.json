@@ -1,15 +1,12 @@
 {
-"project.json":{
+  "project.json": {
     "datasets": [
       "rmaddons_test"
     ],
     "defaultDataset": "rmaddons_test",
-    "imageDataFormats": [
-      "bdv.n5"
-    ],
-    "specVersion": "0.2.0"
+    "specVersion": "0.3.0"
   },
-"dataset.json": {
+  "dataset.json": {
     "is2D": false,
     "sources": {
       "rmaddons_test": {
@@ -22,7 +19,6 @@
         }
       }
     },
-    "timepoints": 1,
     "views": {
       "default": {
         "isExclusive": false,
