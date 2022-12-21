@@ -10,7 +10,10 @@ RUN conda install python=3.7 -y &&\
     pip install render-python &&\
     pip install git+https://github.com/AllenInstitute/asap-modules/ --no-deps &&\
     pip install git+https://git.embl.de/schorb/pyem &&\
-    pip install git+https://github.com/mobie/mobie-utils-python --no-deps
+    pip install git+https://github.com/mobie/mobie-utils-python --no-deps \
+    mkdir -p $(python -m site --user-site) \
+    echo "import coverage" > $(python -m site --user-site)/subprocess_coverage.pth \
+    echo "coverage.process_startup()" >> $(python -m site --user-site)/subprocess_coverage.pth
 USER root
 CMD ["/bin/bash"]
 
