@@ -20,8 +20,6 @@ import glob
 
 import json
 
-# from pyEM import parse_adoc
-
 example_input = {
     "render": {
         "host": "localhost",
@@ -52,42 +50,43 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
         M = np.array(((c, -s), (s, c)))
         return M
 
-    def parse_adoc(self, lines):
+    def parse_adoc(self, lines, delim=' = '):
         """
         converts an adoc-format string list into a dictionary
 
-        :param list lines: adoc string list
+        :param list lines: adoc string list,
+        :param str delim: delimiter of the dictionary assignment
         :return: dict of adoc key-value pairs
 
         """
 
         output = {}
+        mainkey = None
+
         for line in lines:
-            entry = line.split()
-            if entry:
-                output.update({entry[0]: entry[2:]})
+            entry = line.split(delim)
+            if entry != ['']:
+                if len(entry) < 2:
+                    mainkey = entry[0].strip('[]')
+                    output[mainkey] = {}
+                else:
+                    output[mainkey].update({entry[0]: entry[2:]})
 
         return output
 
     imgdir = []
 
-    def ts_from_SBEMtile(self, line, pxs, rotation):
+    def ts_from_SBEMtile(self, tile, pxs, rotation):
         """
         Generates a tilespec entry from a line in a SBEMImage tile definition
 
-        :param str line:  Line from SBEMImage tile definition
+        :param dict tile:  SBEMImage tile definition
         :param float pxs:  Pixelsize
         :param float rotation: rotation from SBEMImage parameters
         :return f1: path to the raw image of the tile
         :return tilespec: a :class:`renderapi.tilespec.TileSpec` object with the metadata for this tile
 
         """
-
-        # tile = bdv.str2dict(line[line.find('{'):])
-
-        instr = line[line.find('{'):].replace("'", '"')
-
-        tile = json.loads(instr)
 
         # curr_posid = [int(tile['tileid'].split('.')[0]),int(tile['tileid'].split('.')[1])]
         # curr_pos = tilepos[posid.index(str(curr_posid[0])+'.'+str(curr_posid[1]))]
@@ -175,7 +174,6 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
         tspecs = []
         allspecs = []
         curr_res = -1
-        curr_rot = -1
         stack_idx = 0
 
         for mfile in mfiles:
@@ -201,33 +199,38 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
 
             config = self.parse_adoc(cl[:cl.index('[overviews]')])
 
-            pxs = float(config['pixel_size'][0].strip('[],'))  # /1000  # in um
+            sessioninfo = json.loads(mdl[0].replace("'", '"').lstrip('SESSION: '))
 
-            z_thick = float(config['slice_thickness'][0])  # /1000  # in um
+            z_thick = sessioninfo['slice_thickness']
 
-            resolution = [pxs, pxs, z_thick]
-            rotation = float(config['rotation'][0].strip('[],'))
-
-            # ----   CHECK if resolution or tile rotation changes during run (should work but never used so far...)
-            # if not curr_res == -1:
-            #     if not resolution==curr_res:
-            #         stack_idx += 1
-            #         allspecs.append([stackname,tspecs,curr_res])
-            #         stackname += '_' + '%02d' %stack_idx
-            #         tspecs=[]
-            #     elif not rotation==curr_rot:
-            #         stack_idx += 1
-            #         allspecs.append([stackname,tspecs,curr_res])
-            #         stackname += '_' + '%02d' % stack_idx
-            #         tspecs=[]
-            #
-            # curr_res = resolution
-            # curr_rot = rotation
-
-            for line in mdl:
+            for line in mdl[1:]:
                 if line.startswith('TILE: '):
 
-                    f1, tilespeclist = self.ts_from_SBEMtile(line, pxs, rotation)
+                    tile = json.loads(line.replace("'", '"').lstrip('TILE: '))
+
+                    grid_id = tile['tileid'].split('.')[0]
+
+                    if grid_id not in sessioninfo['grids']:
+                        raise ValueError('Problem with the SBEMImage metadata! Grid ID not found.')
+
+                    grididx = sessioninfo['grids'].index(grid_id)
+
+                    pxs = sessioninfo['pixel_sizes'][grididx]
+                    rotation = sessioninfo['rotation_angles'][grididx]
+
+                    # ----   CHECK if resolution changes during run
+                    if not curr_res == -1:
+                        if not pxs == curr_res:
+                            raise ValueError('Change in pixel resolution currently not supported!')
+
+                            # stack_idx += 1
+                            # allspecs.append([stackname,tspecs,curr_res])
+                            # stackname += '_' + '%02d' %stack_idx
+                            # tspecs=[]
+
+                    curr_res = pxs
+
+                    f1, tilespeclist = self.ts_from_SBEMtile(tile, pxs, rotation)
 
                     if os.path.exists(f1):
                         tspecs.append(tilespeclist)
@@ -238,6 +241,8 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
                         print(fnf_error)
                         with open(logfile, 'w') as log:
                             log.writelines(fnf_error)
+
+        resolution = [pxs, pxs, z_thick]
 
         allspecs.append([stackname, tspecs, resolution])
 
