@@ -140,7 +140,8 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             rotation=rotation,
             pixelsize=pxs)
 
-        # json_file = os.path.realpath(os.path.join(tilespecdir,outputProject+'_'+outputOwner+'_'+outputStack+'_%04d.json'%z))
+        # json_file = os.path.realpath(os.path.join(
+        #     tilespecdir,outputProject+'_'+outputOwner+'_'+outputStack+'_%04d.json'%z))
         # fd=open(json_file, "w")
         # renderapi.utils.renderdump(tilespeclist,fd,sort_keys=True, indent=4, separators=(',', ': '))
         # fd.close()
@@ -178,6 +179,10 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
         stack_idx = 0
 
         for mfile in mfiles:
+
+            if '_ov_' in mfile:
+                if mfile.replace('_ov_', '_') in mfiles:
+                    continue
 
             stackname = self.args.get("output_stack")
 
