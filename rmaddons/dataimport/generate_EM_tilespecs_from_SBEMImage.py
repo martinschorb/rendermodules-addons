@@ -102,11 +102,14 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
         ip = renderapi.image_pyramid.ImagePyramid()
         ip[0] = renderapi.image_pyramid.MipMap(imageUrl='file://' + filepath)
 
+        width = tile['tile_width']
+        height = tile['tile_height']
+
         xpos = float(tile['glob_x']) / pxs
         ypos = float(tile['glob_y']) / pxs
         M = self.rotmatrix(rotation)
 
-        pos = np.dot(M.T, [xpos, ypos])
+        pos = np.dot(M.T, [xpos, ypos]) + np.dot(M.T,[width, height])
 
         tf_trans = renderapi.transform.AffineModel(
             B0=pos[0],
