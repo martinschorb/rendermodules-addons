@@ -112,11 +112,11 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             B0=pos[0],
             B1=pos[1])
 
-        # tf_rot = renderapi.transform.AffineModel(
-        #                           M00=M[0,0],
-        #                           M01=M[0,1],
-        #                           M10=M[1,0],
-        #                           M11=M[1,1])
+        tf_rot = renderapi.transform.AffineModel(
+                                  M00=M[0,0],
+                                  M01=M[0,1],
+                                  M10=M[1,0],
+                                  M11=M[1,1])
 
         print("Processing tile " + tile['tileid'] + " metadata for Render.")
 
@@ -127,7 +127,7 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             width=tile['tile_width'],
             height=tile['tile_height'],
             minint=0, maxint=255,
-            tforms=[tf_trans],  # ,tf_rot],
+            tforms=[tf_trans, tf_rot],
             # imagePyramid=ip,
             sectionId=tile['slice_counter'],
             scopeId='3View',
@@ -136,7 +136,7 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             # imageRow=imgdata['img_meta']['raster_pos'][1],
             stageX=pos[0],
             stageY=pos[1],
-            rotation=rotation,
+            rotation=0,
             pixelsize=pxs)
 
         # json_file = os.path.realpath(os.path.join(
