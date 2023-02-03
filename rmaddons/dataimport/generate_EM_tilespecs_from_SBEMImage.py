@@ -108,9 +108,10 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
         xpos = float(tile['glob_x']) / pxs
         ypos = float(tile['glob_y']) / pxs
         M = self.rotmatrix(rotation)
-
-        pos = np.dot(M.T, [xpos, ypos])
-        rotshift = np.dot(M.T, [height, width])
+        
+        rotshift = -np.array([width/2, height/2])
+        rotshift1 = -rotshift
+        pos = [xpos, ypos]
 
         tf_trans = renderapi.transform.AffineModel(
             B0=pos[0],
@@ -126,6 +127,11 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             B0=rotshift[0],
             B1=rotshift[1])
 
+        tf_rot_shift1 = renderapi.transform.AffineModel(
+            B0=rotshift1[0],
+            B1=rotshift1[1])
+
+
         print("Processing tile " + tile['tileid'] + " metadata for Render.")
 
         ts = renderapi.tilespec.TileSpec(
@@ -135,7 +141,7 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             width=tile['tile_width'],
             height=tile['tile_height'],
             minint=0, maxint=255,
-            tforms=[tf_rot, tf_trans],
+            tforms=[tf_rot_shift, tf_rot, tf_rot_shift1, tf_trans],
             # imagePyramid=ip,
             sectionId=tile['slice_counter'],
             scopeId='3View',
