@@ -40,39 +40,41 @@ example_input = {
 }
 
 
+def parse_adoc(lines, delim=' = '):
+    """
+    converts an adoc-format string list into a dictionary
+
+    :param list lines: adoc string list,
+    :param str delim: delimiter of the dictionary assignment
+    :return: dict of adoc key-value pairs
+
+    """
+
+    output = {}
+    mainkey = None
+
+    for line in lines:
+        entry = line.split(delim)
+        if entry != ['']:
+            if len(entry) < 2:
+                mainkey = entry[0].strip('[]')
+                output[mainkey] = {}
+            else:
+                output[mainkey].update({entry[0]: entry[2:]})
+
+    return output
+
+
 class GenerateSBEMImageTileSpecs(StackOutputModule):
     default_schema = GenerateSBEMTileSpecsParameters
     default_output_schema = GenerateEMTileSpecsOutput
 
-    def rotmatrix(self, angle):
+    @staticmethod
+    def rotmatrix(angle):
         th = np.radians(angle)
         c, s = np.cos(th), np.sin(th)
         M = np.array(((c, -s), (s, c)))
         return M
-
-    def parse_adoc(self, lines, delim=' = '):
-        """
-        converts an adoc-format string list into a dictionary
-
-        :param list lines: adoc string list,
-        :param str delim: delimiter of the dictionary assignment
-        :return: dict of adoc key-value pairs
-
-        """
-
-        output = {}
-        mainkey = None
-
-        for line in lines:
-            entry = line.split(delim)
-            if entry != ['']:
-                if len(entry) < 2:
-                    mainkey = entry[0].strip('[]')
-                    output[mainkey] = {}
-                else:
-                    output[mainkey].update({entry[0]: entry[2:]})
-
-        return output
 
     imgdir = []
 
@@ -108,8 +110,8 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
         xpos = float(tile['glob_x']) / pxs
         ypos = float(tile['glob_y']) / pxs
         M = self.rotmatrix(rotation)
-        
-        rotshift = -np.array([width/2, height/2])
+
+        rotshift = -np.array([width / 2, height / 2])
         rotshift1 = -rotshift
         pos = [xpos, ypos]
 
@@ -131,7 +133,6 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             B0=rotshift1[0],
             B1=rotshift1[1])
 
-
         print("Processing tile " + tile['tileid'] + " metadata for Render.")
 
         ts = renderapi.tilespec.TileSpec(
@@ -150,7 +151,7 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             # imageRow=imgdata['img_meta']['raster_pos'][1],
             stageX=pos[0],
             stageY=pos[1],
-            rotation=0,
+            rotation=rotation,
             pixelsize=pxs)
 
         # json_file = os.path.realpath(os.path.join(
@@ -188,7 +189,6 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
         tspecs = []
         allspecs = []
         curr_res = -1
-        stack_idx = 0
 
         for mfile in mfiles:
 
@@ -206,12 +206,12 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             with open(mdfile) as mdf:
                 mdl = mdf.read().splitlines()
 
-            conffile = os.path.join(imgdir, 'meta', 'logs', 'config' + acq_suffix)
+            # conffile = os.path.join(imgdir, 'meta', 'logs', 'config' + acq_suffix)
 
-            with open(conffile) as cf:
-                cl = cf.read().splitlines()
-
-            config = self.parse_adoc(cl[:cl.index('[overviews]')])
+            # with open(conffile) as cf:
+            #     cl = cf.read().splitlines()
+            #
+            # config = parse_adoc(cl[:cl.index('[overviews]')])
 
             sessioninfo = json.loads(mdl[0].replace("'", '"').lstrip('SESSION: '))
 
