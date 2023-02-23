@@ -124,6 +124,12 @@ class GenerateTifStackTileSpecs(StackOutputModule):
             width = im.pages.pages[0].imagewidth
             height = im.pages.pages[0].imagelength
             dtype = im.pages.pages[0].dtype.type
+
+            min_x = 0
+            max_x = width
+            min_y = 0
+            max_y = height
+
             if autocrop:
                 image = im.asarray()
                 imcontent = np.argwhere(image != 0)  # assume blackground is zero
@@ -146,10 +152,6 @@ class GenerateTifStackTileSpecs(StackOutputModule):
                     transform = renderapi.transform.AffineModel(B0=min_x, B1=min_y)
                     tifffile.imsave(filepath1, imcrop)
                 else:
-                    min_x = 0
-                    max_x = width
-                    min_y = 0
-                    max_y = height
                     os.system('cp ' + filepath + ' ' + filepath1)
 
                 im.close()
