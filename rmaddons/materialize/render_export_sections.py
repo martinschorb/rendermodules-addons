@@ -2,6 +2,7 @@
 
 from functools import partial
 import time
+import numpy as np
 
 import renderapi
 from asap.materialize.schemas import (RenderSectionAtScaleOutput)
@@ -9,6 +10,7 @@ from asap.materialize.schemas import (RenderSectionAtScaleOutput)
 from asap.materialize.render_downsample_sections import (check_stack_for_mipmaps,
                                                          create_tilespecs_without_mipmaps,
                                                          RenderSectionAtScale)
+from asap.module.render_module import (RenderModuleException)
 
 from rmaddons.materialize.schemas import RenderSectionAtScale_extendedParameters
 
@@ -136,6 +138,45 @@ class RenderSectionAtScale_extended(RenderSectionAtScale):
             render.run(renderapi.stack.delete_stack,
                        temp_no_mipmap_stack)
         return ds_source
+
+    def run(self):
+
+        zvalues1 = self.render.run(
+            renderapi.stack.get_z_values_for_stack,
+            self.args['input_stack'])
+
+        if self.args['minZ'] == -1:
+            self.args['minZ'] = min(zvalues1)
+
+        if self.args['maxZ'] == -1:
+            self.args['maxZ'] = max(zvalues1)
+
+        elif self.args['minZ'] > self.args['maxZ']:
+            raise RenderModuleException('Invalid Z range: {} > {}'.format(
+                self.args['minZ'], self.args['maxZ']))
+
+        zvalues1 = np.array(zvalues1)
+        zrange = range(int(self.args['minZ']), int(self.args['maxZ']) + 1)
+        zvalues = list(set(zvalues1).intersection(set(zrange)))
+
+        if self.args['bounds'] is None:
+            if self.args['use_stack_bounds']:
+                self.args['bounds'] = renderapi.stack.get_stack_bounds(
+                    self.args['input_stack'], render=self.render)
+                self.args['bounds'].pop('minZ')
+                self.args['bounds'].pop('maxZ')
+
+        if not zvalues:
+            raise RenderModuleException(
+                'No valid zvalues found in stack for '
+                'given range {} - {}'.format(
+                    self.args['minZ'], self.args['maxZ']))
+
+        self.args['temp_stack'] = self.downsample_specific_mipmapLevel(
+            zvalues, **dict(self.args, **{'render': self.render}))
+
+        self.output({"image_directory": self.args['image_directory'],
+                     "temp_stack": self.args['temp_stack']})
 
 
 if __name__ == "__main__":
