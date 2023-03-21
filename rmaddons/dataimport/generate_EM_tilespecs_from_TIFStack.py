@@ -167,8 +167,8 @@ class GenerateTifStackTileSpecs(StackOutputModule):
             print("Importing " + slice + " for Render.")
             print("\n...")
 
-        with open(os.path.join(imgdir,'trafo.txt'),'a') as f:
-            f.write(str(transform))
+        # with open(os.path.join(imgdir,'trafo.txt'),'a') as f:
+        #     f.write(str(transform))
 
         ts = renderapi.tilespec.TileSpec(
             tileId=slice,
