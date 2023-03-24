@@ -5,6 +5,7 @@ coverage-badge
 pytest>=3.0.5
 pytest-cov>=2.9
 pytest-dependency
+jsonschema>=4
 codecov
 jinja2
 pathlib2
