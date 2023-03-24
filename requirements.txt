@@ -5,7 +5,7 @@ argschema
 jinja2
 six
 requests
-jsonschema
+jsonschema>=4
 numpy
 tifffile
 scikit-image>0.18
