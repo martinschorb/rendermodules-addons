@@ -64,6 +64,33 @@ class AddtoMoBIE(argschema.ArgSchemaParser):
                             menu_name=menu_name,
                             move_data=True)
 
+        ds = mobie.metadata.read_dataset_metadata(os.path.join(outpath, dataset_name))
+
+        if 'timepoints' in ds.keys():
+            # add new data to last existing timepoint
+
+            views = ds['views']
+
+            if dataset_name not in views.keys():
+                raise ValueError('MoBie project inconsistent, view not found!')
+
+            defview = dict(views['default'])
+            __ = defview.pop('uiSelectionGroup')
+            defview['sourceDisplays'][0]['imageDisplay'].pop('name')
+
+            newview = dict(views[dataset_name])
+            __ = newview.pop('uiSelectionGroup')
+            newview['sourceDisplays'][0]['imageDisplay'].pop('name')
+
+
+
+
+
+            if defview == newview:
+                views['default']['sourceDisplays'] = views[dataset_name]['sourceDisplays']
+
+
+
     def __init__(self, schema_type=None, *args, **kwargs):
         super(AddtoMoBIE, self).__init__(
             schema_type=schema_type, *args, **kwargs)

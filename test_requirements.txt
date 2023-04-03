@@ -1,10 +1,11 @@
-marshmallow<3.0
-argschema<2.0
+marshmallow
+argschema
 coverage>=4.1
 coverage-badge
 pytest>=3.0.5
 pytest-cov>=2.9
 pytest-dependency
+jsonschema>=4
 codecov
 jinja2
 pathlib2

@@ -9,7 +9,7 @@ from pybdv.util import absolute_to_relative_scale_factors
 
 
 example = {
-    "path": "-",
+    "path": "tests/test_files/rmaddons_test.n5",
     "scale_factors": [[1, 1, 1]],
     "resolution": [0.05, 0.015, 0.015],
     "unit": 'micrometer'
