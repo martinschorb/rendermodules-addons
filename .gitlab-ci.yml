@@ -96,7 +96,7 @@ tests:
 #    - pip install pymongo
 #    - python -c "from pymongo import MongoClient; client=MongoClient('mymongo'); print(client.server_info())"
 #    - chmod 777 -R /opt/conda/
-#    - useradd testuser
+    - useradd testuser
 #    - su testuser -c 'conda install python=3.7 -y'
 #    - su testuser -c 'conda install  git mobie_utils -c conda-forge -y'
 #    - pip install render-python
