@@ -220,7 +220,10 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             #
             # config = parse_adoc(cl[:cl.index('[overviews]')])
 
-            sessioninfo = json.loads(mdl[0].replace("'", '"').lstrip('SESSION: '))
+            sessioninfo = json.loads(mdl[0].replace("'", '"')
+                                     .replace("(", "[")
+                                     .replace(")", ']')
+                                     .lstrip('SESSION: '))
 
             z_thick = sessioninfo['slice_thickness']
 
