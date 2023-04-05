@@ -28,7 +28,7 @@ example_input = {
         "project": "tests",
         "client_scripts": (
             "/render/render-ws-java-client/src/main/scripts/")},
-    "image_directory": "test/test_files/sbemimage_testdata",
+    "image_directory": "tests/test_files/sbemimage_testdata",
     "stack": "test_sbem",
     "overwrite_zlayer": True,
     "pool_size": 1,
