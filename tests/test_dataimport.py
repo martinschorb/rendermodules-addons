@@ -72,6 +72,9 @@ def test_generate_SBEM(render):
     # test if all tiles are imported
     assert len(expected_tileIds.symmetric_difference(delivered_tileIds)) == 0
 
+    # test if section index after skipped section is correct
+    assert renderapi.stack.get_section_z_value(render=render, stack=ex['stack'], sectionId='5') == 4
+
     md = renderapi.stack.get_stack_metadata(render=render, stack=ex['stack'])
 
     expected_resolution = sbemimage_template['resolution']
@@ -266,6 +269,8 @@ def test_generate_TIF(render):
     delivered_tileIds = renderapi.stack.get_stack_tileIds(ex['output_stack'], render=render)
 
     assert expected_tileIds == delivered_tileIds[0]
+
+
 
     # cleanup
     os.system('rm -rf ' + example_tif)
