@@ -28,13 +28,13 @@ example_input = {
         "project": "tests",
         "client_scripts": (
             "/render/render-ws-java-client/src/main/scripts/")},
-    "image_directory": "",
+    "image_directory": "test/test_files/sbemimage_testdata",
     "stack": "test_sbem",
     "overwrite_zlayer": True,
     "pool_size": 1,
     "close_stack": True,
     "z_index": 1,
-    "bad_slices": [0,2],
+    "bad_slices": [4],
     "output_stackVersion": {
         "stackResolutionX": 10.1
     }
