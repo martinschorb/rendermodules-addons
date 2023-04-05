@@ -14,6 +14,12 @@ class GenerateSBEMTileSpecsParameters(OutputStackParameters):
                      "Defaults to parent directory containing metafile "
                      "if omitted."))
 
+    bad_slices = List(Int,
+                      required=False,
+                      default=[],
+                      description=("List of slices to be ignored when importing.")
+                      )
+
 
 class GenerateTifStackTileSpecsParameters(GenerateSBEMTileSpecsParameters):
     pxs = ResolutionList(Float,
@@ -37,7 +43,6 @@ class GenerateTifStackTileSpecsParameters(GenerateSBEMTileSpecsParameters):
                  description=(
                      "end index (included) to split file list for processing"),
                  )
-
 
 
 class GenerateSerialEMTileSpecsParameters(OutputStackParameters):

@@ -34,6 +34,7 @@ example_input = {
     "pool_size": 1,
     "close_stack": True,
     "z_index": 1,
+    "bad_slices": [0,2],
     "output_stackVersion": {
         "stackResolutionX": 10.1
     }
@@ -77,14 +78,16 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
         return M
 
     imgdir = []
+    slicediff = 0
 
-    def ts_from_SBEMtile(self, tile, pxs, rotation):
+    def ts_from_SBEMtile(self, tile, pxs, rotation, sliceidx):
         """
         Generates a tilespec entry from a line in a SBEMImage tile definition
 
         :param dict tile:  SBEMImage tile definition
         :param float pxs:  Pixelsize
         :param float rotation: rotation from SBEMImage parameters
+        :param int sliceidx: index of the processed slice
         :return f1: path to the raw image of the tile
         :return tilespec: a :class:`renderapi.tilespec.TileSpec` object with the metadata for this tile
 
@@ -98,6 +101,7 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
         # mat_t = np.concatenate((mat_t,[[0,0,0,1]]))
 
         f1 = os.path.realpath(os.path.join(self.imgdir, tile['filename']))
+
 
         filepath = groupsharepath(f1)
 
@@ -138,7 +142,7 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
         ts = renderapi.tilespec.TileSpec(
             tileId=tile['tileid'],
             imagePyramid=ip,
-            z=tile['slice_counter'],  # tile['glob_z'],
+            z=sliceidx,  # tile['glob_z'],
             width=tile['tile_width'],
             height=tile['tile_height'],
             minint=0, maxint=255,
@@ -190,6 +194,9 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
         allspecs = []
         curr_res = -1
 
+        bad_slices = np.array(self.args.get("bad_slices"))
+
+
         for mfile in mfiles:
 
             if '_ov_' in mfile:
@@ -221,6 +228,10 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
                 if line.startswith('TILE: '):
 
                     tile = json.loads(line.replace("'", '"').lstrip('TILE: '))
+                    sliceidx = tile['slice_counter']
+
+                    if sliceidx in bad_slices:
+                        continue
 
                     grid_id = tile['tileid'].split('.')[0]
 
@@ -244,7 +255,10 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
 
                     curr_res = pxs
 
-                    f1, tilespeclist = self.ts_from_SBEMtile(tile, pxs, rotation)
+                    # compensate index for removed slices
+                    sliceidx = sliceidx - sum(tile['slice_counter'] > bad_slices)
+
+                    f1, tilespeclist = self.ts_from_SBEMtile(tile, pxs, rotation, sliceidx)
 
                     if os.path.exists(f1):
                         tspecs.append(tilespeclist)
