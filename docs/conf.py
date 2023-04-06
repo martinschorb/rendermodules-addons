@@ -70,7 +70,7 @@ intersphinx_mapping = {'marshmallow': ('http://marshmallow.readthedocs.io/en/lat
                        'renderapi' : ('https://render-python.readthedocs.io/en/latest/',None),
                        'asap' : ('https://alleninstitute.github.io/asap-modules/',None),
                        'argschema' : ('https://argschema.readthedocs.io/en/latest/',None),
-                       'sphinx': ('http://www.sphinx-doc.org/en/stable/', None)}
+                       'sphinx': ('https://www.sphinx-doc.org/en/stable/', None)}
 
 sys.path.insert(0, os.path.abspath("../"))
 sys.path.insert(0, os.path.abspath("../rmaddons"))
