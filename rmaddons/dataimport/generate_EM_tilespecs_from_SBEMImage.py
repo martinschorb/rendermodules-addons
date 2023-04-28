@@ -127,15 +127,18 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             M00=M[0, 0],
             M01=M[0, 1],
             M10=M[1, 0],
-            M11=M[1, 1])
+            M11=M[1, 1],
+            labels = ["lens"])
 
         tf_rot_shift = renderapi.transform.AffineModel(
             B0=rotshift[0],
-            B1=rotshift[1])
+            B1=rotshift[1],
+            labels = ["lens"])
 
         tf_rot_shift1 = renderapi.transform.AffineModel(
             B0=rotshift1[0],
-            B1=rotshift1[1])
+            B1=rotshift1[1],
+            labels = ["lens"])
 
         print("Processing tile " + tile['tileid'] + " metadata for Render.")
 
