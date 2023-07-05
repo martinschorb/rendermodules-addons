@@ -40,7 +40,7 @@ example_input = {
     }
 }
 
-ts_label = "lens"
+ts_label = "include"
 
 def parse_adoc(lines, delim=' = '):
     """
@@ -128,18 +128,15 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             M00=M[0, 0],
             M01=M[0, 1],
             M10=M[1, 0],
-            M11=M[1, 1],
-            labels = [ts_label])
+            M11=M[1, 1])
 
         tf_rot_shift = renderapi.transform.AffineModel(
             B0=rotshift[0],
-            B1=rotshift[1],
-            labels = [ts_label])
+            B1=rotshift[1])
 
         tf_rot_shift1 = renderapi.transform.AffineModel(
             B0=rotshift1[0],
-            B1=rotshift1[1],
-            labels = [ts_label])
+            B1=rotshift1[1])
 
         print("Processing tile " + tile['tileid'] + " metadata for Render.")
 
@@ -159,7 +156,7 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             # imageRow=imgdata['img_meta']['raster_pos'][1],
             stageX=pos[0],
             stageY=pos[1],
-            rotation=rotation,
+            rotation=0,
             pixelsize=pxs)
 
         # json_file = os.path.realpath(os.path.join(
