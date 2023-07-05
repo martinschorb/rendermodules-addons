@@ -120,9 +120,9 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
         rotshift1 = -rotshift
         pos = [xpos, ypos]
 
-        tf_trans = renderapi.transform.AffineModel(
-            B0=pos[0],
-            B1=pos[1],
+        tf_rot_shift = renderapi.transform.AffineModel(
+            B0=rotshift[0],
+            B1=rotshift[1],
             labels = [ts_label])
 
         tf_rot = renderapi.transform.AffineModel(
@@ -131,13 +131,13 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             M10=M[1, 0],
             M11=M[1, 1])
 
-        tf_rot_shift = renderapi.transform.AffineModel(
-            B0=rotshift[0],
-            B1=rotshift[1])
-
         tf_rot_shift1 = renderapi.transform.AffineModel(
             B0=rotshift1[0],
             B1=rotshift1[1])
+
+        tf_trans = renderapi.transform.AffineModel(
+            B0=pos[0],
+            B1=pos[1])
 
         print("Processing tile " + tile['tileid'] + " metadata for Render.")
 
