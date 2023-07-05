@@ -122,7 +122,8 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
 
         tf_trans = renderapi.transform.AffineModel(
             B0=pos[0],
-            B1=pos[1])
+            B1=pos[1],
+            labels = [ts_label])
 
         tf_rot = renderapi.transform.AffineModel(
             M00=M[0, 0],
