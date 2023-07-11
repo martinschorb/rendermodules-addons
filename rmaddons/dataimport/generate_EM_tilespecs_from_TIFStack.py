@@ -146,7 +146,7 @@ class GenerateTifStackTileSpecs(StackOutputModule):
                     min_y = imcontent[:, 1].min()
                     max_y = imcontent[:, 1].max()
 
-                    imcrop = image[min_x:max_x + 1, min_y:max_y + 1]
+                    imcrop = image[min_x:min(max_x + 1, image.shape[0]), min_y:min(max_y + 1, image.shape[1])]
                     width = max_y - min_y
                     height = max_x - min_x
                     transform = renderapi.transform.AffineModel(B0=min_x, B1=min_y)
