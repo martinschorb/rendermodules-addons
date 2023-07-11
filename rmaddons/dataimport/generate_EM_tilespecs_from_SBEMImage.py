@@ -35,6 +35,7 @@ example_input = {
     "close_stack": True,
     "z_index": 1,
     "bad_slices": [4],
+    "append": 0,
     "output_stackVersion": {
         "stackResolutionX": 10.1
     }
@@ -208,6 +209,7 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
                     continue
 
             stackname = self.args.get("output_stack")
+            append = self.args.get("append")
 
             # with open(mfile) as mf: ml = mf.read().splitlines()
             acq_suffix = mfile[mfile.rfind('_'):]
@@ -230,6 +232,9 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
                                      .lstrip('SESSION: '))
 
             z_thick = sessioninfo['slice_thickness']
+
+            if append:
+                stack_slices = renderapi.stack.get_z_values_for_stack(stackname)
 
             for line in mdl[1:]:
                 if line.startswith('TILE: '):
@@ -264,6 +269,11 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
 
                     # compensate index for removed slices
                     sliceidx = sliceidx - sum(tile['slice_counter'] > bad_slices)
+
+                    if append > 0:
+                        sliceidx += stack_slices[-1]
+                    elif append < 0:
+                        sliceidx = stack_slices[0] - sliceidx
 
                     f1, tilespeclist = self.ts_from_SBEMtile(tile, pxs, rotation, sliceidx)
 

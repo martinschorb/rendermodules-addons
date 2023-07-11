@@ -41,6 +41,7 @@ example_input = {
     "z": 1,
     "startidx": 0,
     "endidx": -1,
+    "append": 0,
     "output_stackVersion": {
         "stackResolutionX": 10.1
     }

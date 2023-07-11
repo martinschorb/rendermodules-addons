@@ -20,6 +20,9 @@ class GenerateSBEMTileSpecsParameters(OutputStackParameters):
                       description=("List of slices to be ignored when importing.")
                       )
 
+    append = Int(required=False,
+                 default=0,
+                 description=("whether appending to an existing stack. (before 1, after -1)"))
 
 class GenerateTifStackTileSpecsParameters(GenerateSBEMTileSpecsParameters):
     pxs = ResolutionList(Float,
