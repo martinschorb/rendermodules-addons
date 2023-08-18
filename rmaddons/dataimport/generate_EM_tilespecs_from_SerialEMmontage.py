@@ -33,8 +33,8 @@ example_input = {
         "client_scripts": (
             "/g/emcf/software/render/render-ws-java-client/"
             "src/main/scripts")},
-    "image_file": os.path.abspath('tests/test_files/idoc_supermont_testdata/supermont.idoc'),
-        # os.path.abspath('/g/emcf/boermel/projects/Steinmetz_Markus_CardiacMuscle/RBM20_mutants/JEOL2100/RBM20_R636Q/E2375/8k_m0/im.idoc'),
+    "image_file": os.path.abspath('/g/emcf/boermel/projects/Steinmetz_Markus_CardiacMuscle/RBM20_mutants/JEOL2100/RBM20_R636Q/E2375/8k_m0/im.idoc'),
+    #os.path.abspath('tests/test_files/idoc_supermont_testdata/supermont.idoc'),
     "stack": "test_SerialEM",
     "overwrite_zlayer": True,
     "pool_size": 4,
@@ -67,7 +67,7 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
         # mat_t = np.concatenate((np.eye(3),[[tile['glob_x']],[tile['glob_y']],[tile['glob_z']]]),axis=1)
         # mat_t = np.concatenate((mat_t,[[0,0,0,1]]))
 
-        imagefile = [tile[key] for key in tile.keys() if '# [Image' in key][0]
+        imagefile = [tile[key] for key in tile.keys() if '# [Image' in key][0].strip(' ')
 
         rawdir = os.path.dirname(self.args.get("image_file"))
 
