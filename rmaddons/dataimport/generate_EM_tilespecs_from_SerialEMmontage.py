@@ -34,6 +34,7 @@ example_input = {
             "/g/emcf/software/render/render-ws-java-client/"
             "src/main/scripts")},
     "image_file": os.path.abspath('tests/test_files/idoc_supermont_testdata/supermont.idoc'),
+        # os.path.abspath('/g/emcf/boermel/projects/Steinmetz_Markus_CardiacMuscle/RBM20_mutants/JEOL2100/RBM20_R636Q/E2375/8k_m0/im.idoc'),
     "stack": "test_SerialEM",
     "overwrite_zlayer": True,
     "pool_size": 4,
@@ -186,13 +187,16 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
         allspecs = []
         stack_suffix = ''
         curr_navitem = ''
-        pxs = float(tiles[0]['PixelSpacing'][0]) / 10
+        pxs = np.round(float(tiles[0]['PixelSpacing'][0]) / 10, 3)
         curr_mont = {}
 
         if len(montsecs) > 0:
             curr_mont = montsecs[0]
 
-        multiple = True
+        if len(montsecs) > 1:
+            multiple = True
+        else:
+            multiple = False
 
         if 'NavigatorLabel' in tiles[0].keys():
             curr_navitem = tiles[0]['NavigatorLabel'][0].split('-')[0]
@@ -226,13 +230,13 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
                         allspecs.append([stackname + stack_suffix, tspecs, pxs])
                     tspecs = []
 
-            pxs = float(tile['PixelSpacing'][0]) / 10
+            pxs = np.round(float(tiles[0]['PixelSpacing'][0]) / 10, 3)
             if multiple:
                 stack_suffix = '_' + curr_navitem
 
             f1, tilespeclist = self.ts_from_SerialEMtile(tile, camline, header)
 
-            if os.path.exists(os.path.join(rawdir,f1)):
+            if os.path.exists(f1):
                 tspecs.append(tilespeclist)
             else:
                 fnf_error = 'ERROR: File ' + f1 + ' does not exist. Skipping tile creation.'

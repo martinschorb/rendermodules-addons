@@ -24,14 +24,14 @@ from tifffile import TiffFile
 
 example_input = {
     "render": {
-        "host": "render.embl.de",
+        "host": "localhost",
         "port": 8080,
         "owner": "FIBSEM",
         "project": "00tests",
         "client_scripts": (
             "/g/emcf/software/render/render-ws-java-client/src/main/scripts/")},
     "image_directory":
-        "/g/emcf/schorb/data/FIBSEMtest/",
+        "/g/emcf/schorb/code/rendermodules-addons/tests/test_files/tif_testdata",
     "pxs": [10, 10, 20],
     "autocrop": False,
     "output_stack": "test_stack",
