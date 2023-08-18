@@ -33,8 +33,7 @@ example_input = {
         "client_scripts": (
             "/g/emcf/software/render/render-ws-java-client/"
             "src/main/scripts")},
-    "image_file": os.path.abspath('/g/emcf/boermel/projects/Steinmetz_Markus_CardiacMuscle/RBM20_mutants/JEOL2100/RBM20_R636Q/E2375/8k_m0/im.idoc'),
-    #os.path.abspath('tests/test_files/idoc_supermont_testdata/supermont.idoc'),
+    "image_file": os.path.abspath('tests/test_files/idoc_supermont_testdata/supermont.idoc'),
     "stack": "test_SerialEM",
     "overwrite_zlayer": True,
     "pool_size": 4,
