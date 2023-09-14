@@ -4,8 +4,9 @@ Create tilespecs from a directory containing aplhabetically ordered tif files
 """
 
 import os
+import warnings
 from functools import partial
-
+from itertools import repeat
 import tifffile
 
 import renderapi
@@ -88,8 +89,18 @@ class GenerateTifStackTileSpecs(StackOutputModule):
 
         mypartial = partial(self.tiffile_to_ts, autocrop, imgdir, resolution, transform)
 
+        idx_start = 0
+
+        if self.args.get("append") > 0:
+            try:
+                zval = renderapi.stack.get_z_values_for_stack(self.args.get("output_stack"), render=self.render)
+                idx_start = zval[-1] + 1
+            except:
+                warnings.WarningMessage("Stack not found. Will create a fresh one.")
+
+
         with poolclass(pool_size) as pool:
-            tspecs = pool.map(mypartial, list(zip(imfiles, range(len(imfiles)))))
+            tspecs = pool.map(mypartial, list(zip(imfiles, range(len(imfiles)), repeat(idx_start))))
             pool.close()
             pool.join()
 
@@ -108,7 +119,7 @@ class GenerateTifStackTileSpecs(StackOutputModule):
         :rtype: renderapi.tilespec.TileSpec
         """
 
-        imfile, idx = inputkey
+        imfile, idx, idx_start = inputkey
         f1 = os.path.realpath(os.path.join(imgdir, imfile))
 
         filepath = groupsharepath(f1)
@@ -162,8 +173,11 @@ class GenerateTifStackTileSpecs(StackOutputModule):
         slice = os.path.basename(os.path.splitext(imfile)[0])
         slsplit = slice.split('_')
 
-        if slsplit[0] == 'slice' and slsplit[1].isnumeric():
+        if self.args.get("append") > 0:
+            idx += idx_start
+        elif slsplit[0].endswith('slice') and slsplit[1].isnumeric():
             idx = int(slsplit[1])
+
         if idx % 50 == 0:
             print("Importing " + slice + " for Render.")
             print("\n...")
@@ -207,7 +221,7 @@ class GenerateTifStackTileSpecs(StackOutputModule):
         url = 'http://' + self.args["render"]["host"].split('http://')[-1] + ':' + str(self.args["render"]["port"])
         url += '/render-ws/v1/owner/' + self.args["render"]["owner"]
         url += '/project/' + self.args["render"]["project"]
-        url += '/stack/' + self.args["output_stack"]
+        url += '/stack/' + self.args.get("output_stack")
         url += '/resolutionValues'
 
         requests.put(url, json=resolution)
