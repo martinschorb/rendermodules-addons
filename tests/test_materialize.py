@@ -230,7 +230,7 @@ def test_mobie():
     os.system('rm -rf ' + input_params1['outpath'])
 
 
-@pytest.mark.dependency(depends=["test_generate_SerialEM"])
+@pytest.mark.dependency(depends=["test_generate_SBEM"])
 def test_render_export_sections(render):
     assert isinstance(render, renderapi.render.Render)
 
