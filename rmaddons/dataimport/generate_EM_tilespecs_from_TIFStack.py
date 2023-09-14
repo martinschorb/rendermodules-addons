@@ -202,7 +202,7 @@ class GenerateTifStackTileSpecs(StackOutputModule):
             minint=np.iinfo(dtype).min,
             maxint=np.iinfo(dtype).max,
             tforms=[transform],
-            sectionId=idx,
+            sectionId=int(idx),
             scopeId='TIFslice',
             cameraId='TIFslice',
             pixelsize=resolution)
