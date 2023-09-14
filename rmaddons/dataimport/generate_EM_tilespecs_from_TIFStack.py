@@ -94,10 +94,13 @@ class GenerateTifStackTileSpecs(StackOutputModule):
         if self.args.get("append") > 0:
             try:
                 zval = renderapi.stack.get_z_values_for_stack(self.args.get("output_stack"), render=self.render)
-                idx_start = zval[-1] + 1
-            except:
+            except TypeError:
                 warnings.WarningMessage("Stack not found. Will create a fresh one.")
+                zval = [-1]
+            except renderapi.errors.RenderError:
+                zval = [-1]
 
+            idx_start = zval[-1] + 1
 
         with poolclass(pool_size) as pool:
             tspecs = pool.map(mypartial, list(zip(imfiles, range(len(imfiles)), repeat(idx_start))))
@@ -175,6 +178,7 @@ class GenerateTifStackTileSpecs(StackOutputModule):
 
         if self.args.get("append") > 0:
             idx += idx_start
+            slice = f"{idx:04}" + slice
         elif slsplit[0].endswith('slice') and slsplit[1].isnumeric():
             idx = int(slsplit[1])
 
@@ -209,19 +213,27 @@ class GenerateTifStackTileSpecs(StackOutputModule):
         #     meta = json.load(f)
 
         imgdir = self.args.get('image_directory')
+        stack = self.args.get("output_stack")
 
         # print(imgdir)
 
         tspecs = self.ts_from_tifpath(imgdir)
 
+        self.overwrite_zlayer = False
+
         # create stack and fill resolution parameters
+        # if self.args.get("append") > 0:
+        #     tspecs.extend(renderapi.tilespec.get_tile_specs_from_stack(stack, render=self.render))
+        #     print('======\n======')
+        #     print(tspecs)
+
         self.output_tilespecs_to_stack(tspecs)
 
         resolution = self.args.get("pxs")
         url = 'http://' + self.args["render"]["host"].split('http://')[-1] + ':' + str(self.args["render"]["port"])
         url += '/render-ws/v1/owner/' + self.args["render"]["owner"]
         url += '/project/' + self.args["render"]["project"]
-        url += '/stack/' + self.args.get("output_stack")
+        url += '/stack/' + stack
         url += '/resolutionValues'
 
         requests.put(url, json=resolution)
