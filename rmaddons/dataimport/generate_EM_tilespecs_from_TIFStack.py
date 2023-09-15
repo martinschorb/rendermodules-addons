@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Create tilespecs from a directory containing aplhabetically ordered tif files
+Create tilespecs from a directory containing alphabetically ordered tif files
 """
 
 import os
@@ -42,7 +42,7 @@ example_input = {
     "z": 1,
     "startidx": 0,
     "endidx": -1,
-    "append": 0,
+    "append": False,
     "output_stackVersion": {
         "stackResolutionX": 10.1
     }
@@ -63,8 +63,6 @@ class GenerateTifStackTileSpecs(StackOutputModule):
 
         poolclass = renderapi.client.WithPool
         pool_size = self.args.get("pool_size")
-
-        imgdir = os.path.realpath(imgdir)
 
         imfiles = glob.glob(os.path.join(imgdir, '*.[Tt][Ii][Ff]'))
         imfiles.extend(glob.glob(os.path.join(imgdir, '*.[Tt][Ii][Ff][Ff]')))
@@ -91,7 +89,7 @@ class GenerateTifStackTileSpecs(StackOutputModule):
 
         idx_start = 0
 
-        if self.args.get("append") > 0:
+        if self.args.get("append"):
             try:
                 zval = renderapi.stack.get_z_values_for_stack(self.args.get("output_stack"), render=self.render)
             except TypeError:
@@ -176,9 +174,10 @@ class GenerateTifStackTileSpecs(StackOutputModule):
         slice = os.path.basename(os.path.splitext(imfile)[0])
         slsplit = slice.split('_')
 
-        if self.args.get("append") > 0:
+        if self.args.get("append"):
             idx += idx_start
-            slice = f"{idx:04}" + slice
+            slice = f"{idx:04}" + str(slice)
+
         elif slsplit[0].endswith('slice') and slsplit[1].isnumeric():
             idx = int(slsplit[1])
 
@@ -222,7 +221,7 @@ class GenerateTifStackTileSpecs(StackOutputModule):
         self.overwrite_zlayer = False
 
         # create stack and fill resolution parameters
-        # if self.args.get("append") > 0:
+        # if self.args.get("append"):
         #     tspecs.extend(renderapi.tilespec.get_tile_specs_from_stack(stack, render=self.render))
         #     print('======\n======')
         #     print(tspecs)

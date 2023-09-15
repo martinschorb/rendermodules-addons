@@ -230,14 +230,14 @@ def test_mobie():
     os.system('rm -rf ' + input_params1['outpath'])
 
 
-@pytest.mark.dependency(depends=["test_generate_SBEM"])
+@pytest.mark.dependency(depends=["test_generate_SBEM"], scope='session')
 def test_render_export_sections(render):
     assert isinstance(render, renderapi.render.Render)
 
     ex = copy.deepcopy(render_export_sections.example)
     render0 = render
     ex['render'] = render0.make_kwargs()
-    ex['input_stack'] = generate_EM_tilespecs_from_SBEMImage.example_input['stack']
+    ex['input_stack'] = generate_EM_tilespecs_from_SBEMImage.example_input['output_stack']
     ex['project'] = generate_EM_tilespecs_from_SBEMImage.example_input['render']['project']
     ex['output_json'] = './slices_out.json'
 
@@ -340,6 +340,7 @@ def test_cleanup(render):
     os.system('rm -rf ' + example_n5)
     os.system('rm -rf ' + baddir)
     os.system('rm -rf ' + example_sbem)
+    os.system('rm -rf ' + example_tif)
     os.system('rm -rf ' + 'slicedata')
     os.system('rm ./slices_out.json')
-    renderapi.stack.delete_stack(generate_EM_tilespecs_from_SBEMImage.example_input['stack'], render=render)
+    renderapi.stack.delete_stack(generate_EM_tilespecs_from_SBEMImage.example_input['output_stack'], render=render)

@@ -34,11 +34,11 @@ example_input = {
             "/g/emcf/software/render/render-ws-java-client/"
             "src/main/scripts")},
     "image_file": os.path.abspath('tests/test_files/idoc_supermont_testdata/supermont.idoc'),
-    "stack": "test_SerialEM",
+    "output_stack": "test_SerialEM",
     "overwrite_zlayer": True,
     "pool_size": 4,
     "close_stack": True,
-    "z_index": 1,
+    "z": 1,
     "z_spacing": 100
 }
 

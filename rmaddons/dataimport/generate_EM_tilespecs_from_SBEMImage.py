@@ -29,11 +29,11 @@ example_input = {
         "client_scripts": (
             "/render/render-ws-java-client/src/main/scripts/")},
     "image_directory": "tests/test_files/sbemimage_testdata",
-    "stack": "test_sbem",
+    "output_stack": "test_sbem",
     "overwrite_zlayer": True,
     "pool_size": 1,
     "close_stack": True,
-    "z_index": 1,
+    "z": 1,
     "bad_slices": [4],
     "append": 0,
     "output_stackVersion": {
