@@ -43,30 +43,6 @@ example_input = {
 
 ts_label = "lens"
 
-def parse_adoc(lines, delim=' = '):
-    """
-    converts an adoc-format string list into a dictionary
-
-    :param list lines: adoc string list,
-    :param str delim: delimiter of the dictionary assignment
-    :return: dict of adoc key-value pairs
-
-    """
-
-    output = {}
-    mainkey = None
-
-    for line in lines:
-        entry = line.split(delim)
-        if entry != ['']:
-            if len(entry) < 2:
-                mainkey = entry[0].strip('[]')
-                output[mainkey] = {}
-            else:
-                output[mainkey].update({entry[0]: entry[2:]})
-
-    return output
-
 
 class GenerateSBEMImageTileSpecs(StackOutputModule):
     default_schema = GenerateSBEMTileSpecsParameters
@@ -104,7 +80,6 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
 
         f1 = os.path.realpath(os.path.join(self.imgdir, tile['filename']))
 
-
         filepath = groupsharepath(f1)
 
         ip = renderapi.image_pyramid.ImagePyramid()
@@ -130,17 +105,17 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             M01=M[0, 1],
             M10=M[1, 0],
             M11=M[1, 1],
-            labels = [ts_label])
+            labels=[ts_label])
 
         tf_rot_shift = renderapi.transform.AffineModel(
             B0=rotshift[0],
             B1=rotshift[1],
-            labels = [ts_label])
+            labels=[ts_label])
 
         tf_rot_shift1 = renderapi.transform.AffineModel(
             B0=rotshift1[0],
             B1=rotshift1[1],
-            labels = [ts_label])
+            labels=[ts_label])
 
         print("Processing tile " + tile['tileid'] + " metadata for Render.")
 
@@ -201,7 +176,6 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
 
         bad_slices = np.array(self.args.get("bad_slices"))
 
-
         for mfile in mfiles:
 
             if '_ov_' in mfile:
@@ -218,13 +192,6 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
 
             with open(mdfile) as mdf:
                 mdl = mdf.read().splitlines()
-
-            # conffile = os.path.join(imgdir, 'meta', 'logs', 'config' + acq_suffix)
-
-            # with open(conffile) as cf:
-            #     cl = cf.read().splitlines()
-            #
-            # config = parse_adoc(cl[:cl.index('[overviews]')])
 
             sessioninfo = json.loads(mdl[0].replace("'", '"')
                                      .replace("(", "[")
