@@ -24,7 +24,6 @@ from rmaddons.dataimport import generate_EM_tilespecs_from_SBEMImage
 from test_data import (render_params,
                        example_dir,
                        example_n5,
-                       example_sbem,
                        makexml_template,
                        mobie_template,
                        sliceexport_template
@@ -230,7 +229,7 @@ def test_mobie():
     os.system('rm -rf ' + input_params1['outpath'])
 
 
-@pytest.mark.dependency(depends=["test_generate_SBEM"], scope='session')
+@pytest.mark.dependency(depends=["tests/test_dataimport.py::test_generate_SBEM"], scope='session')
 def test_render_export_sections(render):
     assert isinstance(render, renderapi.render.Render)
 
@@ -337,10 +336,7 @@ def test_render_export_sections(render):
 @pytest.mark.dependency(depends=["test_make_xml", "test_mobie","test_render_export_sections"])
 def test_cleanup(render):
     # clean up
-    os.system('rm -rf ' + example_n5)
-    os.system('rm -rf ' + baddir)
-    os.system('rm -rf ' + example_sbem)
-    os.system('rm -rf ' + example_tif)
+    os.system('rm -rf ' + os.path.join(example_dir, '*_testdata'))
     os.system('rm -rf ' + 'slicedata')
     os.system('rm ./slices_out.json')
     renderapi.stack.delete_stack(generate_EM_tilespecs_from_SBEMImage.example_input['output_stack'], render=render)
