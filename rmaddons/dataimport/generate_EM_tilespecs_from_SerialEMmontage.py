@@ -34,11 +34,11 @@ example_input = {
             "/g/emcf/software/render/render-ws-java-client/"
             "src/main/scripts")},
     "image_file": os.path.abspath('tests/test_files/idoc_supermont_testdata/supermont.idoc'),
-    "stack": "test_SerialEM",
+    "output_stack": "test_SerialEM",
     "overwrite_zlayer": True,
     "pool_size": 4,
     "close_stack": True,
-    "z_index": 1,
+    "z": 1,
     "z_spacing": 100
 }
 
@@ -66,7 +66,7 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
         # mat_t = np.concatenate((np.eye(3),[[tile['glob_x']],[tile['glob_y']],[tile['glob_z']]]),axis=1)
         # mat_t = np.concatenate((mat_t,[[0,0,0,1]]))
 
-        imagefile = [tile[key] for key in tile.keys() if '# [Image' in key][0]
+        imagefile = [tile[key] for key in tile.keys() if '# [Image' in key][0].strip(' ')
 
         rawdir = os.path.dirname(self.args.get("image_file"))
 
@@ -186,13 +186,16 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
         allspecs = []
         stack_suffix = ''
         curr_navitem = ''
-        pxs = float(tiles[0]['PixelSpacing'][0]) / 10
+        pxs = np.round(float(tiles[0]['PixelSpacing'][0]) / 10, 3)
         curr_mont = {}
 
         if len(montsecs) > 0:
             curr_mont = montsecs[0]
 
-        multiple = True
+        if len(montsecs) > 1:
+            multiple = True
+        else:
+            multiple = False
 
         if 'NavigatorLabel' in tiles[0].keys():
             curr_navitem = tiles[0]['NavigatorLabel'][0].split('-')[0]
@@ -226,13 +229,13 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
                         allspecs.append([stackname + stack_suffix, tspecs, pxs])
                     tspecs = []
 
-            pxs = float(tile['PixelSpacing'][0]) / 10
+            pxs = np.round(float(tiles[0]['PixelSpacing'][0]) / 10, 3)
             if multiple:
                 stack_suffix = '_' + curr_navitem
 
             f1, tilespeclist = self.ts_from_SerialEMtile(tile, camline, header)
 
-            if os.path.exists(os.path.join(rawdir,f1)):
+            if os.path.exists(f1):
                 tspecs.append(tilespeclist)
             else:
                 fnf_error = 'ERROR: File ' + f1 + ' does not exist. Skipping tile creation.'

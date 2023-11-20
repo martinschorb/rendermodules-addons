@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 """
-Create tilespecs from a directory containing aplhabetically ordered tif files
+Create tilespecs from a directory containing alphabetically ordered tif files
 """
 
 import os
+import warnings
 from functools import partial
-
+from itertools import repeat
 import tifffile
 
 import renderapi
@@ -24,14 +25,14 @@ from tifffile import TiffFile
 
 example_input = {
     "render": {
-        "host": "render.embl.de",
+        "host": "localhost",
         "port": 8080,
         "owner": "FIBSEM",
         "project": "00tests",
         "client_scripts": (
             "/g/emcf/software/render/render-ws-java-client/src/main/scripts/")},
     "image_directory":
-        "/g/emcf/schorb/data/FIBSEMtest/",
+        "/g/emcf/schorb/code/rendermodules-addons/tests/test_files/tif_testdata",
     "pxs": [10, 10, 20],
     "autocrop": False,
     "output_stack": "test_stack",
@@ -41,6 +42,7 @@ example_input = {
     "z": 1,
     "startidx": 0,
     "endidx": -1,
+    "append": False,
     "output_stackVersion": {
         "stackResolutionX": 10.1
     }
@@ -61,8 +63,6 @@ class GenerateTifStackTileSpecs(StackOutputModule):
 
         poolclass = renderapi.client.WithPool
         pool_size = self.args.get("pool_size")
-
-        imgdir = os.path.realpath(imgdir)
 
         imfiles = glob.glob(os.path.join(imgdir, '*.[Tt][Ii][Ff]'))
         imfiles.extend(glob.glob(os.path.join(imgdir, '*.[Tt][Ii][Ff][Ff]')))
@@ -87,8 +87,21 @@ class GenerateTifStackTileSpecs(StackOutputModule):
 
         mypartial = partial(self.tiffile_to_ts, autocrop, imgdir, resolution, transform)
 
+        idx_start = 0
+
+        if self.args.get("append"):
+            try:
+                zval = renderapi.stack.get_z_values_for_stack(self.args.get("output_stack"), render=self.render)
+            except TypeError:
+                warnings.WarningMessage("Stack not found. Will create a fresh one.")
+                zval = [-1]
+            except renderapi.errors.RenderError:
+                zval = [-1]
+
+            idx_start = zval[-1] + 1
+
         with poolclass(pool_size) as pool:
-            tspecs = pool.map(mypartial, list(zip(imfiles, range(len(imfiles)))))
+            tspecs = pool.map(mypartial, list(zip(imfiles, range(len(imfiles)), repeat(idx_start))))
             pool.close()
             pool.join()
 
@@ -107,7 +120,7 @@ class GenerateTifStackTileSpecs(StackOutputModule):
         :rtype: renderapi.tilespec.TileSpec
         """
 
-        imfile, idx = inputkey
+        imfile, idx, idx_start = inputkey
         f1 = os.path.realpath(os.path.join(imgdir, imfile))
 
         filepath = groupsharepath(f1)
@@ -161,8 +174,13 @@ class GenerateTifStackTileSpecs(StackOutputModule):
         slice = os.path.basename(os.path.splitext(imfile)[0])
         slsplit = slice.split('_')
 
-        if slsplit[0] == 'slice' and slsplit[1].isnumeric():
+        if self.args.get("append"):
+            idx += idx_start
+            slice = f"{idx:04}" + str(slice)
+
+        elif slsplit[0].endswith('slice') and slsplit[1].isnumeric():
             idx = int(slsplit[1])
+
         if idx % 50 == 0:
             print("Importing " + slice + " for Render.")
             print("\n...")
@@ -183,7 +201,7 @@ class GenerateTifStackTileSpecs(StackOutputModule):
             minint=np.iinfo(dtype).min,
             maxint=np.iinfo(dtype).max,
             tforms=[transform],
-            sectionId=idx,
+            sectionId=int(idx),
             scopeId='TIFslice',
             cameraId='TIFslice',
             pixelsize=resolution)
@@ -194,19 +212,27 @@ class GenerateTifStackTileSpecs(StackOutputModule):
         #     meta = json.load(f)
 
         imgdir = self.args.get('image_directory')
+        stack = self.args.get("output_stack")
 
         # print(imgdir)
 
         tspecs = self.ts_from_tifpath(imgdir)
 
+        self.overwrite_zlayer = False
+
         # create stack and fill resolution parameters
+        # if self.args.get("append"):
+        #     tspecs.extend(renderapi.tilespec.get_tile_specs_from_stack(stack, render=self.render))
+        #     print('======\n======')
+        #     print(tspecs)
+
         self.output_tilespecs_to_stack(tspecs)
 
         resolution = self.args.get("pxs")
         url = 'http://' + self.args["render"]["host"].split('http://')[-1] + ':' + str(self.args["render"]["port"])
         url += '/render-ws/v1/owner/' + self.args["render"]["owner"]
         url += '/project/' + self.args["render"]["project"]
-        url += '/stack/' + self.args["output_stack"]
+        url += '/stack/' + stack
         url += '/resolutionValues'
 
         requests.put(url, json=resolution)
