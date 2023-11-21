@@ -14,7 +14,7 @@ render_port = os.environ.get(
 render_test_owner = os.environ.get(
     'RENDER_TEST_OWNER', '000tests'
 )
-render_dir = os.environ.get('RENDER_DIR', os.path.abspath('./render'))
+render_dir = os.environ.get('RENDER_DIR', os.path.abspath('../../render'))
 
 client_script_location = os.environ.get(
     'RENDER_CLIENT_SCRIPTS',

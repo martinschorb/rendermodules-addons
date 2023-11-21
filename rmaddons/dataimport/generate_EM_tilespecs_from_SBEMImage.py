@@ -29,42 +29,19 @@ example_input = {
         "client_scripts": (
             "/render/render-ws-java-client/src/main/scripts/")},
     "image_directory": "tests/test_files/sbemimage_testdata",
-    "stack": "test_sbem",
+    "output_stack": "test_sbem",
     "overwrite_zlayer": True,
     "pool_size": 1,
     "close_stack": True,
-    "z_index": 1,
+    "z": 1,
     "bad_slices": [4],
+    "append": 0,
     "output_stackVersion": {
         "stackResolutionX": 10.1
     }
 }
 
-ts_label = "include"
-
-def parse_adoc(lines, delim=' = '):
-    """
-    converts an adoc-format string list into a dictionary
-
-    :param list lines: adoc string list,
-    :param str delim: delimiter of the dictionary assignment
-    :return: dict of adoc key-value pairs
-
-    """
-
-    output = {}
-    mainkey = None
-
-    for line in lines:
-        entry = line.split(delim)
-        if entry != ['']:
-            if len(entry) < 2:
-                mainkey = entry[0].strip('[]')
-                output[mainkey] = {}
-            else:
-                output[mainkey].update({entry[0]: entry[2:]})
-
-    return output
+ts_label = "lens"
 
 
 class GenerateSBEMImageTileSpecs(StackOutputModule):
@@ -103,7 +80,6 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
 
         f1 = os.path.realpath(os.path.join(self.imgdir, tile['filename']))
 
-
         filepath = groupsharepath(f1)
 
         ip = renderapi.image_pyramid.ImagePyramid()
@@ -120,24 +96,26 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
         rotshift1 = -rotshift
         pos = [xpos, ypos]
 
-        tf_rot_shift = renderapi.transform.AffineModel(
-            B0=rotshift[0],
-            B1=rotshift[1],
-            labels = [ts_label])
+        tf_trans = renderapi.transform.AffineModel(
+            B0=pos[0],
+            B1=pos[1])
 
         tf_rot = renderapi.transform.AffineModel(
             M00=M[0, 0],
             M01=M[0, 1],
             M10=M[1, 0],
-            M11=M[1, 1])
+            M11=M[1, 1],
+            labels=[ts_label])
+
+        tf_rot_shift = renderapi.transform.AffineModel(
+            B0=rotshift[0],
+            B1=rotshift[1],
+            labels=[ts_label])
 
         tf_rot_shift1 = renderapi.transform.AffineModel(
             B0=rotshift1[0],
-            B1=rotshift1[1])
-
-        tf_trans = renderapi.transform.AffineModel(
-            B0=pos[0],
-            B1=pos[1])
+            B1=rotshift1[1],
+            labels=[ts_label])
 
         print("Processing tile " + tile['tileid'] + " metadata for Render.")
 
@@ -157,7 +135,7 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             # imageRow=imgdata['img_meta']['raster_pos'][1],
             stageX=pos[0],
             stageY=pos[1],
-            rotation=0,
+            rotation=rotation,
             pixelsize=pxs)
 
         # json_file = os.path.realpath(os.path.join(
@@ -198,7 +176,6 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
 
         bad_slices = np.array(self.args.get("bad_slices"))
 
-
         for mfile in mfiles:
 
             if '_ov_' in mfile:
@@ -206,6 +183,7 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
                     continue
 
             stackname = self.args.get("output_stack")
+            append = self.args.get("append")
 
             # with open(mfile) as mf: ml = mf.read().splitlines()
             acq_suffix = mfile[mfile.rfind('_'):]
@@ -228,6 +206,9 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
                                      .lstrip('SESSION: '))
 
             z_thick = sessioninfo['slice_thickness']
+
+            if append:
+                stack_slices = renderapi.stack.get_z_values_for_stack(stackname)
 
             for line in mdl[1:]:
                 if line.startswith('TILE: '):
@@ -262,6 +243,11 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
 
                     # compensate index for removed slices
                     sliceidx = sliceidx - sum(tile['slice_counter'] > bad_slices)
+
+                    if append > 0:
+                        sliceidx += stack_slices[-1]
+                    elif append < 0:
+                        sliceidx = stack_slices[0] - sliceidx
 
                     f1, tilespeclist = self.ts_from_SBEMtile(tile, pxs, rotation, sliceidx)
 
