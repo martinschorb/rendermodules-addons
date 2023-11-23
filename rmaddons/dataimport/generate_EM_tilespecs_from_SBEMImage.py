@@ -4,6 +4,7 @@ Create tilespecs from SBEMImage dataset
 """
 
 import os
+import logging
 import numpy as np
 import renderapi
 from asap.module.render_module import StackOutputModule
@@ -41,7 +42,7 @@ example_input = {
     }
 }
 
-ts_label = "lens"
+ts_label = "include"
 rounding_precision = 2
 
 
@@ -99,6 +100,19 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
         # TODO This is probably wrong for 90 degree rotations and non-square images!
         pos = [xpos, ypos]
 
+
+        if rotation_type == "ignore":
+            rot_label = "ignore"
+        else:
+            rot_label = ts_label
+
+        tf_unit = renderapi.transform.AffineModel(
+            M00=1,
+            M01=0,
+            M10=0,
+            M11=1,
+            labels=[ts_label])
+
         tf_trans = renderapi.transform.AffineModel(
             B0=pos[0],
             B1=pos[1])
@@ -108,22 +122,17 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             M01=M[0, 1],
             M10=M[1, 0],
             M11=M[1, 1],
-            labels=[ts_label])
+            labels=[rot_label])
 
         tf_rot_shift = renderapi.transform.AffineModel(
             B0=rotshift[0],
             B1=rotshift[1],
-            labels=[ts_label])
+            labels=[rot_label])
 
         tf_rot_shift1 = renderapi.transform.AffineModel(
             B0=rotshift1[0],
             B1=rotshift1[1],
-            labels=[ts_label])
-
-        if rotation_type == "ignore":
-            tforms = [tf_trans]
-        else:
-            tforms = [tf_rot_shift, tf_rot, tf_rot_shift1, tf_trans]
+            labels=[rot_label])
 
         print("Processing tile " + tile['tileid'] + " metadata for Render.")
 
@@ -134,7 +143,7 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             width=tile['tile_width'],
             height=tile['tile_height'],
             minint=0, maxint=255,
-            tforms=tforms,
+            tforms=[tf_unit, tf_rot_shift, tf_rot, tf_rot_shift1, tf_trans],
             # imagePyramid=ip,
             sectionId=tile['slice_counter'],
             scopeId='3View',
@@ -280,11 +289,7 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
                         tspecs.append(tilespeclist)
                     else:
                         fnf_error = 'ERROR: File ' + f1 + ' does not exist, skipping tile creation.'
-                        if not os.path.exists(os.path.join(imgdir, 'conv_log')):
-                            os.makedirs(os.path.join(imgdir, 'conv_log'))
-                        print(fnf_error)
-                        with open(logfile, 'w') as log:
-                            log.writelines(fnf_error)
+                        logging.error(fnf_error)
 
         resolution = [pxs, pxs, z_thick]
 
