@@ -42,6 +42,7 @@ example_input = {
 }
 
 ts_label = "lens"
+rounding_precision = 2
 
 
 class GenerateSBEMImageTileSpecs(StackOutputModule):
@@ -58,7 +59,7 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
     imgdir = []
     slicediff = 0
 
-    def ts_from_SBEMtile(self, tile, pxs, rotation, sliceidx):
+    def ts_from_SBEMtile(self, tile, pxs, rotation, rotation_type, sliceidx):
         """
         Generates a tilespec entry from a line in a SBEMImage tile definition
 
@@ -94,6 +95,8 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
 
         rotshift = -np.array([width / 2, height / 2])
         rotshift1 = -rotshift
+
+        # TODO This is probably wrong for 90 degree rotations and non-square images!
         pos = [xpos, ypos]
 
         tf_trans = renderapi.transform.AffineModel(
@@ -117,6 +120,11 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             B1=rotshift1[1],
             labels=[ts_label])
 
+        if rotation_type == "ignore":
+            tforms = [tf_trans]
+        else:
+            tforms = [tf_rot_shift, tf_rot, tf_rot_shift1, tf_trans]
+
         print("Processing tile " + tile['tileid'] + " metadata for Render.")
 
         ts = renderapi.tilespec.TileSpec(
@@ -126,7 +134,7 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             width=tile['tile_width'],
             height=tile['tile_height'],
             minint=0, maxint=255,
-            tforms=[tf_rot_shift, tf_rot, tf_rot_shift1, tf_trans],
+            tforms=tforms,
             # imagePyramid=ip,
             sectionId=tile['slice_counter'],
             scopeId='3View',
@@ -210,6 +218,23 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             if append:
                 stack_slices = renderapi.stack.get_z_values_for_stack(stackname)
 
+            # check rotations
+            rotations = np.array(sessioninfo['rotation_angles'])
+
+            angles = np.unique(np.round(np.array(rotations) / rounding_precision) * rounding_precision)
+
+            if len(angles) < 2:
+                # all grids at the same angle
+                rotation_type = 'ignore'
+
+            elif ((angles % 90) == 0).all():
+                # all grids at 90 degree orientations
+                rotation_type = '90degree'
+
+            else:
+                rotation_type = 'generic'
+                raise NotImplementedError("generic orientation of grids in SBEMImage not yet supported!!")
+
             for line in mdl[1:]:
                 if line.startswith('TILE: '):
 
@@ -249,7 +274,7 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
                     elif append < 0:
                         sliceidx = stack_slices[0] - sliceidx
 
-                    f1, tilespeclist = self.ts_from_SBEMtile(tile, pxs, rotation, sliceidx)
+                    f1, tilespeclist = self.ts_from_SBEMtile(tile, pxs, rotation, rotation_type, sliceidx)
 
                     if os.path.exists(f1):
                         tspecs.append(tilespeclist)
