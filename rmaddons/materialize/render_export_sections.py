@@ -130,7 +130,8 @@ class RenderSectionAtScale_extended(RenderSectionAtScale):
                    customSubFolder=cSF,
                    maxIntensity=maxInt,
                    minIntensity=minInt,
-                   resolutionUnit=resolutionUnit
+                   resolutionUnit=resolutionUnit,
+                   convertToGray=True
                    )
 
         if stack_has_mipmaps:
