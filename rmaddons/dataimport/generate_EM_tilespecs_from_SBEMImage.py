@@ -97,14 +97,32 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
         rotshift = -np.array([width / 2, height / 2])
         rotshift1 = -rotshift
 
-        # TODO This is probably wrong for 90 degree rotations and non-square images!
         pos = [xpos, ypos]
-
 
         if rotation_type == "ignore":
             rot_label = "ignore"
+
+            # # Combine transformation matrices
+            # T_r = np.column_stack((np.row_stack((M, [0, 0])), [0, 0, 1]))
+            #
+            # T_rs = np.row_stack((np.column_stack((np.eye(2), rotshift)), [0, 0, 1]))
+            # T_rs1 = np.row_stack((np.column_stack((np.eye(2), rotshift1)), [0, 0, 1]))
+            #
+            # T_combined = T_rs @ T_r @ T_rs1
+            #
+            # tf_combined = renderapi.transform.AffineModel(
+            #     M00=T_combined[0, 0],
+            #     M01=T_combined[0, 1],
+            #     M10=T_combined[1, 0],
+            #     M11=T_combined[1, 1],
+            #     B0=T_combined[0, 2],
+            #     B1=T_combined[1, 2],
+            #     labels=[rot_label])
+            #
+            # tforms = [tf_unit, tf_combined, tf_trans]
         else:
             rot_label = ts_label
+
 
         tf_unit = renderapi.transform.AffineModel(
             M00=1,
@@ -115,7 +133,8 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
 
         tf_trans = renderapi.transform.AffineModel(
             B0=pos[0],
-            B1=pos[1])
+            B1=pos[1],
+            labels=['translation, ignore'])
 
         tf_rot = renderapi.transform.AffineModel(
             M00=M[0, 0],
@@ -134,6 +153,8 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             B1=rotshift1[1],
             labels=[rot_label])
 
+        tforms = [tf_unit, tf_rot_shift, tf_rot, tf_rot_shift1, tf_trans]
+
         print("Processing tile " + tile['tileid'] + " metadata for Render.")
 
         ts = renderapi.tilespec.TileSpec(
@@ -143,7 +164,7 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             width=tile['tile_width'],
             height=tile['tile_height'],
             minint=0, maxint=255,
-            tforms=[tf_unit, tf_rot_shift, tf_rot, tf_rot_shift1, tf_trans],
+            tforms=tforms,
             # imagePyramid=ip,
             sectionId=tile['slice_counter'],
             scopeId='3View',
