@@ -1,4 +1,7 @@
+import argschema
+
 from rmaddons.pointmatch.schemas import AMSTParameters, AMSTOutputSchema
+
 
 example = {
     "render": {

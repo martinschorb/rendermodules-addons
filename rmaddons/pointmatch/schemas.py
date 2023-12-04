@@ -1,6 +1,8 @@
 import argschema
 from argschema.fields import Str, InputDir, List, Int
 
+from asap.pointmatch.schemas import PointMatchClientOutputSchema
+
 
 class RenderStackRange(List(Int)):
 
@@ -22,3 +24,7 @@ class AMSTParameters(argschema.ArgSchema):
         "Slice range of the stack to process"
     ))
 
+class AMSTOutputSchema(PointMatchClientOutputSchema):
+    z_range = Int(required=True, description=(
+        "Slice range of the stack to process"
+    ))
