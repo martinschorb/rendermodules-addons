@@ -101,7 +101,7 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
 
         pos = [xpos, ypos]
 
-        if rotation_type == "ignore":
+        if rotation_type in ["ignore", "90degree"]:
             rot_label = "ignore"
 
             pos = self.tilepos[grid, tile_id]
