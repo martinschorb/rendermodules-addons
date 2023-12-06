@@ -58,6 +58,7 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
         return M
 
     imgdir = []
+    tilepos = []
     slicediff = 0
 
     def ts_from_SBEMtile(self, tile, pxs, rotation, rotation_type, sliceidx):
@@ -73,7 +74,8 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
 
         """
 
-        # curr_posid = [int(tile['tileid'].split('.')[0]),int(tile['tileid'].split('.')[1])]
+        grid, tile_id = int(tile['tileid'].split('.')[0]), int(tile['tileid'].split('.')[1])
+
         # curr_pos = tilepos[posid.index(str(curr_posid[0])+'.'+str(curr_posid[1]))]
 
         # 2) The translation matrix to position the object in space (lower left corner)
@@ -102,6 +104,8 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
         if rotation_type == "ignore":
             rot_label = "ignore"
 
+            pos = self.tilepos[grid, tile_id]
+
             # # Combine transformation matrices
             # T_r = np.column_stack((np.row_stack((M, [0, 0])), [0, 0, 1]))
             #
@@ -122,7 +126,6 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             # tforms = [tf_unit, tf_combined, tf_trans]
         else:
             rot_label = ts_label
-
 
         tf_unit = renderapi.transform.AffineModel(
             M00=1,
@@ -153,7 +156,9 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             B1=rotshift1[1],
             labels=[rot_label])
 
-        tforms = [tf_unit, tf_rot_shift, tf_rot, tf_rot_shift1, tf_trans]
+        tforms = [tf_unit,
+                  # tf_rot_shift, tf_rot, tf_rot_shift1,
+                  tf_trans]
 
         print("Processing tile " + tile['tileid'] + " metadata for Render.")
 
@@ -165,7 +170,6 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             height=tile['tile_height'],
             minint=0, maxint=255,
             tforms=tforms,
-            # imagePyramid=ip,
             sectionId=tile['slice_counter'],
             scopeId='3View',
             cameraId='3View',
@@ -237,6 +241,21 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             #     cl = cf.read().splitlines()
             #
             # config = parse_adoc(cl[:cl.index('[overviews]')])
+
+            tileposfile = os.path.join(imgdir, 'meta', 'logs', 'tilepos' + acq_suffix)
+
+            tpraw = np.loadtxt(tileposfile, delimiter=';', dtype=str)
+
+            grids = np.array([a.split('.')[0] for a in tpraw[:, 0]]).astype(int)
+            tileids = np.array([a.split('.')[1] for a in tpraw[:, 0]]).astype(int)
+            tilepos = np.zeros((grids.max() + 1, len(np.unique(tileids) + 1), 2))
+
+            for idx, __ in enumerate(tpraw[:, 1:]):
+                g = int(tpraw[idx, 0].split('.')[0])
+                t = int(tpraw[idx, 0].split('.')[1])
+                tilepos[g, t, :] = np.array(tpraw[idx, 1:]).astype(int)
+
+            self.tilepos = tilepos
 
             sessioninfo = json.loads(mdl[0].replace("'", '"')
                                      .replace("(", "[")
