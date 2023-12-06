@@ -37,6 +37,7 @@ example_input = {
     "z": 1,
     "bad_slices": [4],
     "append": 0,
+    "separate_grids" : True,
     "output_stackVersion": {
         "stackResolutionX": 10.1
     }
@@ -101,7 +102,7 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
 
         pos = [xpos, ypos]
 
-        if rotation_type in ["ignore", "90degree"]:
+        if rotation_type == "ignore":
             rot_label = "ignore"
 
             pos = self.tilepos[grid, tile_id]
@@ -200,10 +201,10 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
 
         timestamp = time.localtime()
 
-        log_name = '_{}{:02d}{:02d}-{:02d}{:02d}'.format(timestamp.tm_year, timestamp.tm_mon, timestamp.tm_mday,
-                                                         timestamp.tm_hour, timestamp.tm_min)
-
-        logfile = os.path.join(imgdir, 'conv_log', 'Render_convert' + log_name + '.log')
+        # log_name = '_{}{:02d}{:02d}-{:02d}{:02d}'.format(timestamp.tm_year, timestamp.tm_mon, timestamp.tm_mday,
+        #                                                  timestamp.tm_hour, timestamp.tm_min)
+        #
+        # logfile = os.path.join(imgdir, 'conv_log', 'Render_convert' + log_name + '.log')
 
         if not os.path.exists(os.path.join(imgdir, 'meta')):
             raise FileNotFoundError('Change to proper directory!')
@@ -212,7 +213,7 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
 
         mfiles = glob.glob(mfile0 + '*')
 
-        tspecs = []
+        tspecs = dict()
         allspecs = []
         curr_res = -1
 
@@ -264,8 +265,20 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
 
             z_thick = sessioninfo['slice_thickness']
 
+            if self.separate_grids:
+                stack_slices = []
+                suffix = []
+                for grid in grids:
+                    suffix.append("_grid_%02d" % grid)
+            else:
+                suffix=['']
+
             if append:
-                stack_slices = renderapi.stack.get_z_values_for_stack(stackname)
+                if self.separate_grids:
+                    for idx in enumerate(grids):
+                        stack_slices.append(renderapi.stack.get_z_values_for_stack(stackname + suffix[idx]))
+                else:
+                    stack_slices = [renderapi.stack.get_z_values_for_stack(stackname)]
 
             # check rotations
             rotations = np.array(sessioninfo['rotation_angles'])
@@ -319,9 +332,9 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
                     sliceidx = sliceidx - sum(tile['slice_counter'] > bad_slices)
 
                     if append > 0:
-                        sliceidx += stack_slices[-1]
+                        sliceidx += stack_slices[grididx][-1]
                     elif append < 0:
-                        sliceidx = stack_slices[0] - sliceidx
+                        sliceidx = stack_slices[grididx][0] - sliceidx
 
                     f1, tilespeclist = self.ts_from_SBEMtile(tile, pxs, rotation, rotation_type, sliceidx)
 

@@ -25,6 +25,10 @@ class GenerateSBEMTileSpecsParameters(OutputStackParameters):
                      default=False,
                      description=("whether appending to an existing stack."))
 
+    separate_grids = Boolean(required=False,
+                     default=True,
+                     description=("whether multiple grids frmo an acquisition are treated individually."))
+
 class GenerateTifStackTileSpecsParameters(GenerateSBEMTileSpecsParameters):
     pxs = ResolutionList(Float,
                          required=True,
