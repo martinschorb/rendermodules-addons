@@ -131,7 +131,7 @@ class RenderSectionAtScale_extended(RenderSectionAtScale):
                    maxIntensity=maxInt,
                    minIntensity=minInt,
                    resolutionUnit=resolutionUnit,
-                   convertToGray=True
+                   convertToGray='true'
                    )
 
         if stack_has_mipmaps:
