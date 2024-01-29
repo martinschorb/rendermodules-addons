@@ -163,7 +163,7 @@ class GenerateTifStackTileSpecs(StackOutputModule):
                     width = max_y - min_y
                     height = max_x - min_x
                     transform = renderapi.transform.AffineModel(B0=min_x, B1=min_y)
-                    tifffile.imsave(filepath1, imcrop)
+                    tifffile.imsave(filepath1, imcrop, compression='zlib')
                 else:
                     os.system('cp ' + filepath + ' ' + filepath1)
 
