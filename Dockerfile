@@ -1,11 +1,12 @@
 # syntax=docker/dockerfile:1
-FROM mambaorg/micromamba
+FROM continuumio/miniconda3
 RUN useradd testuser &&\
     mkdir /home/testuser &&\
     chown -R testuser:testuser /opt/conda &&\
     chown -R testuser:testuser /home/testuser
 USER testuser
-RUN mamba install python=3.7 -y &&\
+RUN conda install mamba &&\
+    mamba install python=3.7 -y &&\
     mamba install  git mobie_utils -c conda-forge -y &&\
     pip install render-python &&\
     pip install git+https://github.com/AllenInstitute/asap-modules/ &&\
