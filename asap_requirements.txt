@@ -1,0 +1,6 @@
+render-python
+argschema
+bokeh<=1.4.0
+bigfeta
+em_stitch
+uri_handler
