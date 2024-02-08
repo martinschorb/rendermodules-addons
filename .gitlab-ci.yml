@@ -121,8 +121,6 @@ tests:
       export PATH=$PATH:$JAVA_HOME/bin
       chmod +rx -R *
       whoami
-#    - pwd
-#    - ls
       coverage run --concurrency=multiprocessing -m pytest
       coverage combine
       coverage xml
