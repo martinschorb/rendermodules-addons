@@ -14,6 +14,6 @@ RUN pip install -r asap_requirements.txt &&\
     pip install git+https://github.com/AllenInstitute/asap-modules/ --no-deps &&\
     pip install git+https://git.embl.de/schorb/pyem
 RUN pip install -r test_requirements.txt
-USER root
+USER testuser
 CMD ["/bin/bash"]
 

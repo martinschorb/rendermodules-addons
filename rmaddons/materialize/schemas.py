@@ -12,7 +12,7 @@ import marshmallow as mm
 
 class InFileOrDir(Str):
     """InFileOrDir: subclass of  :class:`marshmallow.fields.Str` is a path to a
-       a file or directory that exists and is accesible to the user. This is checked with os.access.
+       file or directory that exists and is accesible to the user. This is checked with os.access.
     """
 
     def _validate(self, value):
