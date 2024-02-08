@@ -9,4 +9,3 @@ jsonschema>=4
 numpy
 tifffile
 scikit-image>0.18
-mobie

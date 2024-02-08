@@ -25,3 +25,4 @@ descartes
 lxml
 botocore<1.34.35
 opencv
+mobie_utils

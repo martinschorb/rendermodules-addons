@@ -9,7 +9,7 @@ RUN useradd testuser &&\
     chown -R testuser:testuser /home/testuser
 USER testuser
 RUN mamba install python=3.10 -y &&\
-    mamba install --file asap_conda_requirements.txt -c conda-forge
+    mamba install -y --file asap_conda_requirements.txt -c conda-forge
 RUN pip install -r asap_requirements.txt &&\
     pip install git+https://github.com/AllenInstitute/asap-modules/ --no-deps &&\
     pip install git+https://git.embl.de/schorb/pyem
