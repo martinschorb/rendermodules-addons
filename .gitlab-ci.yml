@@ -103,21 +103,23 @@ tests:
 #    - pip install git+https://github.com/AllenInstitute/asap-modules/ --no-deps
 #    - pip install git+https://git.embl.de/schorb/pyem
 #    - pip install git+https://github.com/mobie/mobie-utils-python --no-deps
+    - su testuser
     - pip install -r requirements.txt
     - pip install -r test_requirements.txt
     - pip install git+https://github.com/mobie/mobie-utils-python
-    - su testuser -c 'mkdir -p $(python -m site --user-site)'
-    - su testuser -c 'echo "import coverage" > $(python -m site --user-site)/subprocess_coverage.pth'
-    - su testuser -c 'echo "coverage.process_startup()" >> $(python -m site --user-site)/subprocess_coverage.pth'
+    - mkdir -p $(python -m site --user-site)
+    - echo "import coverage" > $(python -m site --user-site)/subprocess_coverage.pth
+    - echo "coverage.process_startup()" >> $(python -m site --user-site)/subprocess_coverage.pth
 
   #    - git pull origin $CI_COMMIT_BRANCH
   script:
+    - su testuser
     - export JAVA_HOME=`readlink -m ./render/deploy/*jdk*`
     - export PATH=$PATH:$JAVA_HOME/bin
     - chmod +rx -R *
 #    - pwd
 #    - ls
-    - su testuser -c 'coverage run --concurrency=multiprocessing -m pytest'
+    - coverage run --concurrency=multiprocessing -m pytest
     - coverage combine
     - coverage xml
     - coverage-badge
