@@ -1,5 +1,8 @@
 # syntax=docker/dockerfile:1
 FROM condaforge/mambaforge
+COPY test_requirements.txt ./
+COPY asap_requirements.txt ./
+COPY asap_conda_requirements.txt ./
 RUN useradd testuser &&\
     mkdir /home/testuser &&\
     chown -R testuser:testuser /opt/conda &&\
