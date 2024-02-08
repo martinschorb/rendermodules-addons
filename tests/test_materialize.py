@@ -52,7 +52,7 @@ def test_make_xml():
     os.system('chmod -r ' + baddir)
 
     input_params = {'path': baddir}
-    with pytest.raises(ValidationError):
+    with pytest.raises(TypeError):
         mod1 = make_xml.MakeXML(input_data=input_params)
 
     input_params['path'] = example_n5

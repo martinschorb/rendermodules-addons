@@ -156,7 +156,7 @@ def test_generate_SerialEM(render):
         delivered_resolution = [md.stackResolutionX, md.stackResolutionY, md.stackResolutionZ]
 
         # test if resolution of stack is correct
-        assert np.round((np.array(expected_resolution) - np.array(delivered_resolution),5) == [0, 0, 0]).all()
+        assert (np.round(np.array(expected_resolution) - np.array(delivered_resolution),5) == [0, 0, 0]).all()
 
         # cleanup
         renderapi.stack.delete_stack(stack, render=render)
