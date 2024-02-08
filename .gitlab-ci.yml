@@ -84,7 +84,7 @@ tests:
   variables:
     FF_NETWORK_PER_BUILD: 1
     COVERAGE_PROCESS_START: 1
-    RENDER_DIR: ./
+    RENDER_DIR: ./render
   cache:
     key: render
     paths:
