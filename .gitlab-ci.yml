@@ -48,7 +48,7 @@ build_render_clientscripts:
   before_script:
     - apt-get update && apt-get install -y git  curl  maven
   script:
-    - git clone --depth 1 https://github.com/saalfeldlab/render.git render -b master
+    - git clone --depth 1 https://github.com/saalfeldlab/render.git render -b $RENDER_BRANCH
     - ./render/render-ws/src/main/scripts/install.sh
     - export JAVA_HOME=`readlink -m ./render/deploy/*jdk*`
     - mvn package -pl render-ws-java-client  -am -DskipTests -f render/pom.xml
