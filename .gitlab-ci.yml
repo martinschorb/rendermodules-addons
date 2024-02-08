@@ -3,6 +3,7 @@ variables:
   DOCKER_VERSION: 18.09.7
   RENDER_HOST: myrender
   RENDER_PORT: 8080
+  RENDER_BRANCH: ibeam_msem
 
 
 prepare_test_data:
@@ -34,7 +35,7 @@ build_render_ws_docker:
     - docker info
     - touch tests/test_files/*.n5
   script:
-    - git clone --depth 1 https://github.com/saalfeldlab/render.git render -b master
+    - git clone --depth 1 https://github.com/saalfeldlab/render.git render -b $RENDER_BRANCH
     - cd render
     - sed -i 's/MONGO_HOST=""/MONGO_HOST="mymongo"/' Dockerfile
     - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin && docker build -t "$CI_REGISTRY_IMAGE"/render --target render-ws . && docker push "$CI_REGISTRY_IMAGE"/render
