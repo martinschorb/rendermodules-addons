@@ -43,7 +43,7 @@ build_render_ws_docker:
 
 build_render_clientscripts:
   stage: build
-  image: azul/zulu-openjdk:8
+  image: azul/zulu-openjdk:11
   before_script:
     - apt-get update && apt-get install -y git  curl  maven
   script:
