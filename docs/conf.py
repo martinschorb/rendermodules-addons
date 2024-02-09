@@ -20,7 +20,7 @@ from argschema.autodoc import process_schemas
 # -- Project information -----------------------------------------------------
 
 project = 'Rendermodules_addons'
-copyright = '2022, EMBL - Martin Schorb'
+copyright = '2024, EMBL - Martin Schorb'
 author = 'Martin Schorb'
 
 # The full version, including alpha/beta/rc tags
@@ -36,7 +36,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
     'sphinx.ext.viewcode',
-    'sphinxcontrib.napoleon',
+    'sphinx.ext.napoleon',
     # 'sphinxcontrib.programoutput',
     # 'sphinxcontrib.inlinesyntaxhighlight'
 ]
