@@ -120,7 +120,7 @@ tests:
 #    - pwd
 #    - ls
     - coverage run -m pytest
-    - coverage combine
+#    - coverage combine
     - coverage xml
     - coverage-badge
     - coverage report
