@@ -6,6 +6,7 @@ import copy
 import random
 import string
 import shutil
+import numpy as np
 
 import pytest
 import xml.etree.ElementTree as ET
@@ -30,7 +31,7 @@ from test_data import (render_params,
                        )
 
 baddir = os.path.join(example_dir, 'fakedir')
-
+defaultscale = 0.1
 
 @pytest.fixture(scope='module')
 def render():
@@ -287,6 +288,8 @@ def test_render_export_sections(render):
     imfile = '3.0.jpg'
     im = imread(os.path.join(outdir, imfile))
 
+    assert (im.shape == np.floor(np.array(sliceexport_template["imsize"]))).all()
+
     assert str(im) == sliceexport_template[imfile]
 
     # remove generated subdirectories
@@ -305,15 +308,23 @@ def test_render_export_sections(render):
         mod = render_export_sections.RenderSectionAtScale_extended(input_data=formattest)
         mod.run()
 
+        imfile = '3.0.' + outformat
+        im = imread(os.path.join(ex['image_directory'], imfile))
+
+        assert (im.shape == np.floor(np.array(sliceexport_template["imsize"]))).all()
+
+        assert str(im) == sliceexport_template[imfile]
+
     for outfile in os.listdir(ex['image_directory']):
         flist.remove(outfile)
 
     assert flist == []
 
     # test scale and intensity
+    downscale = 2
 
     scaletest = copy.deepcopy(ex)
-    scaletest['scale'] = 0.05
+    scaletest['scale'] = defaultscale / downscale
     scaletest['minInt'] = 123
     scaletest['maxInt'] = 125
     scaletest['customPath'] = True
@@ -323,10 +334,14 @@ def test_render_export_sections(render):
     mod3.run()
 
     # test one file
-    imfile = '4.0.jpg'
+    imfile = 'scale/4.0.jpg'
 
     im1 = imread(os.path.join(scaletest['image_directory'], imfile))
 
+    # test scaled size
+    assert (im1.shape == np.floor(np.array(sliceexport_template["imsize"]) / downscale)).all()
+
+    # test scaled image
     assert str(im1) == sliceexport_template[imfile]
 
     # cleanup
