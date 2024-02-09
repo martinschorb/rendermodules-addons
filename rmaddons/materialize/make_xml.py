@@ -26,7 +26,7 @@ def get_n5scales(path):
     with open(os.path.join(path, 'setup0', 'timepoint0', 'attributes.json')) as f:
         t0_attribs = json.load(f)
 
-    # first need to reverse the axis order of the scale factors due to XYZ convention in java vs. ZYX convention in python
+    # first need to reverse the axis order of scale factors due to XYZ convention in java vs. ZYX convention in python
     scale_factors = [sf[::-1] for sf in t0_attribs["scales"]]
     # then need to translate from absolute to relative scale factors, which are expected by pybdv
     rel_scales = absolute_to_relative_scale_factors(scale_factors)
@@ -39,7 +39,7 @@ class MakeXML(argschema.ArgSchemaParser):
     default_output_schema = MakeXMLOutput
 
     @classmethod
-    def make_render_xml(self, path, scale_factors=[[1, 1, 1]], resolution=[10, 10, 10], unit='nm'):
+    def make_render_xml(cls, path, scale_factors=[[1, 1, 1]], resolution=[10, 10, 10], unit='nm'):
         """
         Generate valid n5 attributes and BDV XML file to enable visualisation of a Render/Neuroglancer n5 in BDV/MoBIE
 

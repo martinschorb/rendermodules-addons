@@ -186,7 +186,7 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
         allspecs = []
         stack_suffix = ''
         curr_navitem = ''
-        pxs = np.round(float(tiles[0]['PixelSpacing'][0]) / 10, 3)
+
         curr_mont = {}
 
         if len(montsecs) > 0:
@@ -229,7 +229,8 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
                         allspecs.append([stackname + stack_suffix, tspecs, pxs])
                     tspecs = []
 
-            pxs = np.round(float(tiles[0]['PixelSpacing'][0]) / 10, 3)
+            pxs = np.round(float(tile['PixelSpacing'][0]) / 10, 3)
+
             if multiple:
                 stack_suffix = '_' + curr_navitem
 
