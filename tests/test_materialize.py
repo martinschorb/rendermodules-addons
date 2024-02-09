@@ -285,12 +285,12 @@ def test_render_export_sections(render):
     assert flist == []
 
     # test one file
-    imfile = '3.0.jpg'
-    im = imread(os.path.join(outdir, imfile))
+    imfile0 = '3.0.jpg'
+    im = imread(os.path.join(outdir, imfile0))
 
     assert (im.shape == np.floor(np.array(sliceexport_template["imsize"]))).all()
 
-    assert str(im) == sliceexport_template[imfile]
+    assert str(im) == sliceexport_template[imfile0]
 
     # remove generated subdirectories
     shutil.rmtree(os.path.join(ex['image_directory'], ex['render']['project']))
@@ -313,8 +313,6 @@ def test_render_export_sections(render):
 
         assert (im.shape == np.floor(np.array(sliceexport_template["imsize"]))).all()
 
-        assert str(im) == sliceexport_template[imfile]
-
     for outfile in os.listdir(ex['image_directory']):
         flist.remove(outfile)
 
@@ -334,15 +332,17 @@ def test_render_export_sections(render):
     mod3.run()
 
     # test one file
-    imfile = 'scale/4.0.jpg'
+    imfile = '4.0.jpg'
+
 
     im1 = imread(os.path.join(scaletest['image_directory'], imfile))
 
     # test scaled size
     assert (im1.shape == np.floor(np.array(sliceexport_template["imsize"]) / downscale)).all()
 
+    imkey = 'scale/4.0.jpg'
     # test scaled image
-    assert str(im1) == sliceexport_template[imfile]
+    assert str(im1) == sliceexport_template[imkey]
 
     # cleanup
     os.system('rm -rf ' + ex['image_directory'])
@@ -351,7 +351,10 @@ def test_render_export_sections(render):
 @pytest.mark.dependency(depends=["test_make_xml", "test_mobie","test_render_export_sections"])
 def test_cleanup(render):
     # clean up
+    os.system('rm -rf ' + baddir)
     os.system('rm -rf ' + os.path.join(example_dir, '*_testdata'))
-    os.system('rm -rf ' + 'slicedata')
+    os.system('rm -rf ' + os.path.join(example_dir, 'slicedata'))
+    os.system('rm -rf ' + os.path.join(example_dir, 'tests'))
+    os.system('rm -rf ' + os.path.join(example_dir, '__pycache__'))
     os.system('rm ./slices_out.json')
     renderapi.stack.delete_stack(generate_EM_tilespecs_from_SBEMImage.example_input['output_stack'], render=render)
