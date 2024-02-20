@@ -1,0 +1,19 @@
+{
+  "groupIds" : [
+    "0",
+    "1",
+    "2",
+    "3"
+  ],
+  "in_match" : [],
+  "out_match" : {
+    "len" : 3,
+    "match" : {
+      "pGroupId": "2",
+      "pId": "3.0",
+      "qGroupId": "3",
+      "qId": "5.0",
+      "matches": {}
+    }
+  }
+}

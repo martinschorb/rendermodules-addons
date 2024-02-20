@@ -294,8 +294,8 @@ def test_generate_TIF(render):
 
     assert expected_tileIds == delivered_tileIds[0]
 
-    # cleanup
-    os.system('rm -rf ' + example_tif)
+    # # cleanup
+    # os.system('rm -rf ' + example_tif)
 
     for stack in stacks:
         renderapi.stack.delete_stack(stack, render=render)

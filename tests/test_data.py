@@ -128,3 +128,7 @@ sliceexport_template = render_json_template(
 tif_template = render_json_template(
     example_env,
     'dataimport_generate_EM_tilespecs_from_TIFStack.json')
+
+cc_template = render_json_template(
+    example_env,
+    'pointmatch_generate_point_matches_cc.json')

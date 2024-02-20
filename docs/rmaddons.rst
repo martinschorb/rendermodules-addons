@@ -8,6 +8,7 @@ Subpackages
 
     rmaddons.dataimport
     rmaddons.materialize
+    rmaddons.pointmatch
 
 
 Module contents
