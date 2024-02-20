@@ -41,7 +41,7 @@ class PointMatchCC(RenderModule):
         baseDataUrl = format_baseurl(self.args['render']['host'],
                                      self.args['render']['port'])
 
-        if not baseDataUrl.startswith('http'):
+        if not baseDataUrl.startswith('http'): # pragma: no cover
             baseDataUrl = 'http://' + baseDataUrl
 
         className = 'org.janelia.render.client.CrossCorrelationPointMatchClient'
@@ -65,6 +65,6 @@ class PointMatchCC(RenderModule):
             self.call_cc_client(tp_jsonfile)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": # pragma: no cover
     mod = PointMatchCC(input_data=example)
     mod.run()

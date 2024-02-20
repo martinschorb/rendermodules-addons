@@ -20,7 +20,7 @@ class InFileOrDir(Str):
         if not os.path.isdir(value):
             validate_input_path(value)
 
-        if sys.platform == "win32":
+        if sys.platform == "win32": # pragma: no cover
             try:
                 x = list(os.scandir(value))
             except PermissionError:

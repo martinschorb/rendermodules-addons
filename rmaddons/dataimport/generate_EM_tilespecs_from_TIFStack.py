@@ -238,6 +238,6 @@ class GenerateTifStackTileSpecs(StackOutputModule):
         requests.put(url, json=resolution)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": # pragma: no cover
     mod = GenerateTifStackTileSpecs(input_data=example_input)
     mod.run()

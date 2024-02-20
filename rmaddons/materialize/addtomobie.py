@@ -100,6 +100,6 @@ class AddtoMoBIE(argschema.ArgSchemaParser):
         print('Done adding ' + self.args['xmlpath'] + ' to MoBIE project ' + self.args['outpath'] + '.')
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": # pragma: no cover
     mod = AddtoMoBIE(input_data=example)
     mod.run()

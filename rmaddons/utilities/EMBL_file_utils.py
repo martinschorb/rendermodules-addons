@@ -4,7 +4,7 @@ import sys
 
 
 def groupsharepath(f1):
-    if os.name == 'nt':
+    if os.name == 'nt': # pragma: no cover
         p = subprocess.Popen('net use', stdout=subprocess.PIPE)
         n_use = p.communicate()[0].decode(encoding='ansi')
         drive = f1[:f1.find(':\\') + 1]
@@ -25,7 +25,7 @@ def groupsharepath(f1):
         file1 = file1.replace('\\', '/')
         file1 = '/g/' + share + '/' + file1
 
-    if sys.platform == 'darwin':
+    if sys.platform == 'darwin': # pragma: no cover
         file1 = f1.replace('Volumes', 'g')
 
     if 'linux' in sys.platform:

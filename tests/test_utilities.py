@@ -20,4 +20,4 @@ def test_arg2params():
         out2 = arg2params(args, key, flag=flag)
         assert out2 == [flag, args[key]]
 
-
+    assert arg2params(args, 'thiskeydoesnotexist') == []

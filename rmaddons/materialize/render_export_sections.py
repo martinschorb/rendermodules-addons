@@ -180,6 +180,6 @@ class RenderSectionAtScale_extended(RenderSectionAtScale):
                      "temp_stack": self.args['temp_stack']})
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": # pragma: no cover
     mod = RenderSectionAtScale_extended(input_data=example)
     mod.run()

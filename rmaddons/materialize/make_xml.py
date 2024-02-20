@@ -79,6 +79,6 @@ class MakeXML(argschema.ArgSchemaParser):
         print('Done generating XML file for ' + self.args['path'] + '.')
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": # pragma: no cover
     mod = MakeXML(input_data=example)
     mod.run()

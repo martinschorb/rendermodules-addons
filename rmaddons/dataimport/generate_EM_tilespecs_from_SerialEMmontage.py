@@ -285,6 +285,6 @@ class GenerateSEMmontTileSpecs(StackOutputModule):
 #     self.logger.error(e)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": # pragma: no cover
     mod = GenerateSEMmontTileSpecs(input_data=example_input)
     stacks = mod.run()

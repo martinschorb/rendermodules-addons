@@ -13,7 +13,7 @@ class RenderStackRange(List):
         # 2 elements
         # second larger first element
         # (within range of render stack)
-        pass
+        pass # pragma: no cover
 
 
 class PointMatchParameters(argschema.ArgSchema, MatchWebServiceParameters,

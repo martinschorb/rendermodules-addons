@@ -288,6 +288,6 @@ class GenerateSBEMImageTileSpecs(StackOutputModule):
             requests.put(url, json=resolution)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": # pragma: no cover
     mod = GenerateSBEMImageTileSpecs(input_data=example_input)
     mod.run()
