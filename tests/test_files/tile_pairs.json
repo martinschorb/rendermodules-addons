@@ -1,0 +1,60 @@
+{
+  "renderParametersUrlTemplate" : "{baseDataUrl}/owner/000tests/project/test_project/stack/test_stack/tile/{id}/render-parameters",
+  "neighborPairs" : [
+    {
+      "p" : {
+        "groupId" : "0",
+        "id" : "2.0"
+      },
+      "q" : {
+        "groupId" : "1",
+        "id" : "3.0"
+      },
+      "absoluteDeltaZ" : 1.0
+    },
+    {
+      "p" : {
+        "groupId" : "0",
+        "id" : "2.0"
+      },
+      "q" : {
+        "groupId" : "1",
+        "id" : "4.0"
+      },
+      "absoluteDeltaZ" : 1.0
+    },
+    {
+      "p" : {
+        "groupId" : "1",
+        "id" : "3.0"
+      },
+      "q" : {
+        "groupId" : "2",
+        "id" : "4.0"
+      },
+      "absoluteDeltaZ" : 1.0
+    },
+    {
+      "p" : {
+        "groupId" : "2",
+        "id" : "3.0"
+      },
+      "q" : {
+        "groupId" : "3",
+        "id" : "5.0"
+      },
+      "absoluteDeltaZ" : 1.0
+    },
+    {
+      "p" : {
+        "groupId" : "2",
+        "id" : "4.0"
+      },
+      "q" : {
+        "groupId" : "3",
+        "id" : "5.0"
+      },
+      "absoluteDeltaZ" : 1.0
+    }
+  ]
+}
